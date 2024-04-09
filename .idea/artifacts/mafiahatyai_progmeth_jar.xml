@@ -1,0 +1,9 @@
+<component name="ArtifactManager">
+  <artifact type="jar" name="mafiahatyai-progmeth:jar">
+    <output-path>$PROJECT_DIR$/out/artifacts/mafiahatyai_progmeth_jar</output-path>
+    <root id="archive" name="mafiahatyai-progmeth.jar">
+      <element id="module-output" name="mafiahatyai-progmeth" />
+      <element id="module-source" name="mafiahatyai-progmeth" />
+    </root>
+  </artifact>
+</component>
