@@ -14,7 +14,7 @@ public class GamePanel extends Pane {
 
     final int titleSize = originalTitleSize * scale;
     final int maxScreenCol = 16;
-    final int maxScreenRow = 12;
+    final int maxScreenRow = 16;
     final int screenWidth = titleSize * maxScreenCol;
     final int screenHeight = titleSize * maxScreenRow;
 
@@ -28,32 +28,37 @@ public class GamePanel extends Pane {
     private boolean rightPressed = false;
 
     public GamePanel() {
+
         this.setPrefSize(screenWidth, screenHeight);
         this.setStyle("-fx-background-color: black;");
         this.setFocusTraversable(true);
 
         this.setOnKeyPressed(event -> {
             KeyCode code = event.getCode();
-            if (code == KeyCode.UP) {
+            if (code == KeyCode.UP || code == KeyCode.W) {
                 upPressed = true;
-            } else if (code == KeyCode.DOWN) {
+            } else if (code == KeyCode.DOWN || code == KeyCode.S) {
                 downPressed = true;
-            } else if (code == KeyCode.LEFT) {
+            } else if (code == KeyCode.LEFT || code == KeyCode.A) {
                 leftPressed = true;
-            } else if (code == KeyCode.RIGHT) {
+            } else if (code == KeyCode.RIGHT || code == KeyCode.D) {
                 rightPressed = true;
             }
         });
 
         this.setOnKeyReleased(event -> {
             KeyCode code = event.getCode();
-            if (code == KeyCode.UP) {
+            if (code == KeyCode.UP || code == KeyCode.W) {
+                System.out.println("UP");
                 upPressed = false;
-            } else if (code == KeyCode.DOWN) {
+            } else if (code == KeyCode.DOWN || code == KeyCode.S) {
+                System.out.println("DOWN");
                 downPressed = false;
-            } else if (code == KeyCode.LEFT) {
+            } else if (code == KeyCode.LEFT || code == KeyCode.A) {
+                System.out.println("LEFT");
                 leftPressed = false;
-            } else if (code == KeyCode.RIGHT) {
+            } else if (code == KeyCode.RIGHT || code == KeyCode.D) {
+                System.out.println("RIGHT");
                 rightPressed = false;
             }
         });
