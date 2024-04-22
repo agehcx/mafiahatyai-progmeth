@@ -4,6 +4,7 @@ package scene;
 import component.GameButton;
 import component.TextFont;
 import javafx.event.EventHandler;
+import javafx.fxml.FXMLLoader;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.input.MouseEvent;
@@ -13,6 +14,9 @@ import javafx.scene.paint.Color;
 import javafx.stage.Stage;
 import logic.GameInstance;
 import main.GamePanel;
+
+import java.io.IOException;
+import java.util.Objects;
 
 public class HomeScreen {
 
@@ -82,6 +86,12 @@ public class HomeScreen {
         creditButton.addEventHandler(MouseEvent.MOUSE_CLICKED, new EventHandler<MouseEvent>() {
             public void handle(MouseEvent e) {
                 // To handle credit button click event
+                root.getChildren().clear();
+                try {
+                    root.getChildren().add(FXMLLoader.load(Objects.requireNonNull(getClass().getResource("/fxml/loading_screen.fxml"))));
+                } catch (IOException ex) {
+                    throw new RuntimeException(ex);
+                }
             }
         });
 
