@@ -101,7 +101,7 @@ public class HomeScreen {
 
         root = new StackPane();
 
-        root.setPrefSize(1600, 900);
+        root.setPrefSize(1200, 675);
 
         scene = new Scene(root);
 
