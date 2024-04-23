@@ -1,8 +1,10 @@
 package scene;
 
 
+import component.BBFont;
 import component.GameButton;
-import component.TextFont;
+import component.SupermarketFont;
+import component.TekoFont;
 import javafx.event.EventHandler;
 import javafx.fxml.FXMLLoader;
 import javafx.geometry.Pos;
@@ -24,7 +26,8 @@ public class HomeScreen {
     private static Scene scene;
     private static StackPane root;
     private VBox buttonContainer;
-    private TextFont title;
+    private SupermarketFont title;
+    private BBFont title2;
     private GameButton playButton;
     private GameButton tutorialButton;
     private GameButton creditButton;
@@ -43,10 +46,10 @@ public class HomeScreen {
         buttonContainer = new VBox();
         buttonContainer.setSpacing(15);
         buttonContainer.setAlignment(Pos.CENTER);
+        title2 = new BBFont("Hatyai Tycoon", 90);
+        //title = new TekoFont("Hatyai Tycoon", 90);
 
-        title = new TextFont("Hatyai Tycoon", 90);
-
-        title.setFill(Color.rgb(127,35,255));
+        title2.setFill(Color.rgb(127,35,255));
 
         playButton = new GameButton(330, 80, 40, Color.rgb(82, 210, 145));
         playButton.addText("Play", 20, Color.WHITE);
@@ -102,7 +105,7 @@ public class HomeScreen {
             }
         });
 
-        buttonContainer.getChildren().addAll(title, playButton, tutorialButton, creditButton, quitButton);
+        buttonContainer.getChildren().addAll(title2, playButton, tutorialButton, creditButton, quitButton);
 
     }
 

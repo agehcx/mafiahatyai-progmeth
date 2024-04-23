@@ -5,8 +5,8 @@ import javafx.scene.text.Text;
 import javafx.scene.text.Font;
 import javafx.scene.paint.Paint;
 
-public class TextFont extends Text {
-    public TextFont(String text, Integer fontSize, Paint fontColor) {
+public class SupermarketFont extends Text {
+    public SupermarketFont(String text, Integer fontSize, Paint fontColor) {
         super(text);
         Font font = Font.loadFont("file:res/font/supermarket.ttf", fontSize);
         setFont(font);
@@ -14,14 +14,14 @@ public class TextFont extends Text {
         setFill(Color.BLACK);
     }
 
-    public TextFont(String text, Integer fontSize) {
+    public SupermarketFont(String text, Integer fontSize) {
         super(text);
         Font font = Font.loadFont("file:res/font/supermarket.ttf", fontSize);
         setFont(font);
         setFill(Color.BLACK);
     }
 
-    public TextFont(String text) {
+    public SupermarketFont(String text) {
         super(text);
         Font font = Font.loadFont("file:res/font/supermarket.ttf", 16);
         setFont(font);
