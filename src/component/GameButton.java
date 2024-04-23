@@ -48,7 +48,7 @@ public class GameButton extends StackPane {
     }
 
     public void addText(String s, int size, Paint paint) {
-        SupermarketFont text = new SupermarketFont(s, size);
+        TekoFont text = new TekoFont(s, size);
         text.setFill(paint);
         getChildren().add(text);
     }
