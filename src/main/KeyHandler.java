@@ -2,6 +2,7 @@ package main;
 
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
+import java.sql.SQLOutput;
 
 public class KeyHandler implements KeyListener {
 
@@ -26,6 +27,10 @@ public class KeyHandler implements KeyListener {
         }
         if(code==KeyEvent.VK_D) {
             rightPressed = true;
+        }
+
+        if (code == KeyEvent.VK_ESCAPE) {
+            System.out.println("ABC");
         }
     }
 

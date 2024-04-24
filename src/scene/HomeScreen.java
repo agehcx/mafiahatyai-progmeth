@@ -9,9 +9,9 @@ import javafx.event.EventHandler;
 import javafx.fxml.FXMLLoader;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
+import javafx.scene.image.Image;
 import javafx.scene.input.MouseEvent;
-import javafx.scene.layout.StackPane;
-import javafx.scene.layout.VBox;
+import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
 import javafx.stage.Stage;
 import logic.GameInstance;
@@ -35,6 +35,8 @@ public class HomeScreen {
     // Edit full screen
     private final boolean fullScreen = false;
 
+    private final Color buttonColor = Color.rgb(82, 210, 145);
+
     public HomeScreen(Stage stage) {
         this.stage = stage;
         GameInstance gameInstance = new GameInstance();
@@ -47,21 +49,20 @@ public class HomeScreen {
         buttonContainer.setSpacing(15);
         buttonContainer.setAlignment(Pos.CENTER);
         title2 = new BBFont("Hatyai Tycoon", 90);
-        //title = new TekoFont("Hatyai Tycoon", 90);
 
         title2.setFill(Color.rgb(127,35,255));
 
-        playButton = new GameButton(330, 80, 40, Color.rgb(82, 210, 145));
-        playButton.addText("Play", 20, Color.WHITE);
+        playButton = new GameButton(330, 80, 40, buttonColor);
+        playButton.addText("Play", 35, Color.WHITE);
 
-        tutorialButton = new GameButton(330, 80, 40, Color.rgb(82, 210, 145));
-        tutorialButton.addText("Tutorial", 20, Color.WHITE);
+        tutorialButton = new GameButton(330, 80, 40, buttonColor);
+        tutorialButton.addText("Tutorial", 35, Color.WHITE);
 
-        creditButton = new GameButton(330, 80, 40, Color.rgb(82, 210, 145));
-        creditButton.addText("Credits", 20, Color.WHITE);
+        creditButton = new GameButton(330, 80, 40, buttonColor);
+        creditButton.addText("Credits", 35, Color.WHITE);
 
-        quitButton = new GameButton(330, 80, 40, Color.rgb(82, 210, 145));
-        quitButton.addText("Quit Game", 20, Color.WHITE);
+        quitButton = new GameButton(330, 80, 40, buttonColor);
+        quitButton.addText("Quit Game", 35, Color.WHITE);
 
         eventSetup(gameInstance);
 
@@ -115,6 +116,12 @@ public class HomeScreen {
         root = new StackPane();
 
         root.setPrefSize(1200, 675);
+
+//        root.setPrefSize(1053, 593);
+//        Fixed resolution size for game collision rule
+        root.setBackground(new Background(new BackgroundImage(new Image("file:res/img/background.jpg"), BackgroundRepeat.NO_REPEAT,
+                BackgroundRepeat.NO_REPEAT, BackgroundPosition.CENTER,
+                new BackgroundSize(1200, 675, false, false, false, false))));
 
         scene = new Scene(root);
 

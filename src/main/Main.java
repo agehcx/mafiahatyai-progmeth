@@ -6,7 +6,7 @@ import javafx.stage.Stage;
 import scene.HomeScreen;
 
 public class Main extends Application {
-//    @Override
+
     public void start(Stage primaryStage) {
 //        StackPane root = new StackPane();
 //        root.setStyle("-fx-background-color: black;");
