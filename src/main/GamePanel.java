@@ -18,10 +18,10 @@ public class GamePanel extends Pane {
     final int screenWidth = titleSize * maxScreenCol;
     final int screenHeight = titleSize * maxScreenRow;
 
-    int playerX = 0;
-    int playerY = 0;
-    int playerSpeed = 5;
-    long keyPressedTime = 0;
+    private int playerX = 0;
+    private int playerY = 0;
+    private int playerSpeed = 5;
+    private long keyPressedTime = 0;
 
     private boolean upPressed = false;
     private boolean downPressed = false;
@@ -37,45 +37,41 @@ public class GamePanel extends Pane {
         this.setOnKeyPressed(event -> {
             KeyCode code = event.getCode();
             if (code == KeyCode.UP || code == KeyCode.W) {
-                upPressed = true;
+                setUpPressed(true);
             } else if (code == KeyCode.DOWN || code == KeyCode.S) {
-                downPressed = true;
+                setDownPressed(true);
             } else if (code == KeyCode.LEFT || code == KeyCode.A) {
-                leftPressed = true;
+                setLeftPressed(true);
             } else if (code == KeyCode.RIGHT || code == KeyCode.D) {
-                rightPressed = true;
+                setRightPressed(true);
             } else if (code == KeyCode.ESCAPE) {
                 System.out.println("PAUSE ");
             }
-            keyPressedTime = System.nanoTime();
+            setKeyPressedTime(System.nanoTime());
         });
 
         this.setOnKeyReleased(event -> {
             KeyCode code = event.getCode();
             boolean hasUpdated = false;
             if (code == KeyCode.UP || code == KeyCode.W) {
-//                System.out.println("UP");
-                upPressed = false;
+                setUpPressed(false);
                 hasUpdated = true;
             } else if (code == KeyCode.DOWN || code == KeyCode.S) {
-//                System.out.println("DOWN");
-                downPressed = false;
+                setDownPressed(false);
                 hasUpdated = true;
             } else if (code == KeyCode.LEFT || code == KeyCode.A) {
-//                System.out.println("LEFT");
-                leftPressed = false;
+                setLeftPressed(false);
                 hasUpdated = true;
             } else if (code == KeyCode.RIGHT || code == KeyCode.D) {
-//                System.out.println("RIGHT");
-                rightPressed = false;
+                setRightPressed(false);
                 hasUpdated = true;
             }
 
             if (hasUpdated) {
-                System.out.println("POSITION : [" + playerX + ',' + playerY + ']');
+                System.out.println("POSITION : [" + getPlayerX() + ',' + getPlayerY() + ']');
             }
 
-            keyPressedTime = 0;
+            setKeyPressedTime(0);
         });
 
         new AnimationTimer() {
@@ -89,28 +85,28 @@ public class GamePanel extends Pane {
 
     private void update() {
         // Border collide rule added
-        long elapsedTime = System.nanoTime() - keyPressedTime;
+        long elapsedTime = System.nanoTime() - getKeyPressedTime();
         double speedMultiplier = 1.0; // When pressed two key at the same time this function is completely exploded
 //        double speedMultiplier = 1.0 + (elapsedTime / 1e9);
 //         Speed multiplier based on time held
 
         // TOP
-        if (upPressed && playerY - playerSpeed * speedMultiplier >= 0) {
-            playerY -= (int) (playerSpeed * speedMultiplier);
+        if (isUpPressed() && getPlayerY() - getPlayerSpeed() * speedMultiplier >= 0) {
+            setPlayerY(getPlayerY() - (int) (getPlayerSpeed() * speedMultiplier));
         }
         // BOTTOM
-        if (downPressed && playerY + titleSize <= screenHeight) {
-            playerY += (int) (playerSpeed * speedMultiplier);
+        if (isDownPressed() && getPlayerY() + titleSize <= screenHeight) {
+            setPlayerY(getPlayerY() + (int) (getPlayerSpeed() * speedMultiplier));
         }
 
         // LEFT
-        if (leftPressed && playerX - playerSpeed * speedMultiplier >= 0) {
-            playerX -= (int) (playerSpeed * speedMultiplier);
+        if (isLeftPressed() && getPlayerX() - getPlayerSpeed() * speedMultiplier >= 0) {
+            setPlayerX(getPlayerX() - (int) (getPlayerSpeed() * speedMultiplier));
         }
 
         // RIGHT
-        if (rightPressed && playerX + titleSize + playerSpeed * speedMultiplier <= screenWidth) {
-            playerX += (int) (playerSpeed * speedMultiplier);
+        if (isRightPressed() && getPlayerX() + titleSize + getPlayerSpeed() * speedMultiplier <= screenWidth) {
+            setPlayerX(getPlayerX() + (int) (getPlayerSpeed() * speedMultiplier));
         }
     }
 
@@ -118,7 +114,7 @@ public class GamePanel extends Pane {
         Canvas canvas = new Canvas(screenWidth, screenHeight);
         GraphicsContext gc = canvas.getGraphicsContext2D();
         gc.setFill(Color.WHITE);
-        gc.fillRect(playerX, playerY, titleSize, titleSize);
+        gc.fillRect(getPlayerX(), getPlayerY(), titleSize, titleSize);
         getChildren().setAll(canvas);
     }
 
@@ -128,14 +124,68 @@ public class GamePanel extends Pane {
         }
         return instance;
     }
+
+    public int getPlayerX() {
+        return playerX;
+    }
+
+    public void setPlayerX(int playerX) {
+        this.playerX = playerX;
+    }
+
+    public int getPlayerY() {
+        return playerY;
+    }
+
+    public void setPlayerY(int playerY) {
+        this.playerY = playerY;
+    }
+
+    public int getPlayerSpeed() {
+        return playerSpeed;
+    }
+
+    public void setPlayerSpeed(int playerSpeed) {
+        this.playerSpeed = playerSpeed;
+    }
+
+    public long getKeyPressedTime() {
+        return keyPressedTime;
+    }
+
+    public void setKeyPressedTime(long keyPressedTime) {
+        this.keyPressedTime = keyPressedTime;
+    }
+
+    public boolean isUpPressed() {
+        return upPressed;
+    }
+
+    public void setUpPressed(boolean upPressed) {
+        this.upPressed = upPressed;
+    }
+
+    public boolean isDownPressed() {
+        return downPressed;
+    }
+
+    public void setDownPressed(boolean downPressed) {
+        this.downPressed = downPressed;
+    }
+
+    public boolean isLeftPressed() {
+        return leftPressed;
+    }
+
+    public void setLeftPressed(boolean leftPressed) {
+        this.leftPressed = leftPressed;
+    }
+
+    public boolean isRightPressed() {
+        return rightPressed;
+    }
+
+    public void setRightPressed(boolean rightPressed) {
+        this.rightPressed = rightPressed;
+    }
 }
-
-
-// 29.625
-// Height 1185 -> 40
-// Width 16/9 = x/40
-// x = 71.111
-// Width = 71.111*29.625 = 2106.6663375
-
-// 35.555 * 20
-// 1/2 res => 1053.333 * 592.5
