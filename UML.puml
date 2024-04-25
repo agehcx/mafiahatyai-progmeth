@@ -1,0 +1,115 @@
+@startuml
+class main.GamePanel {
+- int screenWidth
+- int screenHeight
+- int playerX
+- int playerY
+- int blockSize
+- int screenWidthBlocks
+- int screenHeightBlocks
+- char[][] mapPattern
++ <<Create>> GamePanel()
+- void movePlayer(int,int)
+- void repaint()
++ int getScreenWidth()
++ void setScreenWidth(int)
++ int getScreenHeight()
++ void setScreenHeight(int)
++ int getPlayerX()
++ void setPlayerX(int)
++ int getPlayerY()
++ void setPlayerY(int)
+}
+class logic.ChangeMap {
+}
+class map.levelMap {
+- {static} char[][] mapPattern
+}
+class logic.GameInstance {
++ <<Create>> GameInstance()
+}
+class component.RetroFont {
++ <<Create>> RetroFont(String,Integer,Paint)
++ <<Create>> RetroFont(String,Integer)
++ <<Create>> RetroFont(String)
+}
+class component.SupermarketFont {
++ <<Create>> SupermarketFont(String,Integer,Paint)
++ <<Create>> SupermarketFont(String,Integer)
++ <<Create>> SupermarketFont(String)
+}
+class map.level2 {
+- {static} char[][] mapPattern
++ {static} char[][] getMapPattern()
++ void setMapPattern(char[][])
+}
+class scene.HomeScreen {
+- Stage stage
+- {static} Scene scene
+- {static} StackPane root
+- VBox buttonContainer
+- SupermarketFont title
+- BBFont title2
+- GameButton playButton
+- GameButton tutorialButton
+- GameButton creditButton
+- GameButton quitButton
+- boolean fullScreen
+- Color buttonColor
++ <<Create>> HomeScreen(Stage)
+- void componentSetup(GameInstance)
+- void eventSetup(GameInstance)
+- void stageSetup()
++ {static} StackPane getRoot()
++ {static} Scene getScene()
+}
+class main.KeyHandler {
++ boolean upPressed
++ void keyTyped(KeyEvent)
++ void keyPressed(KeyEvent)
++ void keyReleased(KeyEvent)
+}
+class map.level1 {
+- {static} char[][] mapPattern
++ {static} char[][] getMapPattern()
++ void setMapPattern(char[][])
+}
+class component.BBFont {
++ <<Create>> BBFont(String,Integer,Paint)
++ <<Create>> BBFont(String,Integer)
++ <<Create>> BBFont(String)
+}
+class scene.LoadingScreen {
+- ImageView imageView
++ void initialize(URL,ResourceBundle)
+}
+class component.GameButton {
+- Rectangle background
++ <<Create>> GameButton(int,int,int,Paint)
++ <<Create>> GameButton()
++ void addText(String,int,Paint)
++ void setColor(Paint)
+}
+class main.Main {
++ void start(Stage)
++ {static} void main(String[])
+}
+class component.TekoFont {
++ <<Create>> TekoFont(String,Integer,Paint)
++ <<Create>> TekoFont(String,Integer)
++ <<Create>> TekoFont(String)
+}
+
+
+javafx.scene.layout.Pane <|-- main.GamePanel
+javafx.scene.text.Text <|-- component.RetroFont
+javafx.scene.text.Text <|-- component.SupermarketFont
+map.levelMap <|-- map.level2
+java.awt.event.KeyListener <|.. main.KeyHandler
+map.levelMap <|-- map.level1
+javafx.scene.text.Text <|-- component.BBFont
+javafx.fxml.Initializable <|.. scene.LoadingScreen
+javafx.scene.layout.StackPane <|-- component.GameButton
+javafx.application.Application <|-- main.Main
+javafx.scene.text.Text <|-- component.TekoFont
+@enduml

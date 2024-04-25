@@ -1,5 +1,4 @@
 package main;
-
 import javafx.animation.AnimationTimer;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
@@ -7,122 +6,112 @@ import javafx.scene.input.KeyCode;
 import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
 
+import map.level1;
+
 public class GamePanel extends Pane {
-    private static GamePanel instance;
-    final int originalTitleSize = 10;
-    final int scale = 3;
-
-    final int titleSize = originalTitleSize * scale;
-    final int maxScreenCol = 36;
-    final int maxScreenRow = 20;
-    final int screenWidth = titleSize * maxScreenCol;
-    final int screenHeight = titleSize * maxScreenRow;
-
-    private int playerX = 0;
-    private int playerY = 0;
-    private int playerSpeed = 5;
-    private long keyPressedTime = 0;
-
-    private boolean upPressed = false;
-    private boolean downPressed = false;
-    private boolean leftPressed = false;
-    private boolean rightPressed = false;
+    private int screenWidth;
+    private int screenHeight;
+    private int playerX;
+    private int playerY;
+    private final int blockSize = 25; // Size of each block
+    private final int screenWidthBlocks = 48;
+    private final int screenHeightBlocks = 27;
+    private char[][] mapPattern = map.level1.getMapPattern();
 
     public GamePanel() {
+        screenWidth = blockSize * screenWidthBlocks;
+        screenHeight = blockSize * screenHeightBlocks;
 
         this.setPrefSize(screenWidth, screenHeight);
         this.setStyle("-fx-background-color: black;");
         this.setFocusTraversable(true);
 
+        playerX = blockSize; // Start player at a specific position
+        playerY = blockSize; // Start player at a specific position
+
         this.setOnKeyPressed(event -> {
             KeyCode code = event.getCode();
             if (code == KeyCode.UP || code == KeyCode.W) {
-                setUpPressed(true);
+                movePlayer(0, -blockSize); // Move up
             } else if (code == KeyCode.DOWN || code == KeyCode.S) {
-                setDownPressed(true);
+                movePlayer(0, blockSize); // Move down
             } else if (code == KeyCode.LEFT || code == KeyCode.A) {
-                setLeftPressed(true);
+                movePlayer(-blockSize, 0); // Move left
             } else if (code == KeyCode.RIGHT || code == KeyCode.D) {
-                setRightPressed(true);
+                movePlayer(blockSize, 0); // Move right
             } else if (code == KeyCode.ESCAPE) {
-                System.out.println("PAUSE ");
+                System.out.println("Skipping Level !!");
+
+                this.mapPattern = map.level2.getMapPattern();
             }
-            setKeyPressedTime(System.nanoTime());
         });
 
-        this.setOnKeyReleased(event -> {
-            KeyCode code = event.getCode();
-            boolean hasUpdated = false;
-            if (code == KeyCode.UP || code == KeyCode.W) {
-                setUpPressed(false);
-                hasUpdated = true;
-            } else if (code == KeyCode.DOWN || code == KeyCode.S) {
-                setDownPressed(false);
-                hasUpdated = true;
-            } else if (code == KeyCode.LEFT || code == KeyCode.A) {
-                setLeftPressed(false);
-                hasUpdated = true;
-            } else if (code == KeyCode.RIGHT || code == KeyCode.D) {
-                setRightPressed(false);
-                hasUpdated = true;
-            }
-
-            if (hasUpdated) {
-                System.out.println("POSITION : [" + getPlayerX() + ',' + getPlayerY() + ']');
-            }
-
-            setKeyPressedTime(0);
-        });
+        // No need for key released event handling for this version
 
         new AnimationTimer() {
             @Override
             public void handle(long now) {
-                update();
+                // No need for update method in this version
                 repaint();
             }
         }.start();
     }
 
-    private void update() {
-        // Border collide rule added
-        long elapsedTime = System.nanoTime() - getKeyPressedTime();
-        double speedMultiplier = 1.0; // When pressed two key at the same time this function is completely exploded
-//        double speedMultiplier = 1.0 + (elapsedTime / 1e9);
-//         Speed multiplier based on time held
+    private void movePlayer(int dx, int dy) {
+        int newX = playerX + dx;
+        int newY = playerY + dy;
 
-        // TOP
-        if (isUpPressed() && getPlayerY() - getPlayerSpeed() * speedMultiplier >= 0) {
-            setPlayerY(getPlayerY() - (int) (getPlayerSpeed() * speedMultiplier));
-        }
-        // BOTTOM
-        if (isDownPressed() && getPlayerY() + titleSize <= screenHeight) {
-            setPlayerY(getPlayerY() + (int) (getPlayerSpeed() * speedMultiplier));
-        }
-
-        // LEFT
-        if (isLeftPressed() && getPlayerX() - getPlayerSpeed() * speedMultiplier >= 0) {
-            setPlayerX(getPlayerX() - (int) (getPlayerSpeed() * speedMultiplier));
-        }
-
-        // RIGHT
-        if (isRightPressed() && getPlayerX() + titleSize + getPlayerSpeed() * speedMultiplier <= screenWidth) {
-            setPlayerX(getPlayerX() + (int) (getPlayerSpeed() * speedMultiplier));
+        // Check if new position is within bounds and is not a wall
+        if (newX >= 0 && newX + blockSize <= screenWidth && newY >= 0 && newY + blockSize <= screenHeight
+                && mapPattern[newY / blockSize][newX / blockSize] != 'X') {
+            setPlayerX(newX);
+            setPlayerY(newY);
+            System.out.println("POSITION: [" + getPlayerX() + ", " + getPlayerY() + "]");
         }
     }
 
     private void repaint() {
         Canvas canvas = new Canvas(screenWidth, screenHeight);
         GraphicsContext gc = canvas.getGraphicsContext2D();
-        gc.setFill(Color.WHITE);
-        gc.fillRect(getPlayerX(), getPlayerY(), titleSize, titleSize);
+
+        // Clear canvas
+        gc.clearRect(0, 0, screenWidth, screenHeight);
+
+        // Draw map
+        for (int i = 0; i < screenHeightBlocks; i++) {
+            for (int j = 0; j < screenWidthBlocks; j++) {
+                if (mapPattern[i][j] == 'X') {
+                    gc.setFill(Color.BLACK);
+                    gc.fillRect(j * blockSize, i * blockSize, blockSize, blockSize);
+                } else if (mapPattern[i][j] == 'O') {
+                    gc.setFill(Color.WHITE);
+                    gc.fillRect(j * blockSize, i * blockSize, blockSize, blockSize);
+                }
+            }
+        }
+
+        // Draw player
+        gc.setFill(Color.RED);
+        gc.fillRect(getPlayerX(), getPlayerY(), blockSize, blockSize);
+
         getChildren().setAll(canvas);
     }
 
-    public static GamePanel getInstance() {
-        if (instance == null) {
-            return new GamePanel();
-        }
-        return instance;
+    // Getter and setter methods
+    public int getScreenWidth() {
+        return screenWidth;
+    }
+
+    public void setScreenWidth(int screenWidth) {
+        this.screenWidth = screenWidth;
+    }
+
+    public int getScreenHeight() {
+        return screenHeight;
+    }
+
+    public void setScreenHeight(int screenHeight) {
+        this.screenHeight = screenHeight;
     }
 
     public int getPlayerX() {
@@ -139,53 +128,5 @@ public class GamePanel extends Pane {
 
     public void setPlayerY(int playerY) {
         this.playerY = playerY;
-    }
-
-    public int getPlayerSpeed() {
-        return playerSpeed;
-    }
-
-    public void setPlayerSpeed(int playerSpeed) {
-        this.playerSpeed = playerSpeed;
-    }
-
-    public long getKeyPressedTime() {
-        return keyPressedTime;
-    }
-
-    public void setKeyPressedTime(long keyPressedTime) {
-        this.keyPressedTime = keyPressedTime;
-    }
-
-    public boolean isUpPressed() {
-        return upPressed;
-    }
-
-    public void setUpPressed(boolean upPressed) {
-        this.upPressed = upPressed;
-    }
-
-    public boolean isDownPressed() {
-        return downPressed;
-    }
-
-    public void setDownPressed(boolean downPressed) {
-        this.downPressed = downPressed;
-    }
-
-    public boolean isLeftPressed() {
-        return leftPressed;
-    }
-
-    public void setLeftPressed(boolean leftPressed) {
-        this.leftPressed = leftPressed;
-    }
-
-    public boolean isRightPressed() {
-        return rightPressed;
-    }
-
-    public void setRightPressed(boolean rightPressed) {
-        this.rightPressed = rightPressed;
     }
 }
