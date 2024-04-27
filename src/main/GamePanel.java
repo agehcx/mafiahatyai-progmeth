@@ -2,6 +2,7 @@ package main;
 import javafx.animation.AnimationTimer;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
+import javafx.scene.image.Image;
 import javafx.scene.input.KeyCode;
 import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
@@ -93,6 +94,7 @@ public class GamePanel extends Pane {
         // Draw player
         gc.setFill(Color.RED);
         gc.fillRect(getPlayerX(), getPlayerY(), blockSize, blockSize);
+
 
         getChildren().setAll(canvas);
     }
