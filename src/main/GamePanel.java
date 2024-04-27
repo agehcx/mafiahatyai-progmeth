@@ -82,18 +82,19 @@ public class GamePanel extends Pane {
         for (int i = 0; i < screenHeightBlocks; i++) {
             for (int j = 0; j < screenWidthBlocks; j++) {
                 if (mapPattern[i][j] == 'X') {
-                    gc.setFill(Color.BLACK);
+                    gc.setFill(Color.DARKGREY);
                     gc.fillRect(j * blockSize, i * blockSize, blockSize, blockSize);
                 } else if (mapPattern[i][j] == 'O') {
-                    gc.setFill(Color.WHITE);
+                    gc.setFill(Color.BLACK);
                     gc.fillRect(j * blockSize, i * blockSize, blockSize, blockSize);
                 }
             }
         }
 
         // Draw player
-        gc.setFill(Color.RED);
-        gc.fillRect(getPlayerX(), getPlayerY(), blockSize, blockSize);
+        Image player = new Image("file:res/gif/pacmanUp.gif", blockSize, blockSize, true, true);
+        gc.drawImage(player, getPlayerX(), getPlayerY());
+
 
 
         getChildren().setAll(canvas);
