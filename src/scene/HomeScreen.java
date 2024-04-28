@@ -50,7 +50,7 @@ public class HomeScreen {
         buttonContainer.setAlignment(Pos.CENTER);
         title2 = new BBFont("Hatyai Tycoon", 90);
 
-        title2.setFill(Color.rgb(127,35,255));
+        title2.setFill(Color.rgb(255,255,255));
 
         playButton = new GameButton(330, 80, 40, buttonColor);
         playButton.addText("Play", 35, Color.WHITE);
