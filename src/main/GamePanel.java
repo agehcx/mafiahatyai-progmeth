@@ -3,7 +3,6 @@ import javafx.animation.AnimationTimer;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.image.Image;
-import javafx.scene.image.ImageView;
 import javafx.scene.input.KeyCode;
 import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
@@ -19,6 +18,7 @@ public class GamePanel extends Pane {
     private final int screenWidthBlocks = 48;
     private final int screenHeightBlocks = 27;
     private char[][] mapPattern = map.level1.getMapPattern();
+    private String side="pacmanDown";
 
     public GamePanel() {
         screenWidth = blockSize * screenWidthBlocks;
@@ -34,12 +34,16 @@ public class GamePanel extends Pane {
         this.setOnKeyPressed(event -> {
             KeyCode code = event.getCode();
             if (code == KeyCode.UP || code == KeyCode.W) {
+                setSide("pacmanUp");
                 movePlayer(0, -blockSize); // Move up
             } else if (code == KeyCode.DOWN || code == KeyCode.S) {
+                setSide("pacmanDown");
                 movePlayer(0, blockSize); // Move down
             } else if (code == KeyCode.LEFT || code == KeyCode.A) {
+                setSide("pacmanLeft");
                 movePlayer(-blockSize, 0); // Move left
             } else if (code == KeyCode.RIGHT || code == KeyCode.D) {
+                setSide("pacmanRight");
                 movePlayer(blockSize, 0); // Move right
             } else if (code == KeyCode.ESCAPE) {
                 System.out.println("Skipping Level !!");
@@ -93,9 +97,8 @@ public class GamePanel extends Pane {
         }
 
         // Draw player
-        Image player = new Image("file:res/gif/pacmanUp.gif", blockSize, blockSize, true, true);
+        Image player = new Image("file:res/gif/"+getSide()+".gif", blockSize, blockSize, true, true);
         gc.drawImage(player, getPlayerX(), getPlayerY());
-
 
         getChildren().setAll(canvas);
     }
@@ -131,5 +134,13 @@ public class GamePanel extends Pane {
 
     public void setPlayerY(int playerY) {
         this.playerY = playerY;
+    }
+
+    public String getSide() {
+        return side;
+    }
+
+    public void setSide(String position) {
+        this.side = position;
     }
 }
