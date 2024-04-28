@@ -1,5 +1,6 @@
 package main;
 
+import ghost.Ghost;
 import javafx.animation.AnimationTimer;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
@@ -9,9 +10,11 @@ import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
 import javafx.util.Pair;
 
+import logic.GhostSpawner;
 import object.Bullet;
 import object.Direction;
 
+import java.sql.SQLOutput;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.Random;
@@ -27,9 +30,10 @@ public class GamePanel extends Pane {
     private char[][] mapPattern = map.level1.getMapPattern();
     private int currentLevel = 1;
     private ArrayList<Bullet> bullets = new ArrayList<>();
+    private static ArrayList<Ghost> ghosts = new ArrayList<>();
     private Direction playerDirection = Direction.RIGHT;
 
-    private ArrayList<Pair<Integer,Integer>> positions = new ArrayList<>();
+    private static ArrayList<Pair<Integer,Integer>> spawnablePosition = new ArrayList<>();
     final Image pacmanUp = new Image("file:res/gif/pacmanup.gif", blockSize, blockSize, true, true);
     final Image pacmanDown = new Image("file:res/gif/pacmandown.gif", blockSize, blockSize, true, true);
     final Image pacmanLeft = new Image("file:res/gif/pacmanleft.gif", blockSize, blockSize, true, true);
@@ -37,8 +41,12 @@ public class GamePanel extends Pane {
     private Image currentPacmanImage = pacmanRight;
     final Image wall = new Image("file:res/gif/wall.png", blockSize, blockSize, true, true);
     final Image whiteDot = new Image("file:res/gif/whitedot.png", blockSize, blockSize, true, true);
-    final Image bulletImg = new Image("file:res/gif/bullet.gif", blockSize, blockSize, true, true);
-
+    final Image bulletRight = new Image("file:res/gif/bulletRight.gif", blockSize, blockSize, true, true);
+    final Image bulletUp = new Image("file:res/gif/bulletUp.gif", blockSize, blockSize, false, true);
+    final Image bulletLeft = new Image("file:res/gif/bulletLeft.gif", blockSize, blockSize, false, true);
+    final Image bulletDown = new Image("file:res/gif/bulletDown.gif", blockSize, blockSize, false, true);
+    final Image redGhost = new Image("file:res/gif/redghost.gif", blockSize, blockSize, true, true);
+    private long startTimeNano;
 
     public GamePanel() {
         screenWidth = blockSize * screenWidthBlocks;
@@ -50,6 +58,8 @@ public class GamePanel extends Pane {
 
         playerX = blockSize; // Start player at a specific position
         playerY = blockSize; // Start player at a specific position
+
+        updateSpawnablePosition();
 
         this.setOnKeyPressed(event -> {
             KeyCode code = event.getCode();
@@ -64,28 +74,47 @@ public class GamePanel extends Pane {
             } else if (code == KeyCode.ESCAPE) {
                 updateMap(getCurrentLevel() + 1);
             } else if (code == KeyCode.SPACE) {
-                System.out.println("Firing bullet");
+//                System.out.println("Firing bullet");
                 shootBullet();
             }
         });
 
         // Update empty position for future usage
-        updateEmptyPosition();
+        updateSpawnablePosition();
+
+        startTimeNano = System.nanoTime();
 
         new AnimationTimer() {
             @Override
             public void handle(long now) {
                 updateBullets();
                 repaint();
+                long elapsedTimeNano = System.nanoTime() - startTimeNano;
+                double elapsedTimeSeconds = elapsedTimeNano / 1_000_000_000.0;
+
+                if (elapsedTimeSeconds >= 15 && ghosts.size() < 3) {
+                    System.out.println("Elapsed time: " + elapsedTimeSeconds + " seconds");
+                    spawnGhost();
+                }
             }
         }.start();
     }
 
-    private void updateEmptyPosition() {
+    private void spawnGhost() {
+        logic.GhostSpawner.spawnGhost();
+
+        System.out.println("Ghost spawned at" + getGhosts().get(getGhosts().size() - 1).getX() + "," + getGhosts().get(getGhosts().size() - 1).getY());
+    }
+
+    // Update current spawn-able positions
+    private void updateSpawnablePosition() {
+
+        spawnablePosition.clear();
+
         for (int i = 0; i < 27; i++) {
             for (int j = 0; j < 48; j++) {
-                if (mapPattern[i][j] == 'O') {
-                    positions.add(new Pair<>(i, j));
+                if (mapPattern[i][j] == 'O' && i * blockSize != playerX && j * blockSize != playerY) {
+                    spawnablePosition.add(new Pair<>(i, j));
                 }
             }
         }
@@ -176,8 +205,17 @@ public class GamePanel extends Pane {
             }
         }
 
+        for (Ghost ghost : ghosts) {
+            gc.drawImage(redGhost, ghost.getY() * blockSize, ghost.getX() * blockSize);
+        }
+
         for (Bullet bullet : bullets) {
-            gc.drawImage(bulletImg, bullet.getX(), bullet.getY());
+            switch (bullet.getDirection()) {
+                case UP -> gc.drawImage(bulletUp, bullet.getX(), bullet.getY());
+                case DOWN -> gc.drawImage(bulletDown, bullet.getX(), bullet.getY());
+                case LEFT -> gc.drawImage(bulletLeft, bullet.getX(), bullet.getY());
+                default -> gc.drawImage(bulletRight, bullet.getX(), bullet.getY());
+            };
         }
 
         gc.drawImage(currentPacmanImage, getPlayerX(), getPlayerY());
@@ -235,8 +273,10 @@ public class GamePanel extends Pane {
         bullets.add(new Bullet(bulletX, bulletY, getPlayerDirection()));
     }
 
-    // Getter and setter methods
 
+
+
+    // Getter and setter methods
     public int getScreenWidth() {
         return screenWidth;
     }
@@ -313,11 +353,19 @@ public class GamePanel extends Pane {
         this.playerDirection = playerDirection;
     }
 
-    public ArrayList<Pair<Integer, Integer>> getPositions() {
-        return positions;
+    public static ArrayList<Pair<Integer, Integer>> getSpawnablePosition() {
+        return spawnablePosition;
     }
 
-    public void setPositions(ArrayList<Pair<Integer, Integer>> positions) {
-        this.positions = positions;
+    public void setSpawnablePosition(ArrayList<Pair<Integer, Integer>> spawnablePosition) {
+        GamePanel.spawnablePosition = spawnablePosition;
+    }
+
+    public static ArrayList<Ghost> getGhosts() {
+        return ghosts;
+    }
+
+    public void setGhosts(ArrayList<Ghost> ghosts) {
+        GamePanel.ghosts = ghosts;
     }
 }

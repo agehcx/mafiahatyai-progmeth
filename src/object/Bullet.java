@@ -35,4 +35,9 @@ public class Bullet {
     public int getY() {
         return y;
     }
+
+    public Direction getDirection() {
+        return direction;
+    }
 }
+
