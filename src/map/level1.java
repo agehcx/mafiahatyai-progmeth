@@ -36,7 +36,7 @@ public class level1 extends levelMap {
         return mapPattern;
     }
 
-    public void setMapPattern(char[][] mapPattern) {
+    public static void setMapPattern(char[][] mapPattern) {
         level1.mapPattern = mapPattern;
     }
 }
