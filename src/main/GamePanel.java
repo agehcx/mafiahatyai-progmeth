@@ -9,11 +9,12 @@ import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
 import javafx.util.Pair;
 
-import java.lang.reflect.Field;
-import java.sql.SQLOutput;
-import java.util.ArrayList;
-import java.util.Random;
+import object.Bullet;
+import object.Direction;
 
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.Random;
 
 public class GamePanel extends Pane {
     private int screenWidth;
@@ -25,13 +26,19 @@ public class GamePanel extends Pane {
     private final int screenHeightBlocks = 27;
     private char[][] mapPattern = map.level1.getMapPattern();
     private int currentLevel = 1;
+    private ArrayList<Bullet> bullets = new ArrayList<>();
+    private Direction playerDirection = Direction.RIGHT;
 
     private ArrayList<Pair<Integer,Integer>> positions = new ArrayList<>();
     final Image pacmanUp = new Image("file:res/gif/pacmanup.gif", blockSize, blockSize, true, true);
     final Image pacmanDown = new Image("file:res/gif/pacmandown.gif", blockSize, blockSize, true, true);
     final Image pacmanLeft = new Image("file:res/gif/pacmanleft.gif", blockSize, blockSize, true, true);
     final Image pacmanRight = new Image("file:res/gif/pacmanright.gif", blockSize, blockSize, true, true);
-    Image currentPacmanImage = pacmanRight;
+    private Image currentPacmanImage = pacmanRight;
+    final Image wall = new Image("file:res/gif/wall.png", blockSize, blockSize, true, true);
+    final Image whiteDot = new Image("file:res/gif/whitedot.png", blockSize, blockSize, true, true);
+    final Image bulletImg = new Image("file:res/gif/bullet.gif", blockSize, blockSize, true, true);
+
 
     public GamePanel() {
         screenWidth = blockSize * screenWidthBlocks;
@@ -56,6 +63,9 @@ public class GamePanel extends Pane {
                 movePlayer(blockSize, 0); // Move right
             } else if (code == KeyCode.ESCAPE) {
                 updateMap(getCurrentLevel() + 1);
+            } else if (code == KeyCode.SPACE) {
+                System.out.println("Firing bullet");
+                shootBullet();
             }
         });
 
@@ -65,6 +75,7 @@ public class GamePanel extends Pane {
         new AnimationTimer() {
             @Override
             public void handle(long now) {
+                updateBullets();
                 repaint();
             }
         }.start();
@@ -138,14 +149,10 @@ public class GamePanel extends Pane {
                 && mapPattern[newY / blockSize][newX / blockSize] != 'X') {
             setPlayerX(newX);
             setPlayerY(newY);
-            updatePacmanImage(dx, dy);
+            updateDirection(dx, dy);
             System.out.println("POSITION: [" + getPlayerY() / blockSize + ", " + getPlayerX() / blockSize + "]");
         }
     }
-
-    final Image wall = new Image("file:res/gif/wall.png", blockSize, blockSize, true, true);
-    final Image whiteDot = new Image("file:res/gif/whitedot.png", blockSize, blockSize, true, true);
-
 
     private void repaint() {
         Canvas canvas = new Canvas(screenWidth, screenHeight);
@@ -158,32 +165,78 @@ public class GamePanel extends Pane {
         for (int i = 0; i < screenHeightBlocks; i++) {
             for (int j = 0; j < screenWidthBlocks; j++) {
                 if (mapPattern[i][j] == 'X') {
-                    gc.setFill(Color.DARKGREY);
+                    gc.setFill(Color.GREEN);
                     gc.fillRect(j * blockSize, i * blockSize, blockSize, blockSize);
+//                    gc.drawImage(bullet, j * blockSize, i * blockSize);
+//                    gc.drawImage(wall, j * blockSize, i * blockSize);
                 } else if (mapPattern[i][j] == 'O') {
-                    gc.setFill(Color.BLACK);
+                    gc.setFill(Color.DARKGOLDENROD);
                     gc.fillRect(j * blockSize, i * blockSize, blockSize, blockSize);
                 }
             }
+        }
+
+        for (Bullet bullet : bullets) {
+            gc.drawImage(bulletImg, bullet.getX(), bullet.getY());
         }
 
         gc.drawImage(currentPacmanImage, getPlayerX(), getPlayerY());
         getChildren().setAll(canvas);
     }
 
-    private void updatePacmanImage(int dx, int dy) {
+    private void updateDirection(int dx, int dy) {
         if (dx > 0) { // Moving right
+            playerDirection = Direction.RIGHT;
             currentPacmanImage = pacmanRight;
         } else if (dx < 0) { // Moving left
+            playerDirection = Direction.LEFT;
             currentPacmanImage = pacmanLeft;
         } else if (dy > 0) { // Moving down
+            playerDirection = Direction.DOWN;
             currentPacmanImage = pacmanDown;
         } else if (dy < 0) { // Moving up
+            playerDirection = Direction.UP;
             currentPacmanImage = pacmanUp;
         }
     }
 
+    private void updateBullets() {
+        Iterator<Bullet> iterator = bullets.iterator();
+        while (iterator.hasNext()) {
+            Bullet bullet = iterator.next();
+            bullet.move(blockSize);
+            if (bulletHitsWall(bullet.getX(), bullet.getY())) {
+                iterator.remove(); // Safely removes the current bullet from the list
+            }
+        }
+    }
+
+    private boolean bulletHitsWall(int x, int y) {
+        return mapPattern[y / blockSize][x / blockSize] == 'X';
+    }
+
+    private void shootBullet() {
+        int bulletX = playerX;
+        int bulletY = playerY;
+        switch (getPlayerDirection()) {
+            case UP:
+                bulletY -= blockSize / 2;
+                break;
+            case DOWN:
+                bulletY += blockSize / 2;
+                break;
+            case LEFT:
+                bulletX -= blockSize / 2;
+                break;
+            case RIGHT:
+                bulletX += blockSize / 2;
+                break;
+        }
+        bullets.add(new Bullet(bulletX, bulletY, getPlayerDirection()));
+    }
+
     // Getter and setter methods
+
     public int getScreenWidth() {
         return screenWidth;
     }
@@ -242,6 +295,22 @@ public class GamePanel extends Pane {
 
     public void setCurrentLevel(int currentLevel) {
         this.currentLevel = currentLevel;
+    }
+
+    public ArrayList<Bullet> getBullets() {
+        return bullets;
+    }
+
+    public void setBullets(ArrayList<Bullet> bullets) {
+        this.bullets = bullets;
+    }
+
+    public Direction getPlayerDirection() {
+        return playerDirection;
+    }
+
+    public void setPlayerDirection(Direction playerDirection) {
+        this.playerDirection = playerDirection;
     }
 
     public ArrayList<Pair<Integer, Integer>> getPositions() {

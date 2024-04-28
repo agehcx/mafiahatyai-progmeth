@@ -8,9 +8,21 @@ class main.GamePanel {
 - int screenWidthBlocks
 - int screenHeightBlocks
 - char[][] mapPattern
+- int currentLevel
+- ArrayList<Pair<Integer,Integer>> positions
+~ Image pacmanUp
+~ Image pacmanDown
+~ Image pacmanLeft
+~ Image pacmanRight
+~ Image currentPacmanImage
+~ Image wall
+~ Image whiteDot
 + <<Create>> GamePanel()
+- void updateEmptyPosition()
+- void updateMap(int)
 - void movePlayer(int,int)
 - void repaint()
+- void updatePacmanImage(int,int)
 + int getScreenWidth()
 + void setScreenWidth(int)
 + int getScreenHeight()
@@ -19,14 +31,59 @@ class main.GamePanel {
 + void setPlayerX(int)
 + int getPlayerY()
 + void setPlayerY(int)
-}
++ int getBlockSize()
++ int getScreenWidthBlocks()
++ int getScreenHeightBlocks()
++ char[][] getMapPattern()
++ void setMapPattern(char[][])
++ int getCurrentLevel()
++ void setCurrentLevel(int)
++ ArrayList<Pair<Integer,Integer>> getPositions()
++ void setPositions(ArrayList<Pair<Integer,Integer>>)
+}note left of main.GamePanel::blockSize
+ Size of each block
+end note
+note left of main.GamePanel::getScreenWidth()
+ Getter and setter methods
+end note
+
 class logic.ChangeMap {
 }
 class map.levelMap {
 - {static} char[][] mapPattern
+- {static} ArrayList<Pair<Integer,Integer>> pos
+- {static} ArrayList<Pair<Integer,Integer>> updateEmptyPosition()
+- {static} ArrayList<Pair<Integer,Integer>> getCurrentPosition()
++ {static} char[][] getMapPattern()
++ {static} void setMapPattern(char[][])
++ {static} ArrayList<Pair<Integer,Integer>> getPos()
++ {static} void setPos(ArrayList<Pair<Integer,Integer>>)
+}
+class map.level5 {
+- {static} char[][] mapPattern
++ {static} char[][] getMapPattern()
++ {static} void setMapPattern(char[][])
+}
+class ghost.Ghost {
+- int x
+- int y
+- int speed
++ <<Create>> Ghost()
++ <<Create>> Ghost(int,int,int)
++ int getX()
++ void setX(int)
++ int getY()
++ void setY(int)
++ int getSpeed()
++ void setSpeed(int)
 }
 class logic.GameInstance {
 + <<Create>> GameInstance()
+}
+class ghost.SpeedyGhost {
++ <<Create>> SpeedyGhost()
++ <<Create>> SpeedyGhost(int,int)
++ <<Create>> SpeedyGhost(int,int,int)
 }
 class component.RetroFont {
 + <<Create>> RetroFont(String,Integer,Paint)
@@ -41,7 +98,7 @@ class component.SupermarketFont {
 class map.level2 {
 - {static} char[][] mapPattern
 + {static} char[][] getMapPattern()
-+ void setMapPattern(char[][])
++ {static} void setMapPattern(char[][])
 }
 class scene.HomeScreen {
 - Stage stage
@@ -62,22 +119,29 @@ class scene.HomeScreen {
 - void stageSetup()
 + {static} StackPane getRoot()
 + {static} Scene getScene()
-}
-class main.KeyHandler {
-+ boolean upPressed
-+ void keyTyped(KeyEvent)
-+ void keyPressed(KeyEvent)
-+ void keyReleased(KeyEvent)
+}note left of scene.HomeScreen::fullScreen
+ Edit full screen
+end note
+
+class map.level4 {
+- {static} char[][] mapPattern
++ {static} char[][] getMapPattern()
++ {static} void setMapPattern(char[][])
 }
 class map.level1 {
 - {static} char[][] mapPattern
 + {static} char[][] getMapPattern()
-+ void setMapPattern(char[][])
++ {static} void setMapPattern(char[][])
 }
 class component.BBFont {
 + <<Create>> BBFont(String,Integer,Paint)
 + <<Create>> BBFont(String,Integer)
 + <<Create>> BBFont(String)
+}
+class map.level3 {
+- {static} char[][] mapPattern
++ {static} char[][] getMapPattern()
++ {static} void setMapPattern(char[][])
 }
 class scene.LoadingScreen {
 - ImageView imageView
@@ -102,12 +166,15 @@ class component.TekoFont {
 
 
 javafx.scene.layout.Pane <|-- main.GamePanel
+map.levelMap <|-- map.level5
+ghost.Ghost <|-- ghost.SpeedyGhost
 javafx.scene.text.Text <|-- component.RetroFont
 javafx.scene.text.Text <|-- component.SupermarketFont
 map.levelMap <|-- map.level2
-java.awt.event.KeyListener <|.. main.KeyHandler
+map.levelMap <|-- map.level4
 map.levelMap <|-- map.level1
 javafx.scene.text.Text <|-- component.BBFont
+map.levelMap <|-- map.level3
 javafx.fxml.Initializable <|.. scene.LoadingScreen
 javafx.scene.layout.StackPane <|-- component.GameButton
 javafx.application.Application <|-- main.Main
