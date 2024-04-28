@@ -12,6 +12,11 @@ public class Ghost {
         this.speed = 1;
     }
 
+    public Ghost(int x, int y) {
+        this.x = x;
+        this.y = y;
+    }
+
     public Ghost(int x, int y, int speed) {
         this.x = x;
         this.y = y;

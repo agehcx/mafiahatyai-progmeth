@@ -9,20 +9,33 @@ class main.GamePanel {
 - int screenHeightBlocks
 - char[][] mapPattern
 - int currentLevel
-- ArrayList<Pair<Integer,Integer>> positions
+- ArrayList<Bullet> bullets
+- {static} ArrayList<Ghost> ghosts
+- Direction playerDirection
+- {static} ArrayList<Pair<Integer,Integer>> spawnablePosition
 ~ Image pacmanUp
 ~ Image pacmanDown
 ~ Image pacmanLeft
 ~ Image pacmanRight
-~ Image currentPacmanImage
+- Image currentPacmanImage
 ~ Image wall
 ~ Image whiteDot
+~ Image bulletRight
+~ Image bulletUp
+~ Image bulletLeft
+~ Image bulletDown
+~ Image redGhost
+- long startTimeNano
 + <<Create>> GamePanel()
-- void updateEmptyPosition()
+- void spawnGhost()
+- void updateSpawnablePosition()
 - void updateMap(int)
 - void movePlayer(int,int)
 - void repaint()
-- void updatePacmanImage(int,int)
+- void updateDirection(int,int)
+- void updateBullets()
+- boolean bulletHitsWall(int,int)
+- void shootBullet()
 + int getScreenWidth()
 + void setScreenWidth(int)
 + int getScreenHeight()
@@ -38,15 +51,15 @@ class main.GamePanel {
 + void setMapPattern(char[][])
 + int getCurrentLevel()
 + void setCurrentLevel(int)
-+ ArrayList<Pair<Integer,Integer>> getPositions()
-+ void setPositions(ArrayList<Pair<Integer,Integer>>)
-}note left of main.GamePanel::blockSize
- Size of each block
-end note
-note left of main.GamePanel::getScreenWidth()
- Getter and setter methods
-end note
-
++ ArrayList<Bullet> getBullets()
++ void setBullets(ArrayList<Bullet>)
++ Direction getPlayerDirection()
++ void setPlayerDirection(Direction)
++ {static} ArrayList<Pair<Integer,Integer>> getSpawnablePosition()
++ void setSpawnablePosition(ArrayList<Pair<Integer,Integer>>)
++ {static} ArrayList<Ghost> getGhosts()
++ void setGhosts(ArrayList<Ghost>)
+}
 class logic.ChangeMap {
 }
 class map.levelMap {
@@ -77,6 +90,21 @@ class ghost.Ghost {
 + int getSpeed()
 + void setSpeed(int)
 }
+class object.Bullet {
+- int x
+- int y
+- Direction direction
++ <<Create>> Bullet(int,int,Direction)
++ void move(int)
++ int getX()
++ int getY()
++ Direction getDirection()
+}
+class logic.GhostSpawner {
+~ {static} ArrayList<Pair<Integer,Integer>> spawnablePosition
+~ {static} ArrayList<Ghost> ghosts
++ {static} ArrayList<Ghost> spawnGhost()
+}
 class logic.GameInstance {
 + <<Create>> GameInstance()
 }
@@ -94,6 +122,12 @@ class component.SupermarketFont {
 + <<Create>> SupermarketFont(String,Integer,Paint)
 + <<Create>> SupermarketFont(String,Integer)
 + <<Create>> SupermarketFont(String)
+}
+enum object.Direction {
++  UP
++  DOWN
++  LEFT
++  RIGHT
 }
 class map.level2 {
 - {static} char[][] mapPattern
@@ -119,10 +153,7 @@ class scene.HomeScreen {
 - void stageSetup()
 + {static} StackPane getRoot()
 + {static} Scene getScene()
-}note left of scene.HomeScreen::fullScreen
- Edit full screen
-end note
-
+}
 class map.level4 {
 - {static} char[][] mapPattern
 + {static} char[][] getMapPattern()

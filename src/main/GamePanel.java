@@ -1,12 +1,16 @@
 package main;
 
 import ghost.Ghost;
+import ghost.SpeedyGhost;
 import javafx.animation.AnimationTimer;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.image.Image;
 import javafx.scene.input.KeyCode;
 import javafx.scene.layout.Pane;
+import javafx.scene.media.AudioClip;
+import javafx.scene.media.Media;
+import javafx.scene.media.MediaPlayer;
 import javafx.scene.paint.Color;
 import javafx.util.Pair;
 
@@ -14,9 +18,11 @@ import logic.GhostSpawner;
 import object.Bullet;
 import object.Direction;
 
+import java.io.File;
 import java.sql.SQLOutput;
 import java.util.ArrayList;
 import java.util.Iterator;
+import java.util.Objects;
 import java.util.Random;
 
 public class GamePanel extends Pane {
@@ -32,8 +38,12 @@ public class GamePanel extends Pane {
     private ArrayList<Bullet> bullets = new ArrayList<>();
     private static ArrayList<Ghost> ghosts = new ArrayList<>();
     private Direction playerDirection = Direction.RIGHT;
-
     private static ArrayList<Pair<Integer,Integer>> spawnablePosition = new ArrayList<>();
+    Media buzzer = new Media(new File("res/sound/pewpew.mp3").toURI().toString());
+    MediaPlayer mediaPlayer = new MediaPlayer(buzzer);
+    private int currentPoint = 0;
+
+    // Image resources
     final Image pacmanUp = new Image("file:res/gif/pacmanup.gif", blockSize, blockSize, true, true);
     final Image pacmanDown = new Image("file:res/gif/pacmandown.gif", blockSize, blockSize, true, true);
     final Image pacmanLeft = new Image("file:res/gif/pacmanleft.gif", blockSize, blockSize, true, true);
@@ -76,6 +86,10 @@ public class GamePanel extends Pane {
             } else if (code == KeyCode.SPACE) {
 //                System.out.println("Firing bullet");
                 shootBullet();
+//                pewPewSound.play();
+                mediaPlayer.setVolume(0.025);
+                mediaPlayer.play();
+
             }
         });
 
@@ -87,13 +101,16 @@ public class GamePanel extends Pane {
         new AnimationTimer() {
             @Override
             public void handle(long now) {
+
                 updateBullets();
+                updateBulletGhostCollisions();
                 repaint();
+
                 long elapsedTimeNano = System.nanoTime() - startTimeNano;
                 double elapsedTimeSeconds = elapsedTimeNano / 1_000_000_000.0;
 
-                if (elapsedTimeSeconds >= 15 && ghosts.size() < 3) {
-                    System.out.println("Elapsed time: " + elapsedTimeSeconds + " seconds");
+                if (elapsedTimeSeconds >= 5 && ghosts.size() < 1) {
+//                    System.out.println("Elapsed time: " + elapsedTimeSeconds + " seconds");
                     spawnGhost();
                 }
             }
@@ -103,7 +120,7 @@ public class GamePanel extends Pane {
     private void spawnGhost() {
         logic.GhostSpawner.spawnGhost();
 
-        System.out.println("Ghost spawned at" + getGhosts().get(getGhosts().size() - 1).getX() + "," + getGhosts().get(getGhosts().size() - 1).getY());
+        System.out.println("Ghost spawned at " + getGhosts().get(getGhosts().size() - 1).getX() + "," + getGhosts().get(getGhosts().size() - 1).getY());
     }
 
     // Update current spawn-able positions
@@ -120,6 +137,7 @@ public class GamePanel extends Pane {
         }
     }
 
+    // to-be moved to logic
     private void updateMap(int level) {
 
         char[][] loadedMap = mapPattern;
@@ -179,7 +197,7 @@ public class GamePanel extends Pane {
             setPlayerX(newX);
             setPlayerY(newY);
             updateDirection(dx, dy);
-            System.out.println("POSITION: [" + getPlayerY() / blockSize + ", " + getPlayerX() / blockSize + "]");
+//            System.out.println("POSITION: [" + getPlayerY() / blockSize + ", " + getPlayerX() / blockSize + "]");
         }
     }
 
@@ -253,6 +271,7 @@ public class GamePanel extends Pane {
         return mapPattern[y / blockSize][x / blockSize] == 'X';
     }
 
+    // to-be moved to logic
     private void shootBullet() {
         int bulletX = playerX;
         int bulletY = playerY;
@@ -273,10 +292,39 @@ public class GamePanel extends Pane {
         bullets.add(new Bullet(bulletX, bulletY, getPlayerDirection()));
     }
 
+    private void updateBulletGhostCollisions() {
+        Iterator<Bullet> bulletIterator = bullets.iterator();
+        while (bulletIterator.hasNext()) {
+            Bullet bullet = bulletIterator.next();
+            Iterator<Ghost> ghostIterator = ghosts.iterator();
+            while (ghostIterator.hasNext()) {
+                Ghost ghost = ghostIterator.next();
+                // Check if the coordinates of the bullet intersect with the coordinates of the ghost
+//                System.out.println("BL " + bullet.getX() + ',' + bullet.getY());
+//                System.out.println("GH " + ghost.getX() * blockSize + ',' + ghost.getY() * blockSize);
+                if (    bullet.getY() >= ghost.getX() * blockSize - blockSize * 0.25 &&
+                        bullet.getY() <= ghost.getX() * blockSize + blockSize * 1.25 &&
+                        bullet.getX() >= ghost.getY() * blockSize - blockSize * 0.25 &&
+                        bullet.getX() <= ghost.getY() * blockSize + blockSize * 1.25    ) {
+                    // Remove the bullet and ghost upon collision
+                    bulletIterator.remove();
+                    ghostIterator.remove();
 
+                    if (ghost instanceof Ghost) {
+                        setCurrentPoint(getCurrentPoint() + 10);
+                    } else if (ghost instanceof SpeedyGhost) {
+                        setCurrentPoint(getCurrentPoint() + 20);
+                    }
+                    System.out.println("Current Point : " + getCurrentPoint() );
+                    break; // Exit the inner loop since the bullet can only hit one ghost
+                }
+            }
+        }
+    }
 
 
     // Getter and setter methods
+
     public int getScreenWidth() {
         return screenWidth;
     }
@@ -367,5 +415,13 @@ public class GamePanel extends Pane {
 
     public void setGhosts(ArrayList<Ghost> ghosts) {
         GamePanel.ghosts = ghosts;
+    }
+
+    public int getCurrentPoint() {
+        return currentPoint;
+    }
+
+    public void setCurrentPoint(int currentPoint) {
+        this.currentPoint = currentPoint;
     }
 }

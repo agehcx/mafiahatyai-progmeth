@@ -17,7 +17,9 @@ import javafx.stage.Stage;
 import logic.GameInstance;
 import main.GamePanel;
 
+import java.awt.*;
 import java.io.IOException;
+import java.net.URI;
 import java.util.Objects;
 
 public class HomeScreen {
@@ -80,7 +82,7 @@ public class HomeScreen {
         tutorialButton.addEventHandler(MouseEvent.MOUSE_CLICKED, new EventHandler<MouseEvent>() {
             public void handle(MouseEvent e) {
                 try {
-//                    Desktop.getDesktop().browse(new URI("https://www.youtube.com"));
+                    Desktop.getDesktop().browse(new URI("https://www.github.com"));
                 } catch (Exception err) {
                     err.printStackTrace();
                 }
