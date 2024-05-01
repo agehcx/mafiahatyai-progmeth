@@ -8,6 +8,8 @@ import component.TekoFont;
 import javafx.event.EventHandler;
 import javafx.fxml.FXMLLoader;
 import javafx.geometry.Pos;
+import javafx.scene.Node;
+import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.image.Image;
 import javafx.scene.input.MouseEvent;
@@ -75,7 +77,21 @@ public class HomeScreen {
         playButton.addEventHandler(MouseEvent.MOUSE_CLICKED, new EventHandler<MouseEvent>() {
             public void handle(MouseEvent e) {
                 // Handle play button click event
-                root.getChildren().add(new GamePanel());
+//                root.getChildren().add(new GamePanel());
+                // Handle play button click event
+                FXMLLoader gamePage = new FXMLLoader(getClass().getResource("GamePage.fxml"));
+                Parent rootGame = null;
+                try {
+                    rootGame = gamePage.load();
+                } catch (IOException ex) {
+                    throw new RuntimeException(ex);
+                }
+
+                // Get the current scene
+                Scene currentScene = ((Node)e.getSource()).getScene();
+
+                // Replace the current scene's root with the new root
+                currentScene.setRoot(rootGame);
             }
         });
 
@@ -117,13 +133,13 @@ public class HomeScreen {
 
         root = new StackPane();
 
-        root.setPrefSize(1200, 675);
+        root.setPrefSize(1280, 765);
 
 //        root.setPrefSize(1053, 593);
 //        Fixed resolution size for game collision rule
         root.setBackground(new Background(new BackgroundImage(new Image("file:res/img/background.jpg"), BackgroundRepeat.NO_REPEAT,
                 BackgroundRepeat.NO_REPEAT, BackgroundPosition.CENTER,
-                new BackgroundSize(1280, 720, false, false, false, false))));
+                new BackgroundSize(1280, 765, false, false, false, false))));
 
         scene = new Scene(root);
 

@@ -50,7 +50,8 @@ public class GamePanel extends Pane {
     final Image pacmanLeft = new Image("file:res/gif/pacmanleft.gif", blockSize, blockSize, true, true);
     final Image pacmanRight = new Image("file:res/gif/pacmanright.gif", blockSize, blockSize, true, true);
     private Image currentPacmanImage = pacmanRight;
-    final Image wall = new Image("file:res/gif/wall.png", blockSize, blockSize, true, true);
+    public Image wall = new Image("file:res/gif/grass.jpg", blockSize, blockSize, true, true);
+    public Image footPath = new Image("file:res/gif/rock.jpg", blockSize, blockSize, true, true);
     final Image whiteDot = new Image("file:res/gif/whitedot.png", blockSize, blockSize, true, true);
     final Image bulletRight = new Image("file:res/gif/bulletRight.gif", blockSize, blockSize, true, true);
     final Image bulletUp = new Image("file:res/gif/bulletUp.gif", blockSize, blockSize, false, true);
@@ -150,11 +151,31 @@ public class GamePanel extends Pane {
         ArrayList<Pair<Integer,Integer>> loadedPosition = new ArrayList<>();
 
         switch (level) {
-            case 1 -> loadedMap = map.level1.getMapPattern();
-            case 2 -> loadedMap = map.level2.getMapPattern();
-            case 3 -> loadedMap = map.level3.getMapPattern();
-            case 4 -> loadedMap = map.level4.getMapPattern();
-            case 5 -> loadedMap = map.level5.getMapPattern();
+            case 1 -> {
+                loadedMap = map.level1.getMapPattern();
+                wall = new Image("file:res/gif/grass.jpg", blockSize, blockSize, true, true);
+                footPath = new Image("file:res/gif/rock.jpg", blockSize, blockSize, true, true);
+            }
+            case 2 -> {
+                loadedMap = map.level2.getMapPattern();
+                wall = new Image("file:res/gif/wood.jpg", blockSize, blockSize, true, true);
+                footPath = new Image("file:res/gif/grass.jpg", blockSize, blockSize, true, true);
+            }
+            case 3 -> {
+                loadedMap = map.level3.getMapPattern();
+                wall = new Image("file:res/gif/water.jpg", blockSize, blockSize, true, true);
+                footPath = new Image("file:res/gif/wood.jpg", blockSize, blockSize, true, true);
+            }
+            case 4 -> {
+                loadedMap = map.level4.getMapPattern();
+                wall = new Image("file:res/gif/fire.jpg", blockSize, blockSize, true, true);
+                footPath = new Image("file:res/gif/rock.jpg", blockSize, blockSize, true, true);
+            }
+            case 5 -> {
+                loadedMap = map.level5.getMapPattern();
+                wall = new Image("file:res/gif/water.jpg", blockSize, blockSize, true, true);
+                footPath = new Image("file:res/gif/grass.jpg", blockSize, blockSize, true, true);
+            }
             default -> {
                 if (level > 5) {
 //                    System.out.println("Exceed level limit.");
@@ -224,7 +245,8 @@ public class GamePanel extends Pane {
                     gc.drawImage(wall, j * blockSize, i * blockSize);
                 } else if (mapPattern[i][j] == 'O') {
                     gc.setFill(Color.LIGHTGRAY);
-                    gc.fillRect(j * blockSize, i * blockSize, blockSize, blockSize);
+                    gc.drawImage(footPath, j * blockSize, i * blockSize);
+//                    gc.fillRect(j * blockSize, i * blockSize, blockSize, blockSize);
                 }
             }
         }
