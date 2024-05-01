@@ -1,6 +1,7 @@
 package main;
 
 import javafx.application.Application;
+import javafx.scene.Scene;
 import javafx.stage.Stage;
 
 import scene.HomeScreen;
@@ -21,6 +22,7 @@ public class Main extends Application {
 //         Set the scene to the primary stage
 //        primaryStage.setScene(scene);
         new HomeScreen(primaryStage);
+//        primaryStage.setScene(new Scene(new HomeScreen(), 1280, 765));
 
         primaryStage.setTitle("Hatyai Tycoon");
         primaryStage.setResizable(false);

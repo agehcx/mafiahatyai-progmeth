@@ -1,0 +1,27 @@
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.BorderPane?>
+<?import javafx.scene.layout.VBox?>
+<?import main.GamePanel?>
+
+<BorderPane fx:controller="main.GamePanel" style="-fx-background-color: black;" xmlns:fx="http://javafx.com/fxml">
+    <top>
+<!--        <BorderPane prefHeight="35" style="-fx-background-color: #0B5091; -fx-padding: 10px, 5px, 10px, 5px" >-->
+<!--            <left><Label fx:id="pointLabel" style="-fx-font-size: 150%; -fx-text-fill: white" /></left>-->
+<!--&lt;!&ndash;            <center><Label fx:id="levelLabel" style="-fx-font-size: 150%; -fx-text-fill: white" /></center>&ndash;&gt;-->
+<!--            <right><Label fx:id="levelLabel" style="-fx-font-size: 150%; -fx-text-fill: white"/></right>-->
+<!--        </BorderPane>-->
+    </top>
+
+    <center>
+        <GamePanel/>
+    </center>
+
+    <bottom>
+        <HBox prefHeight="35" style="-fx-padding: 10px, 5px, 10px, 5px; -fx-background-color: #FF93AC">
+<!--            <Label style="-fx-font-size: 140%; -fx-text-fill: white" text="Press E to buy keys."/>-->
+<!--            <Label fx:id="pointLabel" style="-fx-font-size: 140%; -fx-text-fill: white"/>-->
+<!--            <Label fx:id="levelLabel" style="-fx-font-size: 140%; -fx-text-fill: white"/>-->
+        </HBox>
+    </bottom>
+</BorderPane>

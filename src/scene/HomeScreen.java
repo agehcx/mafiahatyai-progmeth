@@ -77,23 +77,22 @@ public class HomeScreen {
         playButton.addEventHandler(MouseEvent.MOUSE_CLICKED, new EventHandler<MouseEvent>() {
             public void handle(MouseEvent e) {
                 // Handle play button click event
-//                root.getChildren().add(new GamePanel());
-                // Handle play button click event
-                FXMLLoader gamePage = new FXMLLoader(getClass().getResource("GamePage.fxml"));
-                Parent rootGame = null;
+                FXMLLoader gamePageLoader = new FXMLLoader(getClass().getResource("GamePage.fxml"));
                 try {
-                    rootGame = gamePage.load();
+                    Parent rootGame = gamePageLoader.load();
+                    GamePanel controller = gamePageLoader.getController();
+
+                    // Get the current scene
+                    Scene currentScene = playButton.getScene();
+
+                    // Replace the current scene's root with the new root
+                    currentScene.setRoot(rootGame);
                 } catch (IOException ex) {
                     throw new RuntimeException(ex);
                 }
-
-                // Get the current scene
-                Scene currentScene = ((Node)e.getSource()).getScene();
-
-                // Replace the current scene's root with the new root
-                currentScene.setRoot(rootGame);
             }
         });
+
 
         tutorialButton.addEventHandler(MouseEvent.MOUSE_CLICKED, new EventHandler<MouseEvent>() {
             public void handle(MouseEvent e) {
