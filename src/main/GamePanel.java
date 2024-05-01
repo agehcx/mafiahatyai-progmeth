@@ -51,6 +51,16 @@ public class GamePanel extends Pane {
     final Image pacmanRight = new Image("file:res/gif/pacmanright.gif", blockSize, blockSize, true, true);
     private Image currentPacmanImage = pacmanRight;
     final Image wall = new Image("file:res/gif/wall.png", blockSize, blockSize, true, true);
+    final Image grass0 = new Image("file:res/tilemap/grass0.png", blockSize, blockSize, true, true);
+    final Image grass1 = new Image("file:res/tilemap/grass1.png", blockSize, blockSize, true, true);
+    final Image grass2 = new Image("file:res/tilemap/grass2.png", blockSize, blockSize, true, true);
+    final Image grass3 = new Image("file:res/tilemap/grass3.png", blockSize, blockSize, true, true);
+    final Image grass4 = new Image("file:res/tilemap/grass4.png", blockSize, blockSize, true, true);
+    final Image grass5 = new Image("file:res/tilemap/grass5.png", blockSize, blockSize, true, true);
+    final Image grass6 = new Image("file:res/tilemap/grass6.png", blockSize, blockSize, true, true);
+    final Image grass7 = new Image("file:res/tilemap/grass7.png", blockSize, blockSize, true, true);
+    final Image grass8 = new Image("file:res/tilemap/grass8.png", blockSize, blockSize, true, true);
+    final Image grass9 = new Image("file:res/tilemap/grass9.png", blockSize, blockSize, true, true);
     final Image whiteDot = new Image("file:res/gif/whitedot.png", blockSize, blockSize, true, true);
     final Image bulletRight = new Image("file:res/gif/bulletRight.gif", blockSize, blockSize, true, true);
     final Image bulletUp = new Image("file:res/gif/bulletUp.gif", blockSize, blockSize, false, true);
@@ -223,8 +233,18 @@ public class GamePanel extends Pane {
 //                    gc.drawImage(bullet, j * blockSize, i * blockSize);
                     gc.drawImage(wall, j * blockSize, i * blockSize);
                 } else if (mapPattern[i][j] == 'O') {
-                    gc.setFill(Color.LIGHTGRAY);
-                    gc.fillRect(j * blockSize, i * blockSize, blockSize, blockSize);
+                    Random random = new Random();
+                    int rndNum = random.nextInt(5);
+
+//                    gc.setFill(Color.LIGHTGRAY);
+                    switch (rndNum) {
+                        case 0 -> gc.drawImage(grass5, j * blockSize, i * blockSize);
+                        case 1 -> gc.drawImage(grass6, j * blockSize, i * blockSize);
+                        case 2 -> gc.drawImage(grass7, j * blockSize, i * blockSize);
+                        case 3 -> gc.drawImage(grass8, j * blockSize, i * blockSize);
+                        case 4 -> gc.drawImage(grass9, j * blockSize, i * blockSize);
+                    }
+
                 }
             }
         }
