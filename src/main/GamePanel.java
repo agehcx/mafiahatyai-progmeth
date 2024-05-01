@@ -56,13 +56,13 @@ public class GamePanel extends Pane {
     private int currentPoint = 0;
     private int currentLevel = 1;
     // Image resources
-    final Image pacmanUp = new Image("file:res/gif/pacmanup.gif", blockSize, blockSize, true, true);
-    final Image pacmanDown = new Image("file:res/gif/pacmandown.gif", blockSize, blockSize, true, true);
-    final Image pacmanLeft = new Image("file:res/gif/pacmanleft.gif", blockSize, blockSize, true, true);
-    final Image pacmanRight = new Image("file:res/gif/pacmanright.gif", blockSize, blockSize, true, true);
-    private Image currentPacmanImage = pacmanRight;
-    public Image wall = new Image("file:res/gif/grass.jpg", blockSize, blockSize, true, true);
-    public Image footPath = new Image("file:res/gif/rock.jpg", blockSize, blockSize, true, true);
+    private Image characterUp = new Image("file:res/character/manUp.png", blockSize*1.2, blockSize*1.2, true, true);
+    private Image characterDown = new Image("file:res/character/manDown.png", blockSize*1.2, blockSize*1.2, true, true);
+    private Image characterLeft = new Image("file:res/character/manLeft.png", blockSize*1.2, blockSize*1.2, true, true);
+    private Image characterRight = new Image("file:res/character/manRight.png", blockSize*1.2, blockSize*1.2, true, true);
+    private Image currentCharacterImage = characterRight;
+    private Image wall = new Image("file:res/gif/grass.jpg", blockSize, blockSize, true, true);
+    private Image footPath = new Image("file:res/gif/rock.jpg", blockSize, blockSize, true, true);
     final Image whiteDot = new Image("file:res/gif/whitedot.png", blockSize, blockSize, true, true);
     final Image bulletRight = new Image("file:res/gif/bulletRight.gif", blockSize, blockSize, true, true);
     final Image bulletUp = new Image("file:res/gif/bulletUp.gif", blockSize, blockSize, false, true);
@@ -192,28 +192,28 @@ public class GamePanel extends Pane {
         switch (level) {
             case 1 -> {
                 loadedMap = map.level1.getMapPattern();
-                wall = new Image("file:res/gif/grass.jpg", blockSize, blockSize, true, true);
-                footPath = new Image("file:res/gif/rock.jpg", blockSize, blockSize, true, true);
+                setWall(new Image("file:res/gif/grass.jpg", blockSize, blockSize, true, true));
+                setFootPath(new Image("file:res/gif/rock.jpg", blockSize, blockSize, true, true));
             }
             case 2 -> {
                 loadedMap = map.level2.getMapPattern();
-                wall = new Image("file:res/gif/wood.jpg", blockSize, blockSize, true, true);
-                footPath = new Image("file:res/gif/grass.jpg", blockSize, blockSize, true, true);
+                setWall(new Image("file:res/gif/wood.jpg", blockSize, blockSize, true, true));
+                setFootPath(new Image("file:res/gif/grass.jpg", blockSize, blockSize, true, true));
             }
             case 3 -> {
                 loadedMap = map.level3.getMapPattern();
-                wall = new Image("file:res/gif/water.jpg", blockSize, blockSize, true, true);
-                footPath = new Image("file:res/gif/wood.jpg", blockSize, blockSize, true, true);
+                setWall(new Image("file:res/gif/water.jpg", blockSize, blockSize, true, true));
+                setFootPath(new Image("file:res/gif/wood.jpg", blockSize, blockSize, true, true));
             }
             case 4 -> {
                 loadedMap = map.level4.getMapPattern();
-                wall = new Image("file:res/gif/fire.jpg", blockSize, blockSize, true, true);
-                footPath = new Image("file:res/gif/rock.jpg", blockSize, blockSize, true, true);
+                setWall(new Image("file:res/gif/fire.jpg", blockSize, blockSize, true, true));
+                setFootPath(new Image("file:res/gif/rock.jpg", blockSize, blockSize, true, true));
             }
             case 5 -> {
                 loadedMap = map.level5.getMapPattern();
-                wall = new Image("file:res/gif/water.jpg", blockSize, blockSize, true, true);
-                footPath = new Image("file:res/gif/grass.jpg", blockSize, blockSize, true, true);
+                setWall(new Image("file:res/gif/water.jpg", blockSize, blockSize, true, true));
+                setFootPath(new Image("file:res/grass/rock.jpg", blockSize, blockSize, true, true));
             }
         };
 
@@ -286,9 +286,9 @@ public class GamePanel extends Pane {
                     gc.drawImage(footPath, j * blockSize, i * blockSize);
                     //gc.fillRect(j * blockSize, i * blockSize, blockSize, blockSize);
                 }
+
             }
         }
-
         for (Ghost ghost : ghosts) {
             gc.drawImage(redGhost, ghost.getY() * blockSize, ghost.getX() * blockSize);
         }
@@ -302,23 +302,23 @@ public class GamePanel extends Pane {
             };
         }
 
-        gc.drawImage(currentPacmanImage, getPlayerX(), getPlayerY());
+        gc.drawImage(currentCharacterImage, getPlayerX(), getPlayerY());
         getChildren().setAll(canvas);
     }
 
     private void updateDirection(int dx, int dy) {
         if (dx > 0) { // Moving right
             playerDirection = Direction.RIGHT;
-            currentPacmanImage = pacmanRight;
+            currentCharacterImage = characterRight;
         } else if (dx < 0) { // Moving left
             playerDirection = Direction.LEFT;
-            currentPacmanImage = pacmanLeft;
+            currentCharacterImage = characterLeft;
         } else if (dy > 0) { // Moving down
             playerDirection = Direction.DOWN;
-            currentPacmanImage = pacmanDown;
+            currentCharacterImage = characterDown;
         } else if (dy < 0) { // Moving up
             playerDirection = Direction.UP;
-            currentPacmanImage = pacmanUp;
+            currentCharacterImage = characterUp;
         }
     }
 
@@ -513,5 +513,53 @@ public class GamePanel extends Pane {
 
     public static GamePanel getInstance() {
         return instance;
+    }
+
+    public Image getWall() {
+        return wall;
+    }
+
+    public void setWall(Image wall) {
+        this.wall = wall;
+    }
+
+    public Image getFootPath() {
+        return footPath;
+    }
+
+    public void setFootPath(Image footPath) {
+        this.footPath = footPath;
+    }
+
+    public Image getCharacterUp() {
+        return characterUp;
+    }
+
+    public void setCharacterUp(Image characterUp) {
+        this.characterUp = characterUp;
+    }
+
+    public Image getCharacterDown() {
+        return characterDown;
+    }
+
+    public void setCharacterDown(Image characterDown) {
+        this.characterDown = characterDown;
+    }
+
+    public Image getCharacterLeft() {
+        return characterLeft;
+    }
+
+    public void setCharacterLeft(Image characterLeft) {
+        this.characterLeft = characterLeft;
+    }
+
+    public Image getCharacterRight() {
+        return characterRight;
+    }
+
+    public void setCharacterRight(Image characterRight) {
+        this.characterRight = characterRight;
     }
 }
