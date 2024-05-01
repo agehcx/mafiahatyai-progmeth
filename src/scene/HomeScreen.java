@@ -123,7 +123,7 @@ public class HomeScreen {
 //        Fixed resolution size for game collision rule
         root.setBackground(new Background(new BackgroundImage(new Image("file:res/img/background.jpg"), BackgroundRepeat.NO_REPEAT,
                 BackgroundRepeat.NO_REPEAT, BackgroundPosition.CENTER,
-                new BackgroundSize(1200, 675, false, false, false, false))));
+                new BackgroundSize(1280, 720, false, false, false, false))));
 
         scene = new Scene(root);
 

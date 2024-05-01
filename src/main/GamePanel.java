@@ -30,9 +30,9 @@ public class GamePanel extends Pane {
     private int screenHeight;
     private int playerX;
     private int playerY;
-    private final int blockSize = 25; // Size of each block
-    private final int screenWidthBlocks = 48;
-    private final int screenHeightBlocks = 27;
+    private final int blockSize = 40; // Size of each block
+    private final int screenWidthBlocks = 32;
+    private final int screenHeightBlocks = 18;
     private char[][] mapPattern = map.level1.getMapPattern();
     private int currentLevel = 1;
     private ArrayList<Bullet> bullets = new ArrayList<>();
@@ -60,8 +60,10 @@ public class GamePanel extends Pane {
     private long startTimeNano = 0;
 
     public GamePanel() {
-        screenWidth = blockSize * screenWidthBlocks;
-        screenHeight = blockSize * screenHeightBlocks;
+        double v = blockSize * (double) screenWidthBlocks;
+        screenWidth = (int) v;
+        double v1 = blockSize * (double) screenHeightBlocks;
+        screenHeight = (int) v1;
 
         this.setPrefSize(screenWidth, screenHeight);
         this.setStyle("-fx-background-color: black;");
@@ -132,8 +134,8 @@ public class GamePanel extends Pane {
 
         spawnablePosition.clear();
 
-        for (int i = 0; i < 27; i++) {
-            for (int j = 0; j < 48; j++) {
+        for (int i = 0; i < 18; i++) {
+            for (int j = 0; j < 32; j++) {
                 if (mapPattern[i][j] == 'O' && i * blockSize != playerX && j * blockSize != playerY) {
                     spawnablePosition.add(new Pair<>(i, j));
                 }
@@ -161,8 +163,8 @@ public class GamePanel extends Pane {
             }
         };
 
-        for (int i = 0; i < 27; i++) {
-            for (int j = 0; j < 48; j++) {
+        for (int i = 0; i < 18; i++) {
+            for (int j = 0; j < 32; j++) {
                 if (loadedMap[i][j] == 'O') {
                     loadedPosition.add(new Pair<>(i, j));
                 }

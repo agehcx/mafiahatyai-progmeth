@@ -12,8 +12,8 @@ public class levelMap {
 
         pos = new ArrayList<>();
 
-        for (int i = 0; i < 27; i++) {
-            for (int j = 0; j < 48; j++) {
+        for (int i = 0; i < 18; i++) {
+            for (int j = 0; j < 32; j++) {
                 if (mapPattern[i][j] == 'O') {
                     pos.add(new Pair<>(i, j));
                 }
