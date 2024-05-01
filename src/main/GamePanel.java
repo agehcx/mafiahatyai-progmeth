@@ -42,6 +42,7 @@ public class GamePanel extends Pane {
     Media buzzer = new Media(new File("res/sound/pewpew.mp3").toURI().toString());
     MediaPlayer mediaPlayer = new MediaPlayer(buzzer);
     private int currentPoint = 0;
+    private boolean hasGameEnded = false;
 
     // Image resources
     final Image pacmanUp = new Image("file:res/gif/pacmanup.gif", blockSize, blockSize, true, true);
@@ -56,7 +57,7 @@ public class GamePanel extends Pane {
     final Image bulletLeft = new Image("file:res/gif/bulletLeft.gif", blockSize, blockSize, false, true);
     final Image bulletDown = new Image("file:res/gif/bulletDown.gif", blockSize, blockSize, false, true);
     final Image redGhost = new Image("file:res/gif/redghost.gif", blockSize, blockSize, true, true);
-    private long startTimeNano;
+    private long startTimeNano = 0;
 
     public GamePanel() {
         screenWidth = blockSize * screenWidthBlocks;
@@ -102,6 +103,8 @@ public class GamePanel extends Pane {
             @Override
             public void handle(long now) {
 
+                if(hasGameEnded) return;
+
                 updateBullets();
                 updateBulletGhostCollisions();
                 repaint();
@@ -109,7 +112,7 @@ public class GamePanel extends Pane {
                 long elapsedTimeNano = System.nanoTime() - startTimeNano;
                 double elapsedTimeSeconds = elapsedTimeNano / 1_000_000_000.0;
 
-                if (elapsedTimeSeconds >= 5 && ghosts.size() < 1) {
+                if (elapsedTimeSeconds >= 5 && ghosts.size() < 5) {
 //                    System.out.println("Elapsed time: " + elapsedTimeSeconds + " seconds");
                     spawnGhost();
                 }
@@ -118,8 +121,9 @@ public class GamePanel extends Pane {
     }
 
     private void spawnGhost() {
-        logic.GhostSpawner.spawnGhost();
 
+        updateSpawnablePosition();
+        logic.GhostSpawner.spawnGhost();
         System.out.println("Ghost spawned at " + getGhosts().get(getGhosts().size() - 1).getX() + "," + getGhosts().get(getGhosts().size() - 1).getY());
     }
 
@@ -213,11 +217,11 @@ public class GamePanel extends Pane {
             for (int j = 0; j < screenWidthBlocks; j++) {
                 if (mapPattern[i][j] == 'X') {
                     gc.setFill(Color.GREEN);
-                    gc.fillRect(j * blockSize, i * blockSize, blockSize, blockSize);
+//                    gc.fillRect(j * blockSize, i * blockSize, blockSize, blockSize);
 //                    gc.drawImage(bullet, j * blockSize, i * blockSize);
-//                    gc.drawImage(wall, j * blockSize, i * blockSize);
+                    gc.drawImage(wall, j * blockSize, i * blockSize);
                 } else if (mapPattern[i][j] == 'O') {
-                    gc.setFill(Color.DARKGOLDENROD);
+                    gc.setFill(Color.LIGHTGRAY);
                     gc.fillRect(j * blockSize, i * blockSize, blockSize, blockSize);
                 }
             }
@@ -318,6 +322,23 @@ public class GamePanel extends Pane {
                     System.out.println("Current Point : " + getCurrentPoint() );
                     break; // Exit the inner loop since the bullet can only hit one ghost
                 }
+            }
+        }
+
+        for (Ghost ghost : ghosts) {
+            if (playerX == ghost.getY() * blockSize && playerY == ghost.getX() * blockSize) {
+                // Player collides with ghost, set current score to 0
+                setCurrentPoint(0);
+                System.out.println("Dead...");
+
+                playerX = 0;
+                playerY = 0;
+
+                ghosts.clear();
+
+                hasGameEnded = true;
+                // You might want to add additional game over logic here
+                break;
             }
         }
     }

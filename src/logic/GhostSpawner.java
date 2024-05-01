@@ -15,6 +15,9 @@ public class GhostSpawner {
     static ArrayList<Ghost> ghosts = getGhosts();
 
     public static ArrayList<Ghost> spawnGhost() {
+
+        spawnablePosition = getSpawnablePosition();
+
         Random random = new Random();
         int rndPosition = random.nextInt(spawnablePosition.size());
 

@@ -23,7 +23,7 @@ public class Main extends Application {
         new HomeScreen(primaryStage);
 
         primaryStage.setTitle("Hatyai Tycoon");
-        primaryStage.setResizable(true);
+        primaryStage.setResizable(false);
         primaryStage.centerOnScreen();
         primaryStage.show();
     }
