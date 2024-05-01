@@ -117,7 +117,7 @@ public class HomeScreen {
 
         root = new StackPane();
 
-        root.setPrefSize(1200, 675);
+        root.setPrefSize(1280, 720);
 
 //        root.setPrefSize(1053, 593);
 //        Fixed resolution size for game collision rule

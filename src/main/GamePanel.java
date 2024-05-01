@@ -50,7 +50,8 @@ public class GamePanel extends Pane {
     final Image pacmanLeft = new Image("file:res/gif/pacmanleft.gif", blockSize, blockSize, true, true);
     final Image pacmanRight = new Image("file:res/gif/pacmanright.gif", blockSize, blockSize, true, true);
     private Image currentPacmanImage = pacmanRight;
-    final Image wall = new Image("file:res/gif/wall.png", blockSize, blockSize, true, true);
+    final Image wall = new Image("file:res/gif/Grass.jpeg", blockSize, blockSize, true, true);
+    final Image grass = new Image("file:res/gif/Rock.jpg", blockSize, blockSize, true, true);
     final Image whiteDot = new Image("file:res/gif/whitedot.png", blockSize, blockSize, true, true);
     final Image bulletRight = new Image("file:res/gif/bulletRight.gif", blockSize, blockSize, true, true);
     final Image bulletUp = new Image("file:res/gif/bulletUp.gif", blockSize, blockSize, false, true);
@@ -224,7 +225,8 @@ public class GamePanel extends Pane {
                     gc.drawImage(wall, j * blockSize, i * blockSize);
                 } else if (mapPattern[i][j] == 'O') {
                     gc.setFill(Color.LIGHTGRAY);
-                    gc.fillRect(j * blockSize, i * blockSize, blockSize, blockSize);
+                    gc.drawImage(grass, j * blockSize, i * blockSize);
+                    //gc.fillRect(j * blockSize, i * blockSize, blockSize, blockSize);
                 }
             }
         }
