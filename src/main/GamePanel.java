@@ -16,9 +16,7 @@ import javafx.scene.media.MediaPlayer;
 import javafx.scene.paint.Color;
 import javafx.util.Pair;
 
-import logic.GameInstance;
-import logic.GameReset;
-import logic.GhostSpawner;
+import logic.*;
 import object.Bullet;
 import object.Direction;
 
@@ -40,6 +38,10 @@ public class GamePanel extends Pane {
     @FXML
     private Label levelLabel;
     private static GamePanel instance;
+    private PlayerMovement playerMovement = new PlayerMovement();
+    private BulletLogic bulletLogic = new BulletLogic();
+    private MapLoader mapLoader = new MapLoader();
+
     private int screenWidth;
     private int screenHeight;
     private int playerX;
@@ -53,7 +55,7 @@ public class GamePanel extends Pane {
     private Direction playerDirection = Direction.RIGHT;
     private static ArrayList<Pair<Integer,Integer>> spawnablePosition = new ArrayList<>();
     Media buzzer = new Media(new File("res/sound/pewpew.mp3").toURI().toString());
-    MediaPlayer mediaPlayer = new MediaPlayer(buzzer);
+    MediaPlayer gunshotSound = new MediaPlayer(buzzer);
     private boolean hasGameEnded = false;
     private boolean isUpdatingMap = false;
     private int currentPoint = 0;
@@ -100,34 +102,10 @@ public class GamePanel extends Pane {
 //        pointLabel.setText("Point : 0");
 //        levelLabel.setText("Level : 1");
 
-        this.setOnKeyPressed(event -> {
-//            if (hasGameEnded) return;
-            KeyCode code = event.getCode();
-            if (code == KeyCode.UP || code == KeyCode.W && !hasGameEnded) {
-                movePlayer(0, -blockSize); // Move up
-            } else if (code == KeyCode.DOWN || code == KeyCode.S && !hasGameEnded) {
-                movePlayer(0, blockSize); // Move down
-            } else if (code == KeyCode.LEFT || code == KeyCode.A && !hasGameEnded) {
-                movePlayer(-blockSize, 0); // Move left
-            } else if (code == KeyCode.RIGHT || code == KeyCode.D && !hasGameEnded) {
-                movePlayer(blockSize, 0); // Move right
-            } else if (code == KeyCode.ESCAPE && !hasGameEnded) {
-                updateMap(getCurrentLevel() + 1);
-
-            } else if (code == KeyCode.SPACE && !hasGameEnded) {
-//                System.out.println("Firing bullet");
-                shootBullet();
-//                pewPewSound.play();
-
-
-            } else if (code == KeyCode.P && hasGameEnded) {
-                System.out.println("Pressed P !");
-                GameInstance gi = new GameInstance();
-                gi.resetGameInstance();
-                updateMap(1);
-                updateSpawnablePosition();
-            }
-        });
+        KeyHandler keyHandler = new KeyHandler(hasGameEnded, playerMovement, bulletLogic,
+                () -> MapLoader.updateMap(getCurrentLevel() + 1),
+                this::updateSpawnablePosition, blockSize, currentLevel);
+        this.setOnKeyPressed(keyHandler);
 
         // Update empty position for future usage
         updateSpawnablePosition();
@@ -140,12 +118,13 @@ public class GamePanel extends Pane {
 
             @Override
             public void handle(long now) {
+
                 if(hasGameEnded) return;
 
-                updateBullets();
-                updateBulletGhostCollisions();
+                bulletLogic.updateBullets();
+                bulletLogic.updateBulletGhostCollisions();
 //                moveGhosts(); // Add a method to move ghosts
-                repaint();
+                playerMovement.repaint();
 
                 long elapsedTimeNano = System.nanoTime() - lastGhostSpawnTime;
                 double elapsedTimeSeconds = elapsedTimeNano / 1_000_000_000.0;
@@ -160,7 +139,7 @@ public class GamePanel extends Pane {
                 elapsedTimeNano = System.nanoTime() - lastGhostMoveTime;
                 elapsedTimeSeconds = elapsedTimeNano / 1_000_000_000.0;
                 if (elapsedTimeSeconds >= 1) {
-                    moveGhosts(); // Call the method to move ghosts
+                    playerMovement.moveGhosts(); // Call the method to move ghosts
                     lastGhostMoveTime = System.nanoTime(); // Update the last ghost move time
                 }
             }
@@ -169,11 +148,8 @@ public class GamePanel extends Pane {
     }
 
     private void spawnGhost() {
-
         if (isUpdatingMap) return;
-
         updateSpawnablePosition();
-
         setGhosts(spawnerSpawnGhost(getSpawnablePosition(), getGhosts()));
         System.out.println("Ghost spawned at " + getGhosts().get(getGhosts().size() - 1).getX() + "," + getGhosts().get(getGhosts().size() - 1).getY());
     }
@@ -195,262 +171,6 @@ public class GamePanel extends Pane {
 
         setSpawnablePosition(tmpPos);
     }
-
-    // to-be moved to logic
-    private void updateMap(int level) {
-
-        char[][] loadedMap = mapPattern;
-        ArrayList<Pair<Integer,Integer>> loadedPosition = new ArrayList<>();
-
-        if (level > 5) {
-            return;
-        }
-
-        isUpdatingMap = true;
-
-//        setGhosts(new ArrayList<>());
-
-        ghosts.clear();
-
-
-
-        switch (level) {
-            case 1 -> {
-                loadedMap = map.level1.getMapPattern();
-                setWall(new Image("file:res/gif/grass.jpg", blockSize, blockSize, true, true));
-                setFootPath(new Image("file:res/gif/rock.jpg", blockSize, blockSize, true, true));
-            }
-            case 2 -> {
-                loadedMap = map.level2.getMapPattern();
-                setWall(new Image("file:res/gif/wood.jpg", blockSize, blockSize, true, true));
-                setFootPath(new Image("file:res/gif/grass.jpg", blockSize, blockSize, true, true));
-                setCharacterUp(new Image("file:res/character/wmUp.png", blockSize*1.2, blockSize*1.2, true, true));
-                setCharacterDown(new Image("file:res/character/wmDown.png", blockSize*1.2, blockSize*1.2, true, true));
-                setCharacterRight(new Image("file:res/character/wmRight.png", blockSize*1.2, blockSize*1.2, true, true));
-                setCharacterLeft(new Image("file:res/character/wmLeft.png", blockSize*1.2, blockSize*1.2, true, true));
-            }
-            case 3 -> {
-                loadedMap = map.level3.getMapPattern();
-                setWall(new Image("file:res/gif/water.jpg", blockSize, blockSize, true, true));
-                setFootPath(new Image("file:res/gif/wood.jpg", blockSize, blockSize, true, true));
-            }
-            case 4 -> {
-                loadedMap = map.level4.getMapPattern();
-                setWall(new Image("file:res/gif/fire.jpg", blockSize, blockSize, true, true));
-                setFootPath(new Image("file:res/gif/rock.jpg", blockSize, blockSize, true, true));
-            }
-            case 5 -> {
-                loadedMap = map.level5.getMapPattern();
-                setWall(new Image("file:res/gif/water.jpg", blockSize, blockSize, true, true));
-                setFootPath(new Image("file:res/grass/rock.jpg", blockSize, blockSize, true, true));
-            }
-        };
-
-        for (int i = 0; i < 18; i++) {
-            for (int j = 0; j < 32; j++) {
-                if (loadedMap[i][j] == 'O') {
-                    loadedPosition.add(new Pair<>(i, j));
-                }
-            }
-        }
-
-        if (!(loadedPosition.stream()
-                .anyMatch(pair -> pair.getKey() == getPlayerY() / blockSize && pair.getValue() == getPlayerX() / blockSize))) {
-
-            System.out.println("Not in LIST");
-
-            Random random = new Random();
-            int rndPosition = random.nextInt(loadedPosition.size());
-
-            Pair<Integer, Integer> randomPosition = loadedPosition.get(rndPosition);
-            int randomX = randomPosition.getValue() * blockSize;
-            int randomY = randomPosition.getKey() * blockSize;
-
-            setPlayerX(randomX);
-            setPlayerY(randomY);
-        }
-
-        mapPattern = loadedMap;
-        updateSpawnablePosition();
-//        repaint();
-        System.out.println("Upadting map " + getSpawnablePosition());
-        setCurrentLevel(getCurrentLevel() + 1);
-//        levelLabel.setText(String.format("Level: %d", getCurrentLevel()));
-        System.out.println("Loaded level " + (getCurrentLevel()));
-        isUpdatingMap = false;
-
-    }
-
-    private void movePlayer(int dx, int dy) {
-        int newX = playerX + dx;
-        int newY = playerY + dy;
-
-        // Check if new position is within bounds and is not a wall
-        if (newX >= 0 && newX + blockSize <= screenWidth && newY >= 0 && newY + blockSize <= screenHeight
-                && mapPattern[newY / blockSize][newX / blockSize] != 'X') {
-            setPlayerX(newX);
-            setPlayerY(newY);
-            updateDirection(dx, dy);
-//            System.out.println("POSITION: [" + getPlayerY() / blockSize + ", " + getPlayerX() / blockSize + "]");
-        }
-    }
-
-    private void repaint() {
-        Canvas canvas = new Canvas(screenWidth, screenHeight);
-        GraphicsContext gc = canvas.getGraphicsContext2D();
-
-        // Clear canvas
-        gc.clearRect(0, 0, screenWidth, screenHeight);
-
-        // Draw map
-        for (int i = 0; i < screenHeightBlocks; i++) {
-            for (int j = 0; j < screenWidthBlocks; j++) {
-                if (mapPattern[i][j] == 'X') {
-                    gc.setFill(Color.GREEN);
-//                    gc.fillRect(j * blockSize, i * blockSize, blockSize, blockSize);
-//                    gc.drawImage(bullet, j * blockSize, i * blockSize);
-                    gc.drawImage(wall, j * blockSize, i * blockSize);
-                } else if (mapPattern[i][j] == 'O') {
-                    gc.setFill(Color.LIGHTGRAY);
-                    gc.drawImage(footPath, j * blockSize, i * blockSize);
-                    //gc.fillRect(j * blockSize, i * blockSize, blockSize, blockSize);
-                }
-
-            }
-        }
-
-
-        for (Ghost ghost : ghosts) {
-            gc.drawImage(redGhost, ghost.getY() * blockSize, ghost.getX() * blockSize);
-        }
-
-        for (Bullet bullet : bullets) {
-            switch (bullet.getDirection()) {
-                case UP -> gc.drawImage(bulletUp, bullet.getX(), bullet.getY());
-                case DOWN -> gc.drawImage(bulletDown, bullet.getX(), bullet.getY());
-                case LEFT -> gc.drawImage(bulletLeft, bullet.getX(), bullet.getY());
-                default -> gc.drawImage(bulletRight, bullet.getX(), bullet.getY());
-            };
-        }
-
-        gc.drawImage(currentCharacterImage, getPlayerX(), getPlayerY());
-        getChildren().setAll(canvas);
-    }
-
-    private void moveGhosts() {
-        for (Ghost ghost : ghosts) {
-            ghost.move(mapPattern);
-            repaint();
-        }
-    }
-
-    private void updateDirection(int dx, int dy) {
-        if (dx > 0) { // Moving right
-            playerDirection = Direction.RIGHT;
-            currentCharacterImage = characterRight;
-        } else if (dx < 0) { // Moving left
-            playerDirection = Direction.LEFT;
-            currentCharacterImage = characterLeft;
-        } else if (dy > 0) { // Moving down
-            playerDirection = Direction.DOWN;
-            currentCharacterImage = characterDown;
-        } else if (dy < 0) { // Moving up
-            playerDirection = Direction.UP;
-            currentCharacterImage = characterUp;
-        }
-    }
-
-    private void updateBullets() {
-        Iterator<Bullet> iterator = bullets.iterator();
-        while (iterator.hasNext()) {
-            Bullet bullet = iterator.next();
-            bullet.move(blockSize);
-            if (bulletHitsWall(bullet.getX(), bullet.getY())) {
-                iterator.remove(); // Safely removes the current bullet from the list
-            }
-        }
-    }
-
-    private boolean bulletHitsWall(int x, int y) {
-        return mapPattern[y / blockSize][x / blockSize] == 'X';
-    }
-
-    // to-be moved to logic
-    private void shootBullet() {
-        int bulletX = playerX;
-        int bulletY = playerY;
-//        switch (getPlayerDirection()) {
-//            case UP:
-//                bulletY -= blockSize / 2;
-//                break;
-//            case DOWN:
-//                bulletY += blockSize / 2;
-//                break;
-//            case LEFT:
-//                bulletX -= blockSize / 2;
-//                break;
-//            case RIGHT:
-//                bulletX += blockSize / 2;
-//                break;
-//        }
-        bullets.add(new Bullet(bulletX, bulletY, getPlayerDirection()));
-        mediaPlayer.setVolume(0.025);
-        mediaPlayer.play();
-    }
-
-    private void updateBulletGhostCollisions() {
-        Iterator<Bullet> bulletIterator = bullets.iterator();
-        while (bulletIterator.hasNext()) {
-            Bullet bullet = bulletIterator.next();
-            Iterator<Ghost> ghostIterator = ghosts.iterator();
-            while (ghostIterator.hasNext()) {
-                Ghost ghost = ghostIterator.next();
-                // Check if the coordinates of the bullet intersect with the coordinates of the ghost
-//                System.out.println("BL " + bullet.getX() + ',' + bullet.getY());
-//                System.out.println("GH " + ghost.getX() * blockSize + ',' + ghost.getY() * blockSize);
-                if (    bullet.getY() >= ghost.getX() * blockSize - blockSize * 0.25 &&
-                        bullet.getY() <= ghost.getX() * blockSize + blockSize * 1.25 &&
-                        bullet.getX() >= ghost.getY() * blockSize - blockSize * 0.25 &&
-                        bullet.getX() <= ghost.getY() * blockSize + blockSize * 1.25    ) {
-                    // Remove the bullet and ghost upon collision
-                    bulletIterator.remove();
-                    ghostIterator.remove();
-
-                    if (ghost instanceof Ghost) {
-                        setCurrentPoint(getCurrentPoint() + 10);
-                    } else if (ghost instanceof SpeedyGhost) {
-                        setCurrentPoint(getCurrentPoint() + 20);
-                    }
-
-//                    this.pointLabel.setText(String.format("Point : %d", this.getCurrentPoint()));
-
-                    System.out.println("Current Point : " + getCurrentPoint() );
-                    break; // Exit the inner loop since the bullet can only hit one ghost
-                }
-            }
-        }
-
-        for (Ghost ghost : ghosts) {
-            if (playerX == ghost.getY() * blockSize && playerY == ghost.getX() * blockSize) {
-                // Player collides with ghost, set current score to 0
-                setCurrentPoint(0);
-                System.out.println("Dead...");
-                System.out.println("Has game end starting ? " + hasGameEnded);
-
-
-                playerX = -blockSize;
-                playerY = -blockSize;
-
-                ghosts.clear();
-
-                hasGameEnded = true;
-
-                // You might want to add additional game over logic here
-                return;
-            }
-        }
-    }
-
 
     // Getter and setter methods
 
@@ -620,5 +340,13 @@ public class GamePanel extends Pane {
 
     public void setCurrentCharacterImage(Image currentCharacterImage) {
         this.currentCharacterImage = currentCharacterImage;
+    }
+
+    public MediaPlayer getGunshotSound() {
+        return gunshotSound;
+    }
+
+    public void setGunshotSound(MediaPlayer gunshotSound) {
+        this.gunshotSound = gunshotSound;
     }
 }

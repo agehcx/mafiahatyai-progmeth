@@ -1,8 +1,79 @@
 @startuml
+class logic.GameReset {
+}
+class map.level5 {
+- {static} char[][] mapPattern
++ {static} char[][] getMapPattern()
++ {static} void setMapPattern(char[][])
+}
+class object.Bullet {
+- int x
+- int y
+- Direction direction
++ <<Create>> Bullet(int,int,Direction)
++ void move(int)
++ int getX()
++ int getY()
++ Direction getDirection()
++ void setX(int)
++ void setY(int)
++ void setDirection(Direction)
+}
+class logic.GhostSpawner {
+~ {static} ArrayList<Pair<Integer,Integer>> spawnablePosition
+~ {static} ArrayList<Ghost> ghosts
++ <<Create>> GhostSpawner()
++ {static} ArrayList<Ghost> spawnerSpawnGhost(ArrayList<Pair<Integer,Integer>>,ArrayList<Ghost>)
+- {static} boolean isOnFootpath(int,int)
+- {static} boolean isWithinRangeOfPlayer(int,int)
+}
+class logic.KeyHandler {
+- boolean hasGameEnded
+- PlayerMovement playerMovement
+- BulletLogic bulletLogic
+- Runnable updateMap
+- Runnable updateSpawnablePosition
+- int blockSize
+- int currentLevel
++ <<Create>> KeyHandler(boolean,PlayerMovement,BulletLogic,Runnable,Runnable,int,int)
++ void handle(KeyEvent)
+}
+class component.SupermarketFont {
++ <<Create>> SupermarketFont(String,Integer,Paint)
++ <<Create>> SupermarketFont(String,Integer)
++ <<Create>> SupermarketFont(String)
+}
+class map.level2 {
+- {static} char[][] mapPattern
++ {static} char[][] getMapPattern()
++ {static} void setMapPattern(char[][])
+}
+class component.BBFont {
++ <<Create>> BBFont(String,Integer,Paint)
++ <<Create>> BBFont(String,Integer)
++ <<Create>> BBFont(String)
+}
+class map.level3 {
+- {static} char[][] mapPattern
++ {static} char[][] getMapPattern()
++ {static} void setMapPattern(char[][])
+}
+class component.TekoFont {
++ <<Create>> TekoFont(String,Integer,Paint)
++ <<Create>> TekoFont(String,Integer)
++ <<Create>> TekoFont(String)
+}
+class main.Main {
++ void start(Stage)
++ {static} void main(String[])
+}
 class main.GamePanel {
 - Label pointLabel
 - Label levelLabel
 - {static} GamePanel instance
+- PlayerMovement playerMovement
+- BulletLogic bulletLogic
+- MapLoader mapLoader
 - int screenWidth
 - int screenHeight
 - int playerX
@@ -16,7 +87,7 @@ class main.GamePanel {
 - Direction playerDirection
 - {static} ArrayList<Pair<Integer,Integer>> spawnablePosition
 ~ Media buzzer
-~ MediaPlayer mediaPlayer
+~ MediaPlayer gunshotSound
 - boolean hasGameEnded
 - boolean isUpdatingMap
 - int currentPoint
@@ -39,15 +110,6 @@ class main.GamePanel {
 + <<Create>> GamePanel()
 - void spawnGhost()
 - void updateSpawnablePosition()
-- void updateMap(int)
-- void movePlayer(int,int)
-- void repaint()
-- void moveGhosts()
-- void updateDirection(int,int)
-- void updateBullets()
-- boolean bulletHitsWall(int,int)
-- void shootBullet()
-- void updateBulletGhostCollisions()
 + int getScreenWidth()
 + void setScreenWidth(int)
 + int getScreenHeight()
@@ -90,10 +152,10 @@ class main.GamePanel {
 + void setHasGameEnded(boolean)
 + Image getCurrentCharacterImage()
 + void setCurrentCharacterImage(Image)
++ MediaPlayer getGunshotSound()
++ void setGunshotSound(MediaPlayer)
 }
 class logic.ChangeMap {
-}
-class logic.GameReset {
 }
 class map.levelMap {
 - {static} char[][] mapPattern
@@ -105,10 +167,25 @@ class map.levelMap {
 + {static} ArrayList<Pair<Integer,Integer>> getPos()
 + {static} void setPos(ArrayList<Pair<Integer,Integer>>)
 }
-class map.level5 {
-- {static} char[][] mapPattern
-+ {static} char[][] getMapPattern()
-+ {static} void setMapPattern(char[][])
+class logic.PlayerMovement {
+- int blockSize
+- Image characterUp
+- Image characterDown
+- Image characterLeft
+- Image characterRight
+- Image currentCharacterImage
+- Image wall
+- Image footPath
+~ Image whiteDot
+~ Image bulletRight
+~ Image bulletUp
+~ Image bulletLeft
+~ Image bulletDown
+~ Image redGhost
++ void movePlayer(int,int)
++ void repaint()
++ void moveGhosts()
+- void updateDirection(int,int)
 }
 class ghost.Ghost {
 - int x
@@ -132,27 +209,16 @@ class ghost.Ghost {
 + Direction getGhostDirection()
 + void setGhostDirection(Direction)
 }
-class object.Bullet {
-- int x
-- int y
-- Direction direction
-+ <<Create>> Bullet(int,int,Direction)
-+ void move(int)
-+ int getX()
-+ int getY()
-+ Direction getDirection()
-}
-class logic.GhostSpawner {
-~ {static} ArrayList<Pair<Integer,Integer>> spawnablePosition
-~ {static} ArrayList<Ghost> ghosts
-+ <<Create>> GhostSpawner()
-+ {static} ArrayList<Ghost> spawnerSpawnGhost(ArrayList<Pair<Integer,Integer>>,ArrayList<Ghost>)
-- {static} boolean isOnFootpath(int,int)
-- {static} boolean isWithinRangeOfPlayer(int,int)
-}
 class logic.GameInstance {
 + <<Create>> GameInstance()
 + void resetGameInstance()
+}
+class logic.BulletLogic {
++ <<Create>> BulletLogic()
++ void updateBullets()
+- boolean bulletHitsWall(int,int)
++ void shootBullet()
++ void updateBulletGhostCollisions()
 }
 class ghost.SpeedyGhost {
 + <<Create>> SpeedyGhost()
@@ -164,21 +230,11 @@ class component.RetroFont {
 + <<Create>> RetroFont(String,Integer)
 + <<Create>> RetroFont(String)
 }
-class component.SupermarketFont {
-+ <<Create>> SupermarketFont(String,Integer,Paint)
-+ <<Create>> SupermarketFont(String,Integer)
-+ <<Create>> SupermarketFont(String)
-}
 enum object.Direction {
 +  UP
 +  DOWN
 +  LEFT
 +  RIGHT
-}
-class map.level2 {
-- {static} char[][] mapPattern
-+ {static} char[][] getMapPattern()
-+ {static} void setMapPattern(char[][])
 }
 class scene.HomeScreen {
 - Stage stage
@@ -210,15 +266,8 @@ class map.level1 {
 + {static} char[][] getMapPattern()
 + {static} void setMapPattern(char[][])
 }
-class component.BBFont {
-+ <<Create>> BBFont(String,Integer,Paint)
-+ <<Create>> BBFont(String,Integer)
-+ <<Create>> BBFont(String)
-}
-class map.level3 {
-- {static} char[][] mapPattern
-+ {static} char[][] getMapPattern()
-+ {static} void setMapPattern(char[][])
+class logic.MapLoader {
++ {static} GamePanel updateMap(int)
 }
 class scene.LoadingScreen {
 - ImageView imageView
@@ -231,29 +280,21 @@ class component.GameButton {
 + void addText(String,int,Paint)
 + void setColor(Paint)
 }
-class main.Main {
-+ void start(Stage)
-+ {static} void main(String[])
-}
-class component.TekoFont {
-+ <<Create>> TekoFont(String,Integer,Paint)
-+ <<Create>> TekoFont(String,Integer)
-+ <<Create>> TekoFont(String)
-}
 
 
-javafx.scene.layout.Pane <|-- main.GamePanel
 map.levelMap <|-- map.level5
-ghost.Ghost <|-- ghost.SpeedyGhost
-javafx.scene.text.Text <|-- component.RetroFont
+javafx.event.EventHandler <|.. logic.KeyHandler
 javafx.scene.text.Text <|-- component.SupermarketFont
 map.levelMap <|-- map.level2
-map.levelMap <|-- map.level4
-map.levelMap <|-- map.level1
 javafx.scene.text.Text <|-- component.BBFont
 map.levelMap <|-- map.level3
+javafx.scene.text.Text <|-- component.TekoFont
+javafx.application.Application <|-- main.Main
+javafx.scene.layout.Pane <|-- main.GamePanel
+ghost.Ghost <|-- ghost.SpeedyGhost
+javafx.scene.text.Text <|-- component.RetroFont
+map.levelMap <|-- map.level4
+map.levelMap <|-- map.level1
 javafx.fxml.Initializable <|.. scene.LoadingScreen
 javafx.scene.layout.StackPane <|-- component.GameButton
-javafx.application.Application <|-- main.Main
-javafx.scene.text.Text <|-- component.TekoFont
 @enduml
