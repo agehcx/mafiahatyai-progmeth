@@ -118,8 +118,7 @@ public class GamePanel extends Pane {
 //                System.out.println("Firing bullet");
                 shootBullet();
 //                pewPewSound.play();
-                mediaPlayer.setVolume(0.025);
-                mediaPlayer.play();
+
 
             } else if (code == KeyCode.P && hasGameEnded) {
                 System.out.println("Pressed P !");
@@ -391,6 +390,8 @@ public class GamePanel extends Pane {
 //                break;
 //        }
         bullets.add(new Bullet(bulletX, bulletY, getPlayerDirection()));
+        mediaPlayer.setVolume(0.025);
+        mediaPlayer.play();
     }
 
     private void updateBulletGhostCollisions() {
@@ -430,14 +431,15 @@ public class GamePanel extends Pane {
                 // Player collides with ghost, set current score to 0
                 setCurrentPoint(0);
                 System.out.println("Dead...");
-                hasGameEnded = true;
-                System.out.println("Has game end ? " + hasGameEnded);
+                System.out.println("Has game end starting ? " + hasGameEnded);
 
 
                 playerX = -blockSize;
                 playerY = -blockSize;
 
                 ghosts.clear();
+
+                hasGameEnded = true;
 
                 // You might want to add additional game over logic here
                 return;
