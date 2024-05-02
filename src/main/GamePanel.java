@@ -199,6 +199,10 @@ public class GamePanel extends Pane {
                 loadedMap = map.level2.getMapPattern();
                 setWall(new Image("file:res/gif/wood.jpg", blockSize, blockSize, true, true));
                 setFootPath(new Image("file:res/gif/grass.jpg", blockSize, blockSize, true, true));
+                setCharacterUp(new Image("file:res/character/wmUp.png", blockSize*1.2, blockSize*1.2, true, true));
+                setCharacterDown(new Image("file:res/character/wmDown.png", blockSize*1.2, blockSize*1.2, true, true));
+                setCharacterRight(new Image("file:res/character/wmRight.png", blockSize*1.2, blockSize*1.2, true, true));
+                setCharacterLeft(new Image("file:res/character/wmLeft.png", blockSize*1.2, blockSize*1.2, true, true));
             }
             case 3 -> {
                 loadedMap = map.level3.getMapPattern();
