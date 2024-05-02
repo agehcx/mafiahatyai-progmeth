@@ -16,6 +16,8 @@ import javafx.scene.media.MediaPlayer;
 import javafx.scene.paint.Color;
 import javafx.util.Pair;
 
+import logic.GameInstance;
+import logic.GameReset;
 import logic.GhostSpawner;
 import object.Bullet;
 import object.Direction;
@@ -27,6 +29,8 @@ import java.util.Iterator;
 import java.util.Objects;
 import java.util.Random;
 
+import logic.GameReset.*;
+
 import static logic.GhostSpawner.spawnerSpawnGhost;
 
 public class GamePanel extends Pane {
@@ -36,7 +40,6 @@ public class GamePanel extends Pane {
     @FXML
     private Label levelLabel;
     private static GamePanel instance;
-
     private int screenWidth;
     private int screenHeight;
     private int playerX;
@@ -44,7 +47,7 @@ public class GamePanel extends Pane {
     private final int blockSize = 40; // Size of each block
     private final int screenWidthBlocks = 32;
     private final int screenHeightBlocks = 18;
-    private char[][] mapPattern = map.level1.getMapPattern();
+    private char[][] mapPattern;
     private ArrayList<Bullet> bullets = new ArrayList<>();
     private static ArrayList<Ghost> ghosts = new ArrayList<>();
     private Direction playerDirection = Direction.RIGHT;
@@ -69,6 +72,7 @@ public class GamePanel extends Pane {
     final Image bulletLeft = new Image("file:res/gif/bulletLeft.gif", blockSize, blockSize, false, true);
     final Image bulletDown = new Image("file:res/gif/bulletDown.gif", blockSize, blockSize, false, true);
     final Image redGhost = new Image("file:res/gif/redghost.gif", blockSize, blockSize, true, true);
+    private final int[] extraGhost = {0, 1, 2, 3, 5};
     private long startTimeNano = 0;
 
     public GamePanel() {
@@ -84,8 +88,10 @@ public class GamePanel extends Pane {
         this.setStyle("-fx-background-color: black;");
         this.setFocusTraversable(true);
 
-        playerX = blockSize; // Start player at a specific position
-        playerY = blockSize; // Start player at a specific position
+        playerX = blockSize * 2; // Start player at a specific position
+        playerY = blockSize * 2; // Start player at a specific position
+
+        mapPattern = map.level1.getMapPattern();
 
 //        updateSpawnablePosition();
 
@@ -95,25 +101,32 @@ public class GamePanel extends Pane {
 //        levelLabel.setText("Level : 1");
 
         this.setOnKeyPressed(event -> {
+//            if (hasGameEnded) return;
             KeyCode code = event.getCode();
-            if (code == KeyCode.UP || code == KeyCode.W) {
+            if (code == KeyCode.UP || code == KeyCode.W && !hasGameEnded) {
                 movePlayer(0, -blockSize); // Move up
-            } else if (code == KeyCode.DOWN || code == KeyCode.S) {
+            } else if (code == KeyCode.DOWN || code == KeyCode.S && !hasGameEnded) {
                 movePlayer(0, blockSize); // Move down
-            } else if (code == KeyCode.LEFT || code == KeyCode.A) {
+            } else if (code == KeyCode.LEFT || code == KeyCode.A && !hasGameEnded) {
                 movePlayer(-blockSize, 0); // Move left
-            } else if (code == KeyCode.RIGHT || code == KeyCode.D) {
+            } else if (code == KeyCode.RIGHT || code == KeyCode.D && !hasGameEnded) {
                 movePlayer(blockSize, 0); // Move right
-            } else if (code == KeyCode.ESCAPE) {
+            } else if (code == KeyCode.ESCAPE && !hasGameEnded) {
                 updateMap(getCurrentLevel() + 1);
 
-            } else if (code == KeyCode.SPACE) {
+            } else if (code == KeyCode.SPACE && !hasGameEnded) {
 //                System.out.println("Firing bullet");
                 shootBullet();
 //                pewPewSound.play();
                 mediaPlayer.setVolume(0.025);
                 mediaPlayer.play();
 
+            } else if (code == KeyCode.P && hasGameEnded) {
+                System.out.println("Pressed P !");
+                GameInstance gi = new GameInstance();
+                gi.resetGameInstance();
+                updateMap(1);
+                updateSpawnablePosition();
             }
         });
 
@@ -123,24 +136,37 @@ public class GamePanel extends Pane {
         startTimeNano = System.nanoTime();
 
         new AnimationTimer() {
+            private long lastGhostSpawnTime = startTimeNano;
+            private long lastGhostMoveTime = startTimeNano;
+
             @Override
             public void handle(long now) {
-
                 if(hasGameEnded) return;
 
                 updateBullets();
                 updateBulletGhostCollisions();
+//                moveGhosts(); // Add a method to move ghosts
                 repaint();
 
-                long elapsedTimeNano = System.nanoTime() - startTimeNano;
+                long elapsedTimeNano = System.nanoTime() - lastGhostSpawnTime;
                 double elapsedTimeSeconds = elapsedTimeNano / 1_000_000_000.0;
 
-                if (elapsedTimeSeconds >= 5 && ghosts.size() < 5 && !isUpdatingMap) {
-//                    System.out.println("Elapsed time: " + elapsedTimeSeconds + " seconds");
+                // Spawn a ghost every 3 seconds
+                if (elapsedTimeSeconds >= 3 && ghosts.size() < 5 + extraGhost[currentLevel - 1] && !isUpdatingMap) {
                     spawnGhost();
+                    lastGhostSpawnTime = System.nanoTime(); // Update the last ghost spawn time
+                }
+
+                // Move ghosts every 1 second
+                elapsedTimeNano = System.nanoTime() - lastGhostMoveTime;
+                elapsedTimeSeconds = elapsedTimeNano / 1_000_000_000.0;
+                if (elapsedTimeSeconds >= 1) {
+                    moveGhosts(); // Call the method to move ghosts
+                    lastGhostMoveTime = System.nanoTime(); // Update the last ghost move time
                 }
             }
         }.start();
+
     }
 
     private void spawnGhost() {
@@ -177,7 +203,7 @@ public class GamePanel extends Pane {
         char[][] loadedMap = mapPattern;
         ArrayList<Pair<Integer,Integer>> loadedPosition = new ArrayList<>();
 
-        if (level >= 5) {
+        if (level > 5) {
             return;
         }
 
@@ -289,6 +315,8 @@ public class GamePanel extends Pane {
 
             }
         }
+
+
         for (Ghost ghost : ghosts) {
             gc.drawImage(redGhost, ghost.getY() * blockSize, ghost.getX() * blockSize);
         }
@@ -304,6 +332,13 @@ public class GamePanel extends Pane {
 
         gc.drawImage(currentCharacterImage, getPlayerX(), getPlayerY());
         getChildren().setAll(canvas);
+    }
+
+    private void moveGhosts() {
+        for (Ghost ghost : ghosts) {
+            ghost.move(mapPattern);
+            repaint();
+        }
     }
 
     private void updateDirection(int dx, int dy) {
@@ -341,20 +376,20 @@ public class GamePanel extends Pane {
     private void shootBullet() {
         int bulletX = playerX;
         int bulletY = playerY;
-        switch (getPlayerDirection()) {
-            case UP:
-                bulletY -= blockSize / 2;
-                break;
-            case DOWN:
-                bulletY += blockSize / 2;
-                break;
-            case LEFT:
-                bulletX -= blockSize / 2;
-                break;
-            case RIGHT:
-                bulletX += blockSize / 2;
-                break;
-        }
+//        switch (getPlayerDirection()) {
+//            case UP:
+//                bulletY -= blockSize / 2;
+//                break;
+//            case DOWN:
+//                bulletY += blockSize / 2;
+//                break;
+//            case LEFT:
+//                bulletX -= blockSize / 2;
+//                break;
+//            case RIGHT:
+//                bulletX += blockSize / 2;
+//                break;
+//        }
         bullets.add(new Bullet(bulletX, bulletY, getPlayerDirection()));
     }
 
@@ -395,15 +430,17 @@ public class GamePanel extends Pane {
                 // Player collides with ghost, set current score to 0
                 setCurrentPoint(0);
                 System.out.println("Dead...");
+                hasGameEnded = true;
+                System.out.println("Has game end ? " + hasGameEnded);
 
-                playerX = 0;
-                playerY = 0;
+
+                playerX = -blockSize;
+                playerY = -blockSize;
 
                 ghosts.clear();
 
-                hasGameEnded = true;
                 // You might want to add additional game over logic here
-                break;
+                return;
             }
         }
     }
@@ -561,5 +598,21 @@ public class GamePanel extends Pane {
 
     public void setCharacterRight(Image characterRight) {
         this.characterRight = characterRight;
+    }
+
+    public boolean isHasGameEnded() {
+        return hasGameEnded;
+    }
+
+    public void setHasGameEnded(boolean hasGameEnded) {
+        this.hasGameEnded = hasGameEnded;
+    }
+
+    public Image getCurrentCharacterImage() {
+        return currentCharacterImage;
+    }
+
+    public void setCurrentCharacterImage(Image currentCharacterImage) {
+        this.currentCharacterImage = currentCharacterImage;
     }
 }

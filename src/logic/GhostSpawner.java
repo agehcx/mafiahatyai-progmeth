@@ -9,20 +9,30 @@ import java.util.Random;
 
 public class GhostSpawner {
     static ArrayList<Pair<Integer,Integer>> spawnablePosition;
+
     static ArrayList<Ghost> ghosts;
+
+    public GhostSpawner() {
+        spawnablePosition = new ArrayList<>();
+        ghosts = new ArrayList<>();
+    }
 
     public static ArrayList<Ghost> spawnerSpawnGhost(ArrayList<Pair<Integer, Integer>> spawnLocation, ArrayList<Ghost> currentGhosts) {
         spawnablePosition = spawnLocation;
         ghosts = currentGhosts;
 
-        // Filter spawnable positions to ensure ghosts spawn only on footpath
+        // Filter spawnable positions to ensure ghosts spawn only on footpath and not within 5x5 radius of player
         ArrayList<Pair<Integer, Integer>> footPathPositions = new ArrayList<>();
         for (Pair<Integer, Integer> position : spawnablePosition) {
             int x = position.getKey();
             int y = position.getValue();
-            if (GamePanel.getInstance().getMapPattern()[x][y] == 'O') {
-                footPathPositions.add(position);
+
+            // Check if the position is within the allowed range and on footpath
+            if (isWithinRangeOfPlayer(x, y) || !isOnFootpath(x, y)) {
+                continue;
             }
+
+            footPathPositions.add(position);
         }
 
         // Check if there are any footpath positions available
@@ -42,5 +52,17 @@ public class GhostSpawner {
         ghosts.add(spawnedGhost);
 
         return ghosts;
+    }
+
+    // Check if the given position is on footpath
+    private static boolean isOnFootpath(int x, int y) {
+        return GamePanel.getInstance().getMapPattern()[x][y] == 'O';
+    }
+
+    // Check if the given position is within the allowed range of the player
+    private static boolean isWithinRangeOfPlayer(int x, int y) {
+        int playerX = GamePanel.getInstance().getPlayerX();
+        int playerY = GamePanel.getInstance().getPlayerY();
+        return Math.abs(playerX - y) <= 2 && Math.abs(playerY - x) <= 2;
     }
 }
