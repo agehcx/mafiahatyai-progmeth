@@ -3,6 +3,8 @@ package logic;
 import main.GamePanel;
 import object.Direction;
 
+import java.util.ArrayList;
+
 public class GameInstance {
 
     public GameInstance() {
@@ -13,34 +15,24 @@ public class GameInstance {
         GamePanel.getInstance().setPlayerX(GamePanel.getInstance().getBlockSize() * 2);
         GamePanel.getInstance().setPlayerY(GamePanel.getInstance().getBlockSize() * 2);
 
+        System.out.println("Resetting Game Instance");
+
         // Clear bullets
-//        bullets.clear();
-        GamePanel.getInstance().getBullets().clear();
+        GamePanel.getInstance().setBullets(new ArrayList<>());
 
         // Clear ghosts
-//        ghosts.clear();
-        GamePanel.getInstance().getGhosts().clear();
+        GamePanel.getInstance().setGhosts(new ArrayList<>());
 
         // Reset game state variables
-//        hasGameEnded = false;
-//        currentPoint = 0;
-//        currentLevel = 1;
-//        mapPattern = map.level1.getMapPattern();
         GamePanel.getInstance().setHasGameEnded(false);
         GamePanel.getInstance().setCurrentPoint(0);
-        GamePanel.getInstance().setCurrentLevel(1);
+        GamePanel.getInstance().setCurrentLevel(0);
         GamePanel.getInstance().setMapPattern(map.level1.getMapPattern());
+//        GamePanel.getInstance().resetMapToLevel1();
 
         // Reset player direction and image
-//        playerDirection = Direction.RIGHT;
-//        currentCharacterImage = characterRight;
         GamePanel.getInstance().setPlayerDirection(Direction.RIGHT);
         GamePanel.getInstance().setCurrentCharacterImage(GamePanel.getInstance().getCharacterRight());
-
-        // Update spawnable positions
-//        updateSpawnablePosition();
-
-        // Start the game loop again
-
     }
+
 }

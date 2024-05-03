@@ -9,6 +9,8 @@ import java.util.Random;
 
 public class MapLoader {
 
+    static boolean isUpdatingMap;
+
     public static GamePanel updateMap(int level) {
 
         GamePanel gamePanel = GamePanel.getInstance();
@@ -24,7 +26,7 @@ public class MapLoader {
             return gamePanel;
         }
 
-        boolean isUpdatingMap = true;
+        isUpdatingMap = true;
 
         gamePanel.getGhosts().clear();
 
@@ -89,4 +91,13 @@ public class MapLoader {
 
         return gamePanel;
     }
+
+    public static boolean isIsUpdatingMap() {
+        return isUpdatingMap;
+    }
+
+    public static void setIsUpdatingMap(boolean isUpdatingMap) {
+        MapLoader.isUpdatingMap = isUpdatingMap;
+    }
+
 }

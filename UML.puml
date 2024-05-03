@@ -1,6 +1,4 @@
 @startuml
-class logic.GameReset {
-}
 class map.level5 {
 - {static} char[][] mapPattern
 + {static} char[][] getMapPattern()
@@ -23,19 +21,20 @@ class logic.GhostSpawner {
 ~ {static} ArrayList<Pair<Integer,Integer>> spawnablePosition
 ~ {static} ArrayList<Ghost> ghosts
 + <<Create>> GhostSpawner()
++ {static} void spawnGhost()
++ {static} void updateSpawnablePosition()
 + {static} ArrayList<Ghost> spawnerSpawnGhost(ArrayList<Pair<Integer,Integer>>,ArrayList<Ghost>)
 - {static} boolean isOnFootpath(int,int)
 - {static} boolean isWithinRangeOfPlayer(int,int)
 }
 class logic.KeyHandler {
-- boolean hasGameEnded
 - PlayerMovement playerMovement
 - BulletLogic bulletLogic
 - Runnable updateMap
 - Runnable updateSpawnablePosition
 - int blockSize
 - int currentLevel
-+ <<Create>> KeyHandler(boolean,PlayerMovement,BulletLogic,Runnable,Runnable,int,int)
++ <<Create>> KeyHandler(PlayerMovement,BulletLogic,Runnable,Runnable,int,int)
 + void handle(KeyEvent)
 }
 class component.SupermarketFont {
@@ -108,8 +107,6 @@ class main.GamePanel {
 - int[] extraGhost
 - long startTimeNano
 + <<Create>> GamePanel()
-- void spawnGhost()
-- void updateSpawnablePosition()
 + int getScreenWidth()
 + void setScreenWidth(int)
 + int getScreenHeight()
@@ -154,8 +151,9 @@ class main.GamePanel {
 + void setCurrentCharacterImage(Image)
 + MediaPlayer getGunshotSound()
 + void setGunshotSound(MediaPlayer)
-}
-class logic.ChangeMap {
++ PlayerMovement getPlayerMovement()
++ BulletLogic getBulletLogic()
++ MapLoader getMapLoader()
 }
 class map.levelMap {
 - {static} char[][] mapPattern
@@ -173,7 +171,6 @@ class logic.PlayerMovement {
 - Image characterDown
 - Image characterLeft
 - Image characterRight
-- Image currentCharacterImage
 - Image wall
 - Image footPath
 ~ Image whiteDot
@@ -267,7 +264,10 @@ class map.level1 {
 + {static} void setMapPattern(char[][])
 }
 class logic.MapLoader {
+~ {static} boolean isUpdatingMap
 + {static} GamePanel updateMap(int)
++ {static} boolean isIsUpdatingMap()
++ {static} void setIsUpdatingMap(boolean)
 }
 class scene.LoadingScreen {
 - ImageView imageView

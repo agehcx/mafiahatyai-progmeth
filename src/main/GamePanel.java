@@ -27,7 +27,6 @@ import java.util.Iterator;
 import java.util.Objects;
 import java.util.Random;
 
-import logic.GameReset.*;
 
 import static logic.GhostSpawner.spawnerSpawnGhost;
 
@@ -41,6 +40,8 @@ public class GamePanel extends Pane {
     private PlayerMovement playerMovement = new PlayerMovement();
     private BulletLogic bulletLogic = new BulletLogic();
     private MapLoader mapLoader = new MapLoader();
+    private GhostSpawner ghostSpawner = new GhostSpawner();
+
 
     private int screenWidth;
     private int screenHeight;
@@ -78,7 +79,6 @@ public class GamePanel extends Pane {
     private long startTimeNano = 0;
 
     public GamePanel() {
-
         instance = this;
 
         double v = blockSize * (double) screenWidthBlocks;
@@ -95,20 +95,12 @@ public class GamePanel extends Pane {
 
         mapPattern = map.level1.getMapPattern();
 
-//        updateSpawnablePosition();
-
-//        pointLabel = new Label();
-//        levelLabel = new Label();
-//        pointLabel.setText("Point : 0");
-//        levelLabel.setText("Level : 1");
-
-        KeyHandler keyHandler = new KeyHandler(hasGameEnded, playerMovement, bulletLogic,
-                () -> MapLoader.updateMap(getCurrentLevel() + 1),
-                this::updateSpawnablePosition, blockSize, currentLevel);
+        KeyHandler keyHandler = new KeyHandler(playerMovement, bulletLogic,
+                () -> MapLoader.updateMap(GamePanel.getInstance().getCurrentLevel() + 1),
+                GhostSpawner::updateSpawnablePosition, GamePanel.getInstance().getBlockSize(), GamePanel.getInstance().getCurrentLevel());
         this.setOnKeyPressed(keyHandler);
 
-        // Update empty position for future usage
-        updateSpawnablePosition();
+        GhostSpawner.updateSpawnablePosition();
 
         startTimeNano = System.nanoTime();
 
@@ -118,58 +110,30 @@ public class GamePanel extends Pane {
 
             @Override
             public void handle(long now) {
+                if (hasGameEnded) {
+                    // Handle game end logic
+                } else {
+                    bulletLogic.updateBullets();
+                    bulletLogic.updateBulletGhostCollisions();
+                    playerMovement.repaint();
 
-                if(hasGameEnded) return;
+                    long elapsedTimeNano = System.nanoTime() - lastGhostSpawnTime;
+                    double elapsedTimeSeconds = elapsedTimeNano / 1_000_000_000.0;
 
-                bulletLogic.updateBullets();
-                bulletLogic.updateBulletGhostCollisions();
-//                moveGhosts(); // Add a method to move ghosts
-                playerMovement.repaint();
+                    if (elapsedTimeSeconds >= 3 && GhostSpawner.getGhosts().size() < 5 + extraGhost[currentLevel - 1] && !isUpdatingMap) {
+                        GhostSpawner.spawnGhost(); // Use ghostSpawner field
+                        lastGhostSpawnTime = System.nanoTime();
+                    }
 
-                long elapsedTimeNano = System.nanoTime() - lastGhostSpawnTime;
-                double elapsedTimeSeconds = elapsedTimeNano / 1_000_000_000.0;
-
-                // Spawn a ghost every 3 seconds
-                if (elapsedTimeSeconds >= 3 && ghosts.size() < 5 + extraGhost[currentLevel - 1] && !isUpdatingMap) {
-                    spawnGhost();
-                    lastGhostSpawnTime = System.nanoTime(); // Update the last ghost spawn time
-                }
-
-                // Move ghosts every 1 second
-                elapsedTimeNano = System.nanoTime() - lastGhostMoveTime;
-                elapsedTimeSeconds = elapsedTimeNano / 1_000_000_000.0;
-                if (elapsedTimeSeconds >= 1) {
-                    playerMovement.moveGhosts(); // Call the method to move ghosts
-                    lastGhostMoveTime = System.nanoTime(); // Update the last ghost move time
+                    elapsedTimeNano = System.nanoTime() - lastGhostMoveTime;
+                    elapsedTimeSeconds = elapsedTimeNano / 1_000_000_000.0;
+                    if (elapsedTimeSeconds >= 1) {
+                        playerMovement.moveGhosts();
+                        lastGhostMoveTime = System.nanoTime();
+                    }
                 }
             }
         }.start();
-
-    }
-
-    private void spawnGhost() {
-        if (isUpdatingMap) return;
-        updateSpawnablePosition();
-        setGhosts(spawnerSpawnGhost(getSpawnablePosition(), getGhosts()));
-        System.out.println("Ghost spawned at " + getGhosts().get(getGhosts().size() - 1).getX() + "," + getGhosts().get(getGhosts().size() - 1).getY());
-    }
-
-    // Update current spawn-able positions
-    private void updateSpawnablePosition() {
-
-        spawnablePosition.clear();
-
-        ArrayList<Pair<Integer,Integer>> tmpPos = new ArrayList<>();
-
-        for (int i = 0; i < 18; i++) {
-            for (int j = 0; j < 32; j++) {
-                if (mapPattern[i][j] == 'O' && i * blockSize != playerX && j * blockSize != playerY) {
-                    tmpPos.add(new Pair<>(i, j));
-                }
-            }
-        }
-
-        setSpawnablePosition(tmpPos);
     }
 
     // Getter and setter methods
@@ -349,4 +313,24 @@ public class GamePanel extends Pane {
     public void setGunshotSound(MediaPlayer gunshotSound) {
         this.gunshotSound = gunshotSound;
     }
+
+
+    // Logic classes
+
+    public PlayerMovement getPlayerMovement() {
+        return playerMovement;
+    }
+
+    public BulletLogic getBulletLogic() {
+        return bulletLogic;
+    }
+
+    public MapLoader getMapLoader() {
+        return mapLoader;
+    }
+
+    public GhostSpawner getGhostSpawner() {
+        return ghostSpawner;
+    }
+
 }
