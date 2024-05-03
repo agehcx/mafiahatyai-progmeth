@@ -51,7 +51,7 @@ public class BulletLogic {
         Iterator<Bullet> bulletIterator = GamePanel.getInstance().getBullets().iterator();
         while (bulletIterator.hasNext()) {
             Bullet bullet = bulletIterator.next();
-            Iterator<Ghost> ghostIterator = GamePanel.getInstance().getGhosts().iterator();
+            Iterator<Ghost> ghostIterator = GhostSpawner.getGhosts().iterator();
             while (ghostIterator.hasNext()) {
                 Ghost ghost = ghostIterator.next();
                 // Check if the coordinates of the bullet intersect with the coordinates of the ghost

@@ -18,14 +18,59 @@ class object.Bullet {
 + void setDirection(Direction)
 }
 class logic.GhostSpawner {
-~ {static} ArrayList<Pair<Integer,Integer>> spawnablePosition
-~ {static} ArrayList<Ghost> ghosts
+- {static} ArrayList<Pair<Integer,Integer>> spawnablePosition
+- {static} ArrayList<Ghost> ghosts
 + <<Create>> GhostSpawner()
 + {static} void spawnGhost()
 + {static} void updateSpawnablePosition()
 + {static} ArrayList<Ghost> spawnerSpawnGhost(ArrayList<Pair<Integer,Integer>>,ArrayList<Ghost>)
 - {static} boolean isOnFootpath(int,int)
 - {static} boolean isWithinRangeOfPlayer(int,int)
++ {static} ArrayList<Ghost> getGhosts()
++ {static} void setGhosts(ArrayList<Ghost>)
+}
+class logic.ImageManager {
+- {static} int blockSize
+- Image characterUp
+- Image characterDown
+- Image characterLeft
+- Image characterRight
+- Image currentCharacterImage
+- Image wall
+- Image footPath
+- Image whiteDot
+- Image bulletRight
+- Image bulletUp
+- Image bulletLeft
+- Image bulletDown
+- Image redGhost
++ <<Create>> ImageManager()
++ Image getCurrentCharacterImage()
++ void setCurrentCharacterImage(Image)
++ Image getCharacterUp()
++ void setCharacterUp(Image)
++ Image getCharacterDown()
++ void setCharacterDown(Image)
++ Image getCharacterLeft()
++ void setCharacterLeft(Image)
++ Image getCharacterRight()
++ void setCharacterRight(Image)
++ Image getWall()
++ void setWall(Image)
++ Image getFootPath()
++ void setFootPath(Image)
++ Image getWhiteDot()
++ void setWhiteDot(Image)
++ Image getBulletRight()
++ void setBulletRight(Image)
++ Image getBulletUp()
++ void setBulletUp(Image)
++ Image getBulletLeft()
++ void setBulletLeft(Image)
++ Image getBulletDown()
++ void setBulletDown(Image)
++ Image getRedGhost()
++ void setRedGhost(Image)
 }
 class logic.KeyHandler {
 - PlayerMovement playerMovement
@@ -41,6 +86,14 @@ class component.SupermarketFont {
 + <<Create>> SupermarketFont(String,Integer,Paint)
 + <<Create>> SupermarketFont(String,Integer)
 + <<Create>> SupermarketFont(String)
+}
+class main.Player {
+- int playerX
+- int playerY
++ int getPlayerX()
++ void setPlayerX(int)
++ int getPlayerY()
++ void setPlayerY(int)
 }
 class map.level2 {
 - {static} char[][] mapPattern
@@ -73,6 +126,8 @@ class main.GamePanel {
 - PlayerMovement playerMovement
 - BulletLogic bulletLogic
 - MapLoader mapLoader
+- GhostSpawner ghostSpawner
+- ImageManager imageManager
 - int screenWidth
 - int screenHeight
 - int playerX
@@ -91,19 +146,6 @@ class main.GamePanel {
 - boolean isUpdatingMap
 - int currentPoint
 - int currentLevel
-- Image characterUp
-- Image characterDown
-- Image characterLeft
-- Image characterRight
-- Image currentCharacterImage
-- Image wall
-- Image footPath
-~ Image whiteDot
-~ Image bulletRight
-~ Image bulletUp
-~ Image bulletLeft
-~ Image bulletDown
-~ Image redGhost
 - int[] extraGhost
 - long startTimeNano
 + <<Create>> GamePanel()
@@ -120,40 +162,33 @@ class main.GamePanel {
 + int getScreenHeightBlocks()
 + char[][] getMapPattern()
 + void setMapPattern(char[][])
-+ int getCurrentLevel()
-+ void setCurrentLevel(int)
 + ArrayList<Bullet> getBullets()
 + void setBullets(ArrayList<Bullet>)
++ {static} ArrayList<Ghost> getGhosts()
++ {static} void setGhosts(ArrayList<Ghost>)
 + Direction getPlayerDirection()
 + void setPlayerDirection(Direction)
-+ ArrayList<Pair<Integer,Integer>> getSpawnablePosition()
-+ void setSpawnablePosition(ArrayList<Pair<Integer,Integer>>)
-+ ArrayList<Ghost> getGhosts()
-+ void setGhosts(ArrayList<Ghost>)
-+ int getCurrentPoint()
-+ void setCurrentPoint(int)
-+ {static} GamePanel getInstance()
-+ Image getWall()
-+ void setWall(Image)
-+ Image getFootPath()
-+ void setFootPath(Image)
-+ Image getCharacterUp()
-+ void setCharacterUp(Image)
-+ Image getCharacterDown()
-+ void setCharacterDown(Image)
-+ Image getCharacterLeft()
-+ void setCharacterLeft(Image)
-+ Image getCharacterRight()
-+ void setCharacterRight(Image)
++ {static} ArrayList<Pair<Integer,Integer>> getSpawnablePosition()
++ {static} void setSpawnablePosition(ArrayList<Pair<Integer,Integer>>)
++ Media getBuzzer()
++ void setBuzzer(Media)
 + boolean isHasGameEnded()
 + void setHasGameEnded(boolean)
-+ Image getCurrentCharacterImage()
-+ void setCurrentCharacterImage(Image)
++ boolean isUpdatingMap()
++ void setUpdatingMap(boolean)
++ int getCurrentPoint()
++ void setCurrentPoint(int)
++ int getCurrentLevel()
++ void setCurrentLevel(int)
 + MediaPlayer getGunshotSound()
 + void setGunshotSound(MediaPlayer)
++ {static} GamePanel getInstance()
++ {static} void setInstance(GamePanel)
 + PlayerMovement getPlayerMovement()
 + BulletLogic getBulletLogic()
 + MapLoader getMapLoader()
++ GhostSpawner getGhostSpawner()
++ ImageManager getImageManager()
 }
 class map.levelMap {
 - {static} char[][] mapPattern

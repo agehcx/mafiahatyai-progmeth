@@ -41,6 +41,7 @@ public class GamePanel extends Pane {
     private BulletLogic bulletLogic = new BulletLogic();
     private MapLoader mapLoader = new MapLoader();
     private GhostSpawner ghostSpawner = new GhostSpawner();
+    private ImageManager imageManager = new ImageManager();
 
 
     private int screenWidth;
@@ -52,7 +53,7 @@ public class GamePanel extends Pane {
     private final int screenHeightBlocks = 18;
     private char[][] mapPattern;
     private ArrayList<Bullet> bullets = new ArrayList<>();
-    private static ArrayList<Ghost> ghosts = new ArrayList<>();
+//    private static ArrayList<Ghost> ghosts = new ArrayList<>();
     private Direction playerDirection = Direction.RIGHT;
     private static ArrayList<Pair<Integer,Integer>> spawnablePosition = new ArrayList<>();
     Media buzzer = new Media(new File("res/sound/pewpew.mp3").toURI().toString());
@@ -62,19 +63,6 @@ public class GamePanel extends Pane {
     private int currentPoint = 0;
     private int currentLevel = 1;
     // Image resources
-    private Image characterUp = new Image("file:res/character/manUp.png", blockSize*1.2, blockSize*1.2, true, true);
-    private Image characterDown = new Image("file:res/character/manDown.png", blockSize*1.2, blockSize*1.2, true, true);
-    private Image characterLeft = new Image("file:res/character/manLeft.png", blockSize*1.2, blockSize*1.2, true, true);
-    private Image characterRight = new Image("file:res/character/manRight.png", blockSize*1.2, blockSize*1.2, true, true);
-    private Image currentCharacterImage = characterRight;
-    private Image wall = new Image("file:res/gif/grass.jpg", blockSize, blockSize, true, true);
-    private Image footPath = new Image("file:res/gif/rock.jpg", blockSize, blockSize, true, true);
-    final Image whiteDot = new Image("file:res/gif/whitedot.png", blockSize, blockSize, true, true);
-    final Image bulletRight = new Image("file:res/gif/bulletRight.gif", blockSize, blockSize, true, true);
-    final Image bulletUp = new Image("file:res/gif/bulletUp.gif", blockSize, blockSize, false, true);
-    final Image bulletLeft = new Image("file:res/gif/bulletLeft.gif", blockSize, blockSize, false, true);
-    final Image bulletDown = new Image("file:res/gif/bulletDown.gif", blockSize, blockSize, false, true);
-    final Image redGhost = new Image("file:res/gif/redghost.gif", blockSize, blockSize, true, true);
     private final int[] extraGhost = {0, 1, 2, 3, 5};
     private long startTimeNano = 0;
 
@@ -190,14 +178,6 @@ public class GamePanel extends Pane {
         this.mapPattern = mapPattern;
     }
 
-    public int getCurrentLevel() {
-        return currentLevel;
-    }
-
-    public void setCurrentLevel(int currentLevel) {
-        this.currentLevel = currentLevel;
-    }
-
     public ArrayList<Bullet> getBullets() {
         return bullets;
     }
@@ -205,6 +185,14 @@ public class GamePanel extends Pane {
     public void setBullets(ArrayList<Bullet> bullets) {
         this.bullets = bullets;
     }
+
+//    public static ArrayList<Ghost> getGhosts() {
+//        return ghosts;
+//    }
+//
+//    public static void setGhosts(ArrayList<Ghost> ghosts) {
+//        GamePanel.ghosts = ghosts;
+//    }
 
     public Direction getPlayerDirection() {
         return playerDirection;
@@ -214,80 +202,20 @@ public class GamePanel extends Pane {
         this.playerDirection = playerDirection;
     }
 
-    public ArrayList<Pair<Integer, Integer>> getSpawnablePosition() {
+    public static ArrayList<Pair<Integer, Integer>> getSpawnablePosition() {
         return spawnablePosition;
     }
 
-    public void setSpawnablePosition(ArrayList<Pair<Integer, Integer>> spawnablePosition) {
+    public static void setSpawnablePosition(ArrayList<Pair<Integer, Integer>> spawnablePosition) {
         GamePanel.spawnablePosition = spawnablePosition;
     }
 
-    public ArrayList<Ghost> getGhosts() {
-        return ghosts;
+    public Media getBuzzer() {
+        return buzzer;
     }
 
-    public void setGhosts(ArrayList<Ghost> ghosts) {
-        GamePanel.ghosts = ghosts;
-    }
-
-    public int getCurrentPoint() {
-        return currentPoint;
-    }
-
-    public void setCurrentPoint(int currentPoint) {
-        this.currentPoint = currentPoint;
-    }
-
-    public static GamePanel getInstance() {
-        return instance;
-    }
-
-    public Image getWall() {
-        return wall;
-    }
-
-    public void setWall(Image wall) {
-        this.wall = wall;
-    }
-
-    public Image getFootPath() {
-        return footPath;
-    }
-
-    public void setFootPath(Image footPath) {
-        this.footPath = footPath;
-    }
-
-    public Image getCharacterUp() {
-        return characterUp;
-    }
-
-    public void setCharacterUp(Image characterUp) {
-        this.characterUp = characterUp;
-    }
-
-    public Image getCharacterDown() {
-        return characterDown;
-    }
-
-    public void setCharacterDown(Image characterDown) {
-        this.characterDown = characterDown;
-    }
-
-    public Image getCharacterLeft() {
-        return characterLeft;
-    }
-
-    public void setCharacterLeft(Image characterLeft) {
-        this.characterLeft = characterLeft;
-    }
-
-    public Image getCharacterRight() {
-        return characterRight;
-    }
-
-    public void setCharacterRight(Image characterRight) {
-        this.characterRight = characterRight;
+    public void setBuzzer(Media buzzer) {
+        this.buzzer = buzzer;
     }
 
     public boolean isHasGameEnded() {
@@ -298,12 +226,28 @@ public class GamePanel extends Pane {
         this.hasGameEnded = hasGameEnded;
     }
 
-    public Image getCurrentCharacterImage() {
-        return currentCharacterImage;
+    public boolean isUpdatingMap() {
+        return isUpdatingMap;
     }
 
-    public void setCurrentCharacterImage(Image currentCharacterImage) {
-        this.currentCharacterImage = currentCharacterImage;
+    public void setUpdatingMap(boolean updatingMap) {
+        isUpdatingMap = updatingMap;
+    }
+
+    public int getCurrentPoint() {
+        return currentPoint;
+    }
+
+    public void setCurrentPoint(int currentPoint) {
+        this.currentPoint = currentPoint;
+    }
+
+    public int getCurrentLevel() {
+        return currentLevel;
+    }
+
+    public void setCurrentLevel(int currentLevel) {
+        this.currentLevel = currentLevel;
     }
 
     public MediaPlayer getGunshotSound() {
@@ -314,8 +258,16 @@ public class GamePanel extends Pane {
         this.gunshotSound = gunshotSound;
     }
 
+    // Instance + Logic classes
 
-    // Logic classes
+
+    public static GamePanel getInstance() {
+        return instance;
+    }
+
+    public static void setInstance(GamePanel instance) {
+        GamePanel.instance = instance;
+    }
 
     public PlayerMovement getPlayerMovement() {
         return playerMovement;
@@ -333,4 +285,7 @@ public class GamePanel extends Pane {
         return ghostSpawner;
     }
 
+    public ImageManager getImageManager() {
+        return imageManager;
+    }
 }

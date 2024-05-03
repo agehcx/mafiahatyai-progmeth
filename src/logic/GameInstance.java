@@ -7,8 +7,7 @@ import java.util.ArrayList;
 
 public class GameInstance {
 
-    public GameInstance() {
-    }
+    public GameInstance() {}
 
     public void resetGameInstance() {
         // Reset player position
@@ -21,7 +20,7 @@ public class GameInstance {
         GamePanel.getInstance().setBullets(new ArrayList<>());
 
         // Clear ghosts
-        GamePanel.getInstance().setGhosts(new ArrayList<>());
+        GhostSpawner.setGhosts(new ArrayList<>());
 
         // Reset game state variables
         GamePanel.getInstance().setHasGameEnded(false);
@@ -32,7 +31,7 @@ public class GameInstance {
 
         // Reset player direction and image
         GamePanel.getInstance().setPlayerDirection(Direction.RIGHT);
-        GamePanel.getInstance().setCurrentCharacterImage(GamePanel.getInstance().getCharacterRight());
+        GamePanel.getInstance().getImageManager().setCurrentCharacterImage(GamePanel.getInstance().getImageManager().getCharacterRight());
     }
 
 }
