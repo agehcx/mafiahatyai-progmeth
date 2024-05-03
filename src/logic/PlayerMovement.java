@@ -6,10 +6,13 @@ import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.image.Image;
 import javafx.scene.paint.Color;
 import main.GamePanel;
+import map.level1;
 import object.Bullet;
 import object.Direction;
 
 import java.awt.*;
+import java.util.List;
+import java.util.ArrayList;
 
 public class PlayerMovement {
 
@@ -18,7 +21,7 @@ public class PlayerMovement {
     private Image characterDown = new Image("file:res/character/manDown.png", blockSize*1.2, blockSize*1.2, true, true);
     private Image characterLeft = new Image("file:res/character/manLeft.png", blockSize*1.2, blockSize*1.2, true, true);
     private Image characterRight = new Image("file:res/character/manRight.png", blockSize*1.2, blockSize*1.2, true, true);
-    private Image currentCharacterImage = characterRight;
+//    private Image currentCharacterImage = characterRight;
     private Image wall = new Image("file:res/gif/grass.jpg", blockSize, blockSize, true, true);
     private Image footPath = new Image("file:res/gif/rock.jpg", blockSize, blockSize, true, true);
     final Image whiteDot = new Image("file:res/gif/whitedot.png", blockSize, blockSize, true, true);
@@ -40,6 +43,7 @@ public class PlayerMovement {
             updateDirection(dx, dy);
 //            System.out.println("POSITION: [" + getPlayerY() / blockSize + ", " + getPlayerX() / blockSize + "]");
         }
+
     }
 
     public void repaint() {
@@ -50,14 +54,46 @@ public class PlayerMovement {
         int screenHeightBlocks = GamePanel.getInstance().getScreenHeightBlocks();
         int screenWidthBlocks = GamePanel.getInstance().getScreenWidthBlocks();
 
-        Image wall = GamePanel.getInstance().getWall();
-        Image footPath = GamePanel.getInstance().getFootPath();
+        Image wall = GamePanel.getInstance().getImageManager().getWall();
+        Image footPath = GamePanel.getInstance().getImageManager().getFootPath();
 
         Canvas canvas = new Canvas(screenWidth, screenHeight);
         GraphicsContext gc = canvas.getGraphicsContext2D();
 
         // Clear canvas
         gc.clearRect(0, 0, screenWidth, screenHeight);
+
+        for (Ghost ghost : GhostSpawner.getGhosts()) {
+            if (GamePanel.getInstance().getPlayerX() == ghost.getY() * blockSize && GamePanel.getInstance().getPlayerY() == ghost.getX() * blockSize) {
+                // Player collides with ghost, set current score to 0
+                GamePanel.getInstance().setCurrentPoint(0);
+                System.out.println("Dead...");
+                System.out.println("Has game end starting ? " + GamePanel.getInstance().isHasGameEnded());
+
+
+                GamePanel.getInstance().setPlayerX(blockSize);
+                GamePanel.getInstance().setPlayerY(blockSize);
+
+                GamePanel.getInstance().setMapPattern(level1.getMapPattern());
+
+//                GamePanel.getInstance().resetMapToLevel1();
+
+                GhostSpawner.setGhosts(new ArrayList<>());
+
+                GamePanel.getInstance().setHasGameEnded(true);
+
+                System.out.println("IS GAME ENDED ? " + GamePanel.getInstance().isHasGameEnded());
+
+//                GamePanel.getInstance().resetInstance();
+
+//                GameInstance gi = new GameInstance();
+//                gi.resetGameInstance();
+
+                System.out.println("GAME ENDED !!");
+
+                // You might want to add additional game over logic here
+            }
+        }
 
         // Draw map
         for (int i = 0; i < screenHeightBlocks; i++) {
@@ -78,7 +114,7 @@ public class PlayerMovement {
 
 
         // Update ghost
-        for (Ghost ghost : GamePanel.getInstance().getGhosts()) {
+        for (Ghost ghost : GhostSpawner.getGhosts()) {
             if (ghost instanceof Ghost) {
                 gc.drawImage(redGhost, ghost.getY() * blockSize, ghost.getX() * blockSize);
             }
@@ -94,33 +130,42 @@ public class PlayerMovement {
             };
         }
 
-        gc.drawImage(currentCharacterImage, GamePanel.getInstance().getPlayerX(), GamePanel.getInstance().getPlayerY());
+        gc.drawImage(GamePanel.getInstance().getImageManager().getCurrentCharacterImage(), GamePanel.getInstance().getPlayerX(), GamePanel.getInstance().getPlayerY());
         GamePanel.getInstance().getChildren().setAll(canvas);
     }
 
     public void moveGhosts() {
-        for (Ghost ghost : GamePanel.getInstance().getGhosts()) {
+        for (Ghost ghost : GhostSpawner.getGhosts()) {
             ghost.move(GamePanel.getInstance().getMapPattern());
             repaint();
         }
+//        List<Ghost> ghosts = new ArrayList<>(GamePanel.getInstance().getGhosts());
+//        for (Ghost ghost : ghosts) {
+//            ghost.move(GamePanel.getInstance().getMapPattern());
+//        }
+//        repaint();
+
     }
 
     private void updateDirection(int dx, int dy) {
         if (dx > 0) { // Moving right
             GamePanel.getInstance().setPlayerDirection(Direction.RIGHT);
-            currentCharacterImage = characterRight;
+            GamePanel.getInstance().getImageManager().setCurrentCharacterImage(GamePanel.getInstance().getImageManager().getCharacterRight());
         } else if (dx < 0) { // Moving left
 //            playerDirection = Direction.LEFT;
             GamePanel.getInstance().setPlayerDirection(Direction.LEFT);
-            currentCharacterImage = characterLeft;
+            GamePanel.getInstance().getImageManager().setCurrentCharacterImage(GamePanel.getInstance().getImageManager().getCharacterLeft());
+//            currentCharacterImage = characterLeft;
         } else if (dy > 0) { // Moving down
 //            playerDirection = Direction.DOWN;
             GamePanel.getInstance().setPlayerDirection(Direction.DOWN);
-            currentCharacterImage = characterDown;
+            GamePanel.getInstance().getImageManager().setCurrentCharacterImage(GamePanel.getInstance().getImageManager().getCharacterDown());
+//            currentCharacterImage = characterDown;
         } else if (dy < 0) { // Moving up
 //            playerDirection = Direction.UP;
             GamePanel.getInstance().setPlayerDirection(Direction.UP);
-            currentCharacterImage = characterUp;
+            GamePanel.getInstance().getImageManager().setCurrentCharacterImage(GamePanel.getInstance().getImageManager().getCharacterUp());
+//            currentCharacterImage = characterUp;
         }
     }
 }

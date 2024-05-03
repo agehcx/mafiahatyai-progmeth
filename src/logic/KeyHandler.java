@@ -3,10 +3,10 @@ package logic;
 import javafx.event.EventHandler;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
+import main.GamePanel;
 
 public class KeyHandler implements EventHandler<KeyEvent> {
 
-    private boolean hasGameEnded;
     private PlayerMovement playerMovement;
     private BulletLogic bulletLogic;
     private Runnable updateMap;
@@ -14,9 +14,8 @@ public class KeyHandler implements EventHandler<KeyEvent> {
     private int blockSize;
     private int currentLevel;
 
-    public KeyHandler(boolean hasGameEnded, PlayerMovement playerMovement, BulletLogic bulletLogic,
+    public KeyHandler(PlayerMovement playerMovement, BulletLogic bulletLogic,
                           Runnable updateMap, Runnable updateSpawnablePosition, int blockSize, int currentLevel) {
-        this.hasGameEnded = hasGameEnded;
         this.playerMovement = playerMovement;
         this.bulletLogic = bulletLogic;
         this.updateMap = updateMap;
@@ -28,7 +27,7 @@ public class KeyHandler implements EventHandler<KeyEvent> {
     @Override
     public void handle(KeyEvent event) {
         KeyCode code = event.getCode();
-        if (!hasGameEnded) {
+        if (!GamePanel.getInstance().isHasGameEnded()) {
             if (code == KeyCode.UP || code == KeyCode.W) {
                 playerMovement.movePlayer(0, -blockSize); // Move up
             } else if (code == KeyCode.DOWN || code == KeyCode.S) {
@@ -41,8 +40,16 @@ public class KeyHandler implements EventHandler<KeyEvent> {
                 updateMap.run();
             } else if (code == KeyCode.SPACE) {
                 bulletLogic.shootBullet();
-            } else if (code == KeyCode.P && hasGameEnded) {
-                System.out.println("Pressed P !");
+            } else if (code == KeyCode.P) {
+                System.out.println("Restart P !");
+                GameInstance gi = new GameInstance();
+                gi.resetGameInstance();
+                updateMap.run();
+                updateSpawnablePosition.run();
+            }
+        } else {
+            if (code == KeyCode.O && GamePanel.getInstance().isHasGameEnded()) {
+                System.out.println("Pressed OOOOOOOOOOOOOOOOOOOOOOOOO !");
                 GameInstance gi = new GameInstance();
                 gi.resetGameInstance();
                 updateMap.run();

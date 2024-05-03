@@ -51,7 +51,7 @@ public class BulletLogic {
         Iterator<Bullet> bulletIterator = GamePanel.getInstance().getBullets().iterator();
         while (bulletIterator.hasNext()) {
             Bullet bullet = bulletIterator.next();
-            Iterator<Ghost> ghostIterator = GamePanel.getInstance().getGhosts().iterator();
+            Iterator<Ghost> ghostIterator = GhostSpawner.getGhosts().iterator();
             while (ghostIterator.hasNext()) {
                 Ghost ghost = ghostIterator.next();
                 // Check if the coordinates of the bullet intersect with the coordinates of the ghost
@@ -81,27 +81,5 @@ public class BulletLogic {
             }
         }
 
-        for (Ghost ghost : GamePanel.getInstance().getGhosts()) {
-            if (GamePanel.getInstance().getPlayerX() == ghost.getY() * blockSize && GamePanel.getInstance().getPlayerY() == ghost.getX() * blockSize) {
-                // Player collides with ghost, set current score to 0
-                GamePanel.getInstance().setCurrentPoint(0);
-                System.out.println("Dead...");
-                System.out.println("Has game end starting ? " + GamePanel.getInstance().isHasGameEnded());
-
-
-                GamePanel.getInstance().setPlayerX(blockSize);
-                GamePanel.getInstance().setPlayerY(blockSize);
-
-                GamePanel.getInstance().setMapPattern(level1.getMapPattern());
-
-                GamePanel.getInstance().setGhosts(new ArrayList<>());
-
-                GamePanel.getInstance().setHasGameEnded(true);
-
-                System.out.println("GAME ENDED !!");
-
-                // You might want to add additional game over logic here
-            }
-        }
     }
 }
