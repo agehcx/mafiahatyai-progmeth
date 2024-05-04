@@ -132,13 +132,13 @@ public class HomeScreen {
 
         root = new StackPane();
 
-        root.setPrefSize(1280, 765);
+        root.setPrefSize(1280, 760);
 
 //        root.setPrefSize(1053, 593);
 //        Fixed resolution size for game collision rule
         root.setBackground(new Background(new BackgroundImage(new Image("file:res/img/background.jpg"), BackgroundRepeat.NO_REPEAT,
                 BackgroundRepeat.NO_REPEAT, BackgroundPosition.CENTER,
-                new BackgroundSize(1280, 765, false, false, false, false))));
+                new BackgroundSize(1280, 760, false, false, false, false))));
 
         scene = new Scene(root);
 

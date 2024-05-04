@@ -28,6 +28,8 @@ public class LoadingScreen implements Initializable{
     public void initialize(URL location, ResourceBundle resources) {
         Image image = new Image(Objects.requireNonNull(getClass().getResourceAsStream("/img/loading_screen.jpg")));
         imageView.setImage(image);
+        imageView.setFitHeight(760);
+        imageView.setFitWidth(1280);
 
         /*
         media_player.setOnEndOfMedia(() -> {

@@ -1,10 +1,12 @@
 package logic;
 
+import component.RetroFont;
 import ghost.Ghost;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.image.Image;
 import javafx.scene.paint.Color;
+import javafx.scene.text.FontWeight;
 import javafx.util.Pair;
 import main.GamePanel;
 import map.level1;
@@ -65,6 +67,9 @@ public class PlayerMovement {
 
         // Clear canvas
         gc.clearRect(0, 0, screenWidth, screenHeight);
+
+        gc.setFill(Color.web("#FF93AC"));
+        gc.fillRect(0, 0, screenWidth, screenHeight);
 
         for (Ghost ghost : GhostSpawner.getGhosts()) {
             if (GamePanel.getInstance().getPlayerX() == ghost.getY() * blockSize && GamePanel.getInstance().getPlayerY() == ghost.getX() * blockSize) {
@@ -151,6 +156,14 @@ public class PlayerMovement {
                 default -> gc.drawImage(bulletRight, bullet.getX(), bullet.getY());
             };
         }
+
+//        if ()
+        gc.setFill(Color.WHITE);
+        gc.setFont(new RetroFont("Arial", 20).getFont());
+        gc.fillText("Score : " + GamePanel.getInstance().getCurrentPoint(), 20, screenHeight - 15);
+        gc.setFont(new RetroFont("Arial", 20).getFont());
+        gc.fillText("Level : " + GamePanel.getInstance().getCurrentLevel(), screenWidth - 125, screenHeight - 15);
+//        gc.fillText("GameEnd : " + GamePanel.getInstance().isHasGameEnded(), screenWidth - 500, screenHeight - 15);
 
         gc.drawImage(GamePanel.getInstance().getImageManager().getCurrentCharacterImage(), GamePanel.getInstance().getPlayerX() - 0.1 * blockSize, GamePanel.getInstance().getPlayerY() - 0.2 * blockSize);
         GamePanel.getInstance().getChildren().setAll(canvas);
