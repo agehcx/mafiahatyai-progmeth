@@ -1,7 +1,9 @@
 package logic;
 
 import ghost.Ghost;
+import ghost.NormalGhost;
 import ghost.SpeedyGhost;
+import ghost.TankGhost;
 import javafx.scene.media.Media;
 import javafx.scene.media.MediaPlayer;
 import main.GamePanel;
@@ -69,19 +71,28 @@ public class BulletLogic {
                         bullet.getX() <= ghost.getY() * blockSize + blockSize * 1.25    ) {
 
                     // Remove the bullet and ghost upon collision
-                    bulletIterator.remove();
-                    ghostIterator.remove();
+                    if (ghost.getHp() == 1) {
+                        bulletIterator.remove();
+                        ghostIterator.remove();
 
-                    if (ghost instanceof Ghost) {
-                        GamePanel.getInstance().setCurrentPoint(GamePanel.getInstance().getCurrentPoint() + 10);
-                    } else if (ghost instanceof SpeedyGhost) {
-                        GamePanel.getInstance().setCurrentPoint(GamePanel.getInstance().getCurrentPoint() + 20);
-//                        setCurrentPoint(getCurrentPoint() + 20);
-                    }
+                        if (ghost instanceof NormalGhost) {
+                            GamePanel.getInstance().setCurrentPoint(GamePanel.getInstance().getCurrentPoint() + 10);
+                        } else if (ghost instanceof SpeedyGhost) {
+                            GamePanel.getInstance().setCurrentPoint(GamePanel.getInstance().getCurrentPoint() + 15);
+                        } else if (ghost instanceof TankGhost) {
+                            GamePanel.getInstance().setCurrentPoint(GamePanel.getInstance().getCurrentPoint() + 20);
+                        }
 
 //                    this.pointLabel.setText(String.format("Point : %d", this.getCurrentPoint()));
 
-                    System.out.println("Current Point : " + GamePanel.getInstance().getCurrentPoint());
+                        System.out.println("Current Point : " + GamePanel.getInstance().getCurrentPoint());
+
+
+                    } else {
+                        ghost.setHp(ghost.getHp() - 1);
+                        bulletIterator.remove();
+                    }
+
                     break;
                 }
             }

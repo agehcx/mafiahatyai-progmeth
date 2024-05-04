@@ -103,6 +103,14 @@ public class Ghost {
         ghostDirection = Direction.values()[randomDirectionIndex];
     }
 
+    public int getHp() {
+        return hp;
+    }
+
+    public void setHp(int hp) {
+        this.hp = hp;
+    }
+
     public int getX() {
         return x;
     }

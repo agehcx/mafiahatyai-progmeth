@@ -111,7 +111,7 @@ public class GhostSpawner {
     private static boolean isWithinRangeOfPlayer(int x, int y) {
         int playerX = GamePanel.getInstance().getPlayerX();
         int playerY = GamePanel.getInstance().getPlayerY();
-        return Math.abs(playerX - y) <= 2 && Math.abs(playerY - x) <= 2;
+        return (Math.abs(playerX - y) <= 2 && Math.abs(playerY - x) <= 2) || Math.abs(playerX - x) <= 2 && Math.abs(playerY - y) <= 2;
     }
 
     // Getter for ghosts list
