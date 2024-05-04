@@ -1,6 +1,9 @@
 package logic;
 
 import ghost.Ghost;
+import ghost.NormalGhost;
+import ghost.SpeedyGhost;
+import ghost.TankGhost;
 import javafx.util.Pair;
 import main.GamePanel;
 
@@ -77,8 +80,26 @@ public class GhostSpawner {
         int spawnedGhostX = pair.getKey();
         int spawnedGhostY = pair.getValue();
 
-        Ghost spawnedGhost = new Ghost(spawnedGhostX, spawnedGhostY, 1);
-        ghosts.add(spawnedGhost);
+        Random rnd = new Random();
+        int rndGhost = random.nextInt(3);
+
+        switch (rndGhost) {
+            case 0 -> {
+                NormalGhost spawnedGhost = new NormalGhost(1, spawnedGhostX, spawnedGhostY, 1);
+                ghosts.add(spawnedGhost);
+            }
+            case 1 -> {
+                SpeedyGhost speedGhost = new SpeedyGhost(1, spawnedGhostX,spawnedGhostY, 2);
+                ghosts.add(speedGhost);
+            }
+            case 2 -> {
+                TankGhost tankGhost = new TankGhost(2, spawnedGhostX, spawnedGhostY, 1);
+                ghosts.add(tankGhost);
+            }
+        }
+
+
+
 
         return ghosts;
     }

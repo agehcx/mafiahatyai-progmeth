@@ -48,7 +48,7 @@ public class BulletLogic {
 //        GamePanel.getInstance().getGunshotSound().play();
         Media buzzerGunshot = new Media(new File("res/sound/shoot.mp3").toURI().toString());
         MediaPlayer gunshot = new MediaPlayer(buzzerGunshot);
-        gunshot.setVolume(0.05);
+        gunshot.setVolume(0.125);
         gunshot.play();
     }
 

@@ -100,6 +100,8 @@ class map.level2 {
 + {static} char[][] getMapPattern()
 + {static} void setMapPattern(char[][])
 }
+class ghost.TankGhost {
+}
 class component.BBFont {
 + <<Create>> BBFont(String,Integer,Paint)
 + <<Create>> BBFont(String,Integer)
@@ -120,8 +122,6 @@ class main.Main {
 + {static} void main(String[])
 }
 class main.GamePanel {
-- Label pointLabel
-- Label levelLabel
 - {static} GamePanel instance
 - PlayerMovement playerMovement
 - BulletLogic bulletLogic
@@ -141,11 +141,15 @@ class main.GamePanel {
 - {static} ArrayList<Pair<Integer,Integer>> spawnablePosition
 ~ Media buzzer
 ~ MediaPlayer gunshotSound
+~ Media bgm
+~ MediaPlayer backgroundMusic
 - boolean hasGameEnded
 - boolean isUpdatingMap
+- boolean hasKey
 - int currentPoint
 - int currentLevel
 - int[] extraGhost
+- int[] levelSpawntime
 - long startTimeNano
 + <<Create>> GamePanel()
 + int getScreenWidth()
@@ -178,7 +182,10 @@ class main.GamePanel {
 + int getCurrentLevel()
 + void setCurrentLevel(int)
 + MediaPlayer getGunshotSound()
-+ void setGunshotSound(MediaPlayer)
++ boolean isHasKey()
++ void setHasKey(boolean)
++ MediaPlayer getBackgroundMusic()
++ void stopBackgroundMusic()
 + {static} GamePanel getInstance()
 + {static} void setInstance(GamePanel)
 + PlayerMovement getPlayerMovement()
@@ -244,6 +251,8 @@ class logic.GameInstance {
 + <<Create>> GameInstance()
 + void resetGameInstance()
 }
+class ghost.BossGhost {
+}
 class logic.BulletLogic {
 + <<Create>> BulletLogic()
 + void updateBullets()
@@ -299,6 +308,10 @@ class map.level1 {
 }
 class logic.MapLoader {
 ~ {static} boolean isUpdatingMap
+~ {static} int chestX
+~ {static} int chestY
+~ {static} int homeX
+~ {static} int homeY
 + {static} GamePanel updateMap(int)
 + {static} boolean isIsUpdatingMap()
 + {static} void setIsUpdatingMap(boolean)
@@ -320,11 +333,13 @@ map.levelMap <|-- map.level5
 javafx.event.EventHandler <|.. logic.KeyHandler
 javafx.scene.text.Text <|-- component.SupermarketFont
 map.levelMap <|-- map.level2
+ghost.Ghost <|-- ghost.TankGhost
 javafx.scene.text.Text <|-- component.BBFont
 map.levelMap <|-- map.level3
 javafx.scene.text.Text <|-- component.TekoFont
 javafx.application.Application <|-- main.Main
 javafx.scene.layout.Pane <|-- main.GamePanel
+ghost.Ghost <|-- ghost.BossGhost
 ghost.Ghost <|-- ghost.SpeedyGhost
 javafx.scene.text.Text <|-- component.RetroFont
 map.levelMap <|-- map.level4
