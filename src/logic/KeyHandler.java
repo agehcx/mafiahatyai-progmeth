@@ -5,20 +5,18 @@ import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 import main.GamePanel;
 
-import java.util.Map;
-
 public class KeyHandler implements EventHandler<KeyEvent> {
 
-    private PlayerMovement playerMovement;
+    private Movement playerMovement;
     private BulletLogic bulletLogic;
     private Runnable updateMap;
     private Runnable updateSpawnablePosition;
     private int blockSize;
     private int currentLevel;
 
-    public KeyHandler(PlayerMovement playerMovement, BulletLogic bulletLogic,
-                          Runnable updateMap, Runnable updateSpawnablePosition, int blockSize, int currentLevel) {
-        this.playerMovement = playerMovement;
+    public KeyHandler(Movement movement, BulletLogic bulletLogic,
+                      Runnable updateMap, Runnable updateSpawnablePosition, int blockSize, int currentLevel) {
+        this.playerMovement = movement;
         this.bulletLogic = bulletLogic;
         this.updateMap = updateMap;
         this.updateSpawnablePosition = updateSpawnablePosition;
@@ -55,7 +53,7 @@ public class KeyHandler implements EventHandler<KeyEvent> {
                 if (   GamePanel.getInstance().getPlayerX() / blockSize == MapLoader.chestX
                     && GamePanel.getInstance().getPlayerY() / blockSize == MapLoader.chestY) {
 //                    updateMap.run();\
-                    if (GamePanel.getInstance().getCurrentPoint() >= 50) {
+                    if (GamePanel.getInstance().getCurrentPoint() >= 50 && !GamePanel.getInstance().isHasKey()) {
                         GamePanel.getInstance().setCurrentPoint(GamePanel.getInstance().getCurrentPoint() - 50);
                         GamePanel.getInstance().setHasKey(true);
                     }

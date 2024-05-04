@@ -6,12 +6,14 @@ import java.util.Random;
 
 public class Ghost {
 
+    private int hp;
     private int x;
     private int y;
     private int speed;
     private Direction ghostDirection;
 
     public Ghost() {
+        this.hp = 1;
         this.x = 1;
         this.y = 1;
         this.speed = 1;
@@ -19,27 +21,28 @@ public class Ghost {
     }
 
     public Ghost(Direction dir) {
+        this.hp = 1;
         this.x = 1;
         this.y = 1;
         this.speed = 1;
         this.ghostDirection = dir;
     }
 
-    public Ghost(int x, int y) {
+    public Ghost(int hp, int x, int y) {
         this.x = x;
         this.y = y;
         this.speed = 1;
         this.ghostDirection = Direction.UP;
     }
 
-    public Ghost(int x, int y, int speed) {
+    public Ghost(int hp, int x, int y, int speed) {
         this.x = x;
         this.y = y;
         this.speed = speed;
         this.ghostDirection = Direction.UP;
     }
 
-    public Ghost(int x, int y, int speed, Direction dir) {
+    public Ghost(int hp, int x, int y, int speed, Direction dir) {
         this.x = x;
         this.y = y;
         this.speed = speed;

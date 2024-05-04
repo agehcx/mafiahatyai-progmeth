@@ -1,6 +1,8 @@
 package main;
 
 public class Player {
+
+    private int playerHp;
     private int playerX;
     private int playerY;
 
@@ -18,5 +20,13 @@ public class Player {
 
     public void setPlayerY(int playerY) {
         this.playerY = playerY;
+    }
+
+    public int getPlayerHp() {
+        return playerHp;
+    }
+
+    public void setPlayerHp(int playerHp) {
+        this.playerHp = playerHp;
     }
 }

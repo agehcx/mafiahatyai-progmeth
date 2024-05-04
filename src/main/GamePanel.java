@@ -1,19 +1,9 @@
 package main;
 
-import ghost.Ghost;
-import ghost.SpeedyGhost;
 import javafx.animation.AnimationTimer;
-import javafx.fxml.FXML;
-import javafx.scene.canvas.Canvas;
-import javafx.scene.canvas.GraphicsContext;
-import javafx.scene.control.Label;
-import javafx.scene.image.Image;
-import javafx.scene.input.KeyCode;
 import javafx.scene.layout.Pane;
-import javafx.scene.media.AudioClip;
 import javafx.scene.media.Media;
 import javafx.scene.media.MediaPlayer;
-import javafx.scene.paint.Color;
 import javafx.util.Pair;
 
 import logic.*;
@@ -21,28 +11,20 @@ import object.Bullet;
 import object.Direction;
 
 import java.io.File;
-import java.sql.SQLOutput;
 import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.Objects;
-import java.util.Random;
-
-
-import static logic.GhostSpawner.spawnerSpawnGhost;
 
 public class GamePanel extends Pane {
 
     private static GamePanel instance;
-    private PlayerMovement playerMovement = new PlayerMovement();
+    private Movement movement = new Movement();
     private BulletLogic bulletLogic = new BulletLogic();
     private MapLoader mapLoader = new MapLoader();
     private GhostSpawner ghostSpawner = new GhostSpawner();
     private ImageManager imageManager = new ImageManager();
-
+    private Player player = new Player();
+    private Painter painter = new Painter();
     private int screenWidth;
     private int screenHeight;
-    private int playerX;
-    private int playerY;
     private final int blockSize = 40; // Size of each block
     private final int screenWidthBlocks = 32;
     private final int screenHeightBlocks = 18;
@@ -81,12 +63,12 @@ public class GamePanel extends Pane {
         backgroundMusic.setVolume(0.125);
         backgroundMusic.play();
 
-        playerX = blockSize * 2; // Start player at a specific position
-        playerY = blockSize * 2; // Start player at a specific position
+        player.setPlayerX(blockSize * 2); // Start player at a specific position
+        player.setPlayerY(blockSize * 2); // Start player at a specific position
 
         mapPattern = map.level1.getMapPattern();
 
-        KeyHandler keyHandler = new KeyHandler(playerMovement, bulletLogic,
+        KeyHandler keyHandler = new KeyHandler(movement, bulletLogic,
                 () -> MapLoader.updateMap(GamePanel.getInstance().getCurrentLevel() + 1),
                 GhostSpawner::updateSpawnablePosition, GamePanel.getInstance().getBlockSize(), GamePanel.getInstance().getCurrentLevel());
         this.setOnKeyPressed(keyHandler);
@@ -102,11 +84,11 @@ public class GamePanel extends Pane {
             @Override
             public void handle(long now) {
                 if (hasGameEnded) {
-                    // Handle game end logic
+//                     Handle game end logic
                 } else {
                     bulletLogic.updateBullets();
                     bulletLogic.updateBulletGhostCollisions();
-                    playerMovement.repaint();
+                    GamePanel.getInstance().getPainter().repaint();
 
                     long elapsedTimeNano = System.nanoTime() - lastGhostSpawnTime;
                     double elapsedTimeSeconds = elapsedTimeNano / 1_000_000_000.0;
@@ -119,7 +101,7 @@ public class GamePanel extends Pane {
                     elapsedTimeNano = System.nanoTime() - lastGhostMoveTime;
                     elapsedTimeSeconds = elapsedTimeNano / 1_000_000_000.0;
                     if (elapsedTimeSeconds >= 1) {
-                        playerMovement.moveGhosts();
+                        movement.moveGhosts();
                         lastGhostMoveTime = System.nanoTime();
                     }
                 }
@@ -146,19 +128,19 @@ public class GamePanel extends Pane {
     }
 
     public int getPlayerX() {
-        return playerX;
+        return player.getPlayerX();
     }
 
     public void setPlayerX(int playerX) {
-        this.playerX = playerX;
+        player.setPlayerX(playerX);
     }
 
     public int getPlayerY() {
-        return playerY;
+        return player.getPlayerY();
     }
 
     public void setPlayerY(int playerY) {
-        this.playerY = playerY;
+        player.setPlayerY(playerY);
     }
 
     public int getBlockSize() {
@@ -271,8 +253,9 @@ public class GamePanel extends Pane {
 
     // Non-getter/setter functions
 
-    public void stopBackgroundMusic() {
-        backgroundMusic.stop();
+    public void playBossMusic() {
+        backgroundMusic.setVolume(0);
+
     }
 
     // Instance + Logic classes
@@ -283,10 +266,6 @@ public class GamePanel extends Pane {
 
     public static void setInstance(GamePanel instance) {
         GamePanel.instance = instance;
-    }
-
-    public PlayerMovement getPlayerMovement() {
-        return playerMovement;
     }
 
     public BulletLogic getBulletLogic() {
@@ -303,5 +282,17 @@ public class GamePanel extends Pane {
 
     public ImageManager getImageManager() {
         return imageManager;
+    }
+
+    public Player getPlayer() {
+        return player;
+    }
+
+    public Movement getMovement() {
+        return movement;
+    }
+
+    public Painter getPainter() {
+        return painter;
     }
 }
