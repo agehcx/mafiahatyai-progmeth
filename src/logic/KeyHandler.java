@@ -51,6 +51,7 @@ public class KeyHandler implements EventHandler<KeyEvent> {
             } else if (code == KeyCode.E) {
                 System.out.println(GamePanel.getInstance().getPlayerX() + "," + GamePanel.getInstance().getPlayerY());
                 System.out.println(MapLoader.chestX + "," + MapLoader.chestY);
+                System.out.println(MapLoader.homeX  + "," + MapLoader.homeY );
                 if (   GamePanel.getInstance().getPlayerX() / blockSize == MapLoader.chestX
                     && GamePanel.getInstance().getPlayerY() / blockSize == MapLoader.chestY) {
                     updateMap.run();

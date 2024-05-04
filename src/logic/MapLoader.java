@@ -12,8 +12,8 @@ public class MapLoader {
     static boolean isUpdatingMap;
     static int chestX = 16;
     static int chestY = 10;
-    static int homeX;
-    static int homeY;
+    static int homeX = 16;
+    static int homeY = 1;
 
     public static GamePanel updateMap(int level) {
 
@@ -69,11 +69,11 @@ public class MapLoader {
                 if (mapPattern[i][j] == 'O') {
                     spawnablePosition.add(new Pair<>(i, j));
                 } else if (mapPattern[i][j] == 'C') {
-                    chestX = i;
-                    chestY = j;
+                    chestX = j;
+                    chestY = i;
                 } else if (mapPattern[i][j] == 'H') {
-                    homeX = i;
-                    homeY = j;
+                    homeX = j;
+                    homeY = i;
                 }
             }
         }
