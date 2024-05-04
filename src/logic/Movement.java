@@ -46,7 +46,7 @@ public class Movement {
 
     }
 
-    private void updateDirection(int dx, int dy) {
+    void updateDirection(int dx, int dy) {
         if (dx > 0) { // Moving right
             GamePanel.getInstance().setPlayerDirection(Direction.RIGHT);
             GamePanel.getInstance().getImageManager().setCurrentCharacterImage(GamePanel.getInstance().getImageManager().getCharacterRight());

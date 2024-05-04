@@ -2,11 +2,11 @@ package ghost;
 
 public class NormalGhost extends Ghost {
     public NormalGhost() {
-        super(1,1,1,2);
+        super(1,1,1,1);
     }
 
     public NormalGhost(int x, int y) {
-        super(1, x, y, 2);
+        super(1, x, y, 1);
     }
 
     public NormalGhost(int x, int y, int speed) {

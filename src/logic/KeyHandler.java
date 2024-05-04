@@ -1,22 +1,25 @@
 package logic;
 
+import javafx.animation.PauseTransition;
 import javafx.event.EventHandler;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
+import javafx.util.Duration;
 import main.GamePanel;
 
 public class KeyHandler implements EventHandler<KeyEvent> {
 
-    private Movement playerMovement;
+    private Movement movement;
     private BulletLogic bulletLogic;
     private Runnable updateMap;
     private Runnable updateSpawnablePosition;
     private int blockSize;
     private int currentLevel;
+    private boolean canShoot = true;
 
     public KeyHandler(Movement movement, BulletLogic bulletLogic,
                       Runnable updateMap, Runnable updateSpawnablePosition, int blockSize, int currentLevel) {
-        this.playerMovement = movement;
+        this.movement = movement;
         this.bulletLogic = bulletLogic;
         this.updateMap = updateMap;
         this.updateSpawnablePosition = updateSpawnablePosition;
@@ -29,17 +32,28 @@ public class KeyHandler implements EventHandler<KeyEvent> {
         KeyCode code = event.getCode();
         if (!GamePanel.getInstance().isHasGameEnded()) {
             if (code == KeyCode.UP || code == KeyCode.W) {
-                playerMovement.movePlayer(0, -blockSize); // Move up
+                movement.updateDirection(0,-1);
+                movement.movePlayer(0, -blockSize); // Move up
             } else if (code == KeyCode.DOWN || code == KeyCode.S) {
-                playerMovement.movePlayer(0, blockSize); // Move down
+                movement.updateDirection(0,1);
+                movement.movePlayer(0, blockSize); // Move down
             } else if (code == KeyCode.LEFT || code == KeyCode.A) {
-                playerMovement.movePlayer(-blockSize, 0); // Move left
+                movement.updateDirection(-1,0);
+                movement.movePlayer(-blockSize, 0); // Move left
             } else if (code == KeyCode.RIGHT || code == KeyCode.D) {
-                playerMovement.movePlayer(blockSize, 0); // Move right
+                movement.updateDirection(1,0);
+                movement.movePlayer(blockSize, 0); // Move right
             } else if (code == KeyCode.ESCAPE) {
-                updateMap.run();
+                updateMap.run(); // Dev mode
             } else if (code == KeyCode.SPACE) {
-                bulletLogic.shootBullet();
+                if (canShoot) {
+                    bulletLogic.shootBullet();
+                    canShoot = false;
+                    PauseTransition delay = new PauseTransition(Duration.seconds(1));
+                    delay.setOnFinished(e -> canShoot = true);
+                    delay.play();
+                }
+
             } else if (code == KeyCode.P) {
                 System.out.println("Restart P !");
                 GameInstance gi = new GameInstance();
@@ -70,8 +84,9 @@ public class KeyHandler implements EventHandler<KeyEvent> {
                 System.out.println("Pressed OOOOOOOOOOOOOOOOOOOOOOOOO !");
                 GameInstance gi = new GameInstance();
                 gi.resetGameInstance();
-                updateMap.run();
-                updateSpawnablePosition.run();
+                MapLoader.updateMap(1);
+//                updateMap.run();
+//                updateSpawnablePosition.run();
             }
         }
     }
