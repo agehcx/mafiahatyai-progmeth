@@ -152,7 +152,7 @@ public class PlayerMovement {
             };
         }
 
-        gc.drawImage(GamePanel.getInstance().getImageManager().getCurrentCharacterImage(), GamePanel.getInstance().getPlayerX(), GamePanel.getInstance().getPlayerY());
+        gc.drawImage(GamePanel.getInstance().getImageManager().getCurrentCharacterImage(), GamePanel.getInstance().getPlayerX() - 0.1 * blockSize, GamePanel.getInstance().getPlayerY() - 0.2 * blockSize);
         GamePanel.getInstance().getChildren().setAll(canvas);
     }
 
