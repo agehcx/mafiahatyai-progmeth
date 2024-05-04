@@ -18,10 +18,10 @@
     </center>
 
     <bottom>
-        <HBox prefHeight="35" style="-fx-padding: 10px, 5px, 10px, 5px; -fx-background-color: #FF93AC">
-            <Label style="-fx-font-size: 140%; -fx-text-fill: white" text="Press E to buy keys."/>
-            <Label fx:id="pointLabel" style="-fx-font-size: 140%; -fx-text-fill: white"/>
-            <Label fx:id="levelLabel" style="-fx-font-size: 140%; -fx-text-fill: white"/>
-        </HBox>
+<!--        <HBox prefHeight="35" style="-fx-padding: 10px, 5px, 10px, 5px; -fx-background-color: #FF93AC">-->
+<!--            <Label style="-fx-font-size: 140%; -fx-text-fill: white" text="Press E to buy keys."/>-->
+<!--            <Label fx:id="pointLabel" style="-fx-font-size: 140%; -fx-text-fill: white"/>-->
+<!--            <Label fx:id="levelLabel" style="-fx-font-size: 140%; -fx-text-fill: white"/>-->
+<!--        </HBox>-->
     </bottom>
 </BorderPane>

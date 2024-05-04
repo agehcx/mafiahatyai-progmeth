@@ -73,7 +73,7 @@ public class GamePanel extends Pane {
         double v = blockSize * (double) screenWidthBlocks;
         screenWidth = (int) v;
         double v1 = blockSize * (double) screenHeightBlocks;
-        screenHeight = (int) v1;
+        screenHeight = (int) v1 + 40;
 
         this.setPrefSize(screenWidth, screenHeight);
         this.setStyle("-fx-background-color: black;");
@@ -255,9 +255,7 @@ public class GamePanel extends Pane {
         return gunshotSound;
     }
 
-
     // Instance + Logic classes
-
 
     public static GamePanel getInstance() {
         return instance;
