@@ -58,6 +58,7 @@ public class MapLoader {
                 GamePanel.getInstance().getImageManager().setFootPath(new Image("file:res/gif/rock.jpg", blockSize, blockSize, true, true));
             }
             case 5 -> {
+                GamePanel.getInstance().stopBackgroundMusic();
                 mapPattern = map.level5.getMapPattern();
                 GamePanel.getInstance().getImageManager().setWall(new Image("file:res/gif/water.jpg", blockSize, blockSize, true, true));
                 GamePanel.getInstance().getImageManager().setFootPath(new Image("file:res/grass/rock.jpg", blockSize, blockSize, true, true));

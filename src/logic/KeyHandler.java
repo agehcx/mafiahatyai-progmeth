@@ -49,12 +49,22 @@ public class KeyHandler implements EventHandler<KeyEvent> {
                 updateMap.run();
                 updateSpawnablePosition.run();
             } else if (code == KeyCode.E) {
-                System.out.println(GamePanel.getInstance().getPlayerX() + "," + GamePanel.getInstance().getPlayerY());
-                System.out.println(MapLoader.chestX + "," + MapLoader.chestY);
-                System.out.println(MapLoader.homeX  + "," + MapLoader.homeY );
+//                System.out.println(GamePanel.getInstance().getPlayerX() + "," + GamePanel.getInstance().getPlayerY());
+//                System.out.println(MapLoader.chestX + "," + MapLoader.chestY);
+//                System.out.println(MapLoader.homeX  + "," + MapLoader.homeY );
                 if (   GamePanel.getInstance().getPlayerX() / blockSize == MapLoader.chestX
                     && GamePanel.getInstance().getPlayerY() / blockSize == MapLoader.chestY) {
-                    updateMap.run();
+//                    updateMap.run();\
+                    if (GamePanel.getInstance().getCurrentPoint() >= 50) {
+                        GamePanel.getInstance().setCurrentPoint(GamePanel.getInstance().getCurrentPoint() - 50);
+                        GamePanel.getInstance().setHasKey(true);
+                    }
+                } else if (GamePanel.getInstance().getPlayerX() / blockSize == MapLoader.homeX
+                        && GamePanel.getInstance().getPlayerY() / blockSize == MapLoader.homeY) {
+                    if (GamePanel.getInstance().isHasKey()) {
+                        updateMap.run();
+                        GamePanel.getInstance().setHasKey(false);
+                    }
                 }
             }
         } else {
