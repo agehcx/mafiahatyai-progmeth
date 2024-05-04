@@ -2,14 +2,19 @@ package logic;
 
 import ghost.Ghost;
 import ghost.SpeedyGhost;
+import javafx.scene.media.Media;
+import javafx.scene.media.MediaPlayer;
 import main.GamePanel;
 import map.level1;
 import object.Bullet;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.Iterator;
 
 public class BulletLogic {
+
+
 
     public BulletLogic() {}
 
@@ -39,8 +44,12 @@ public class BulletLogic {
         GamePanel.getInstance().setBullets(updatedBullet);
 //        mediaPlayer.setVolume(0.025);
 //        mediaPlayer.play();
-        GamePanel.getInstance().getGunshotSound().setVolume(0.25);
-        GamePanel.getInstance().getGunshotSound().play();
+//        GamePanel.getInstance().getGunshotSound().setVolume(0.25);
+//        GamePanel.getInstance().getGunshotSound().play();
+        Media buzzerGunshot = new Media(new File("res/sound/shoot.mp3").toURI().toString());
+        MediaPlayer gunshot = new MediaPlayer(buzzerGunshot);
+        gunshot.setVolume(0.05);
+        gunshot.play();
     }
 
     public void updateBulletGhostCollisions() {

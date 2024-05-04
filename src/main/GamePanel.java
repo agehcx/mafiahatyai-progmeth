@@ -31,11 +31,7 @@ import java.util.Random;
 import static logic.GhostSpawner.spawnerSpawnGhost;
 
 public class GamePanel extends Pane {
-    @FXML
-    private Label pointLabel;
 
-    @FXML
-    private Label levelLabel;
     private static GamePanel instance;
     private PlayerMovement playerMovement = new PlayerMovement();
     private BulletLogic bulletLogic = new BulletLogic();
@@ -55,8 +51,10 @@ public class GamePanel extends Pane {
 //    private static ArrayList<Ghost> ghosts = new ArrayList<>();
     private Direction playerDirection = Direction.RIGHT;
     private static ArrayList<Pair<Integer,Integer>> spawnablePosition = new ArrayList<>();
-    Media buzzer = new Media(new File("res/sound/pewpew.mp3").toURI().toString());
+    Media buzzer = new Media(new File("res/sound/shoot.mp3").toURI().toString());
     MediaPlayer gunshotSound = new MediaPlayer(buzzer);
+    Media bgm = new Media(new File("res/sound/ingame.mp3").toURI().toString());
+    MediaPlayer backgroundMusic = new MediaPlayer(bgm);
     private boolean hasGameEnded = false;
     private boolean isUpdatingMap = false;
     private boolean hasKey = false;
@@ -78,6 +76,10 @@ public class GamePanel extends Pane {
         this.setPrefSize(screenWidth, screenHeight);
         this.setStyle("-fx-background-color: black;");
         this.setFocusTraversable(true);
+
+        backgroundMusic.setCycleCount(MediaPlayer.INDEFINITE);
+        backgroundMusic.setVolume(0.125);
+        backgroundMusic.play();
 
         playerX = blockSize * 2; // Start player at a specific position
         playerY = blockSize * 2; // Start player at a specific position
@@ -253,6 +255,24 @@ public class GamePanel extends Pane {
 
     public MediaPlayer getGunshotSound() {
         return gunshotSound;
+    }
+
+    public boolean isHasKey() {
+        return hasKey;
+    }
+
+    public void setHasKey(boolean hasKey) {
+        this.hasKey = hasKey;
+    }
+
+    public MediaPlayer getBackgroundMusic() {
+        return backgroundMusic;
+    }
+
+    // Non-getter/setter functions
+
+    public void stopBackgroundMusic() {
+        backgroundMusic.stop();
     }
 
     // Instance + Logic classes
