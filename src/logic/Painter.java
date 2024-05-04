@@ -2,6 +2,9 @@ package logic;
 
 import component.RetroFont;
 import ghost.Ghost;
+import ghost.NormalGhost;
+import ghost.SpeedyGhost;
+import ghost.TankGhost;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.image.Image;
@@ -28,7 +31,9 @@ public class Painter {
     final Image bulletUp = new Image("file:res/gif/bulletUp.gif", blockSize, blockSize, false, true);
     final Image bulletLeft = new Image("file:res/gif/bulletLeft.gif", blockSize, blockSize, false, true);
     final Image bulletDown = new Image("file:res/gif/bulletDown.gif", blockSize, blockSize, false, true);
-    final Image redGhost = new Image("file:res/gif/redghost.gif", blockSize, blockSize, true, true);
+    final Image normalGhost = new Image("file:res/gif/redghost.gif", blockSize, blockSize, true, true);
+    final Image tankGhost = new Image("file:res/gif/blueghost.gif", blockSize, blockSize, true, true);
+    final Image speedyGhost = new Image("file:res/gif/ghost2.gif", blockSize, blockSize, true, true);
     final Image chest = new Image("file:res/gif/chest.gif", blockSize, blockSize, true,true);
     final Image house = new Image("file:res/gif/house.png", blockSize * 2, blockSize * 2, true,true);
 
@@ -124,8 +129,12 @@ public class Painter {
 
         // Update ghost
         for (Ghost ghost : GhostSpawner.getGhosts()) {
-            if (ghost instanceof Ghost) {
-                gc.drawImage(redGhost, ghost.getY() * blockSize, ghost.getX() * blockSize);
+            if (ghost instanceof NormalGhost) {
+                gc.drawImage(normalGhost, ghost.getY() * blockSize, ghost.getX() * blockSize);
+            } else if (ghost instanceof SpeedyGhost) {
+                gc.drawImage(speedyGhost, ghost.getY() * blockSize, ghost.getX() * blockSize);
+            } else if (ghost instanceof TankGhost) {
+                gc.drawImage(tankGhost, ghost.getY() * blockSize, ghost.getX() * blockSize);
             }
         }
 
