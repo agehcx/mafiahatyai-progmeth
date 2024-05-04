@@ -43,7 +43,6 @@ public class GamePanel extends Pane {
     private GhostSpawner ghostSpawner = new GhostSpawner();
     private ImageManager imageManager = new ImageManager();
 
-
     private int screenWidth;
     private int screenHeight;
     private int playerX;
@@ -60,10 +59,12 @@ public class GamePanel extends Pane {
     MediaPlayer gunshotSound = new MediaPlayer(buzzer);
     private boolean hasGameEnded = false;
     private boolean isUpdatingMap = false;
+    private boolean hasKey = false;
     private int currentPoint = 0;
     private int currentLevel = 1;
     // Image resources
-    private final int[] extraGhost = {0, 1, 2, 3, 5};
+    private final int[] extraGhost = {0, 1, 3, 5, 8};
+    private final int[] levelSpawntime = {0, 0, 0, 1, 2};
     private long startTimeNano = 0;
 
     public GamePanel() {
@@ -108,7 +109,7 @@ public class GamePanel extends Pane {
                     long elapsedTimeNano = System.nanoTime() - lastGhostSpawnTime;
                     double elapsedTimeSeconds = elapsedTimeNano / 1_000_000_000.0;
 
-                    if (elapsedTimeSeconds >= 3 && GhostSpawner.getGhosts().size() < 5 + extraGhost[currentLevel - 1] && !isUpdatingMap) {
+                    if (elapsedTimeSeconds >= (3 - levelSpawntime[currentLevel - 1])  && GhostSpawner.getGhosts().size() < 5 + extraGhost[currentLevel - 1] && !isUpdatingMap) {
                         GhostSpawner.spawnGhost(); // Use ghostSpawner field
                         lastGhostSpawnTime = System.nanoTime();
                     }
@@ -254,9 +255,6 @@ public class GamePanel extends Pane {
         return gunshotSound;
     }
 
-    public void setGunshotSound(MediaPlayer gunshotSound) {
-        this.gunshotSound = gunshotSound;
-    }
 
     // Instance + Logic classes
 

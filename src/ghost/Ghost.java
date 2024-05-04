@@ -82,9 +82,13 @@ public class Ghost {
 
     private boolean isValidMove(int newX, int newY, char[][] mapPattern) {
         // Check if the new position is within the map boundaries and not a wall
-        return newX >= 0 && newX < mapPattern.length &&
-                newY >= 0 && newY < mapPattern[0].length &&
-                mapPattern[newX][newY] != 'X';
+        return     newX >= 0
+                && newX < mapPattern.length
+                && newY >= 0
+                && newY < mapPattern[0].length
+                && mapPattern[newX][newY] != 'X'
+                && mapPattern[newX][newY] != 'H'
+                && mapPattern[newX][newY] != 'C';
     }
 
     private void changeDirection() {

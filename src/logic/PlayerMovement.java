@@ -5,14 +5,15 @@ import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.image.Image;
 import javafx.scene.paint.Color;
+import javafx.util.Pair;
 import main.GamePanel;
 import map.level1;
 import object.Bullet;
 import object.Direction;
 
 import java.awt.*;
+import java.util.*;
 import java.util.List;
-import java.util.ArrayList;
 
 public class PlayerMovement {
 
@@ -30,6 +31,8 @@ public class PlayerMovement {
     final Image bulletLeft = new Image("file:res/gif/bulletLeft.gif", blockSize, blockSize, false, true);
     final Image bulletDown = new Image("file:res/gif/bulletDown.gif", blockSize, blockSize, false, true);
     final Image redGhost = new Image("file:res/gif/redghost.gif", blockSize, blockSize, true, true);
+    final Image chest = new Image("file:res/gif/chest.gif", blockSize, blockSize, true,true);
+    final Image house = new Image("file:res/gif/house.png", blockSize * 2, blockSize * 2, true,true);
 
     public void movePlayer(int dx, int dy) {
         int newX = GamePanel.getInstance().getPlayerX() + dx;
@@ -95,6 +98,8 @@ public class PlayerMovement {
             }
         }
 
+        ArrayList<Pair<Integer, Integer>> toRenderList = new ArrayList<>();
+
         // Draw map
         for (int i = 0; i < screenHeightBlocks; i++) {
             for (int j = 0; j < screenWidthBlocks; j++) {
@@ -107,11 +112,28 @@ public class PlayerMovement {
                     gc.setFill(Color.LIGHTGRAY);
                     gc.drawImage(footPath, j * blockSize, i * blockSize);
                     //gc.fillRect(j * blockSize, i * blockSize, blockSize, blockSize);
+                } else if (GamePanel.getInstance().getMapPattern()[i][j] == 'C') {
+                    gc.drawImage(footPath, j * blockSize, i * blockSize);
+                    gc.setFill(Color.GREEN);
+                    gc.drawImage(chest, j * blockSize, i * blockSize);
+                } else if (GamePanel.getInstance().getMapPattern()[i][j] == 'H') {
+//                    gc.drawImage(footPath, j * blockSize, i * blockSize);
+//                    gc.setFill(Color.GREEN);
+//                    gc.drawImage(house, j * blockSize, i * blockSize);
+                    toRenderList.add(new Pair<>(i, j));
                 }
-
             }
         }
 
+        for (Pair<Integer, Integer> position : toRenderList) {
+            // Re render-house for larger size and front z-index
+            int i = position.getKey();
+            int j = position.getValue();
+            gc.drawImage(footPath, j * blockSize, i * blockSize);
+            gc.setFill(Color.GREEN);
+            gc.drawImage(house, j * blockSize - 0.5 * blockSize , i * blockSize - blockSize );
+            // Offset
+        }
 
         // Update ghost
         for (Ghost ghost : GhostSpawner.getGhosts()) {
@@ -143,7 +165,7 @@ public class PlayerMovement {
 //        for (Ghost ghost : ghosts) {
 //            ghost.move(GamePanel.getInstance().getMapPattern());
 //        }
-//        repaint();
+        repaint();
 
     }
 

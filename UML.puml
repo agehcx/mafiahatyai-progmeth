@@ -137,7 +137,6 @@ class main.GamePanel {
 - int screenHeightBlocks
 - char[][] mapPattern
 - ArrayList<Bullet> bullets
-- {static} ArrayList<Ghost> ghosts
 - Direction playerDirection
 - {static} ArrayList<Pair<Integer,Integer>> spawnablePosition
 ~ Media buzzer
@@ -164,8 +163,6 @@ class main.GamePanel {
 + void setMapPattern(char[][])
 + ArrayList<Bullet> getBullets()
 + void setBullets(ArrayList<Bullet>)
-+ {static} ArrayList<Ghost> getGhosts()
-+ {static} void setGhosts(ArrayList<Ghost>)
 + Direction getPlayerDirection()
 + void setPlayerDirection(Direction)
 + {static} ArrayList<Pair<Integer,Integer>> getSpawnablePosition()
@@ -214,6 +211,8 @@ class logic.PlayerMovement {
 ~ Image bulletLeft
 ~ Image bulletDown
 ~ Image redGhost
+~ Image chest
+~ Image house
 + void movePlayer(int,int)
 + void repaint()
 + void moveGhosts()
