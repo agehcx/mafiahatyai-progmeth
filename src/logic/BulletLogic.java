@@ -11,8 +11,6 @@ import java.util.Iterator;
 
 public class BulletLogic {
 
-
-
     public BulletLogic() {}
 
     public void updateBullets() {
@@ -41,9 +39,8 @@ public class BulletLogic {
         GamePanel.getInstance().setBullets(updatedBullet);
 //        mediaPlayer.setVolume(0.025);
 //        mediaPlayer.play();
-        GamePanel.getInstance().getGunshotSound().setVolume(0.025);
+        GamePanel.getInstance().getGunshotSound().setVolume(0.25);
         GamePanel.getInstance().getGunshotSound().play();
-
     }
 
     public void updateBulletGhostCollisions() {

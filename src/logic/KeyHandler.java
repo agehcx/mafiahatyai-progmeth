@@ -5,6 +5,8 @@ import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 import main.GamePanel;
 
+import java.util.Map;
+
 public class KeyHandler implements EventHandler<KeyEvent> {
 
     private PlayerMovement playerMovement;
@@ -46,6 +48,14 @@ public class KeyHandler implements EventHandler<KeyEvent> {
                 gi.resetGameInstance();
                 updateMap.run();
                 updateSpawnablePosition.run();
+            } else if (code == KeyCode.E) {
+                System.out.println(GamePanel.getInstance().getPlayerX() + "," + GamePanel.getInstance().getPlayerY());
+                System.out.println(MapLoader.chestX + "," + MapLoader.chestY);
+                System.out.println(MapLoader.homeX  + "," + MapLoader.homeY );
+                if (   GamePanel.getInstance().getPlayerX() / blockSize == MapLoader.chestX
+                    && GamePanel.getInstance().getPlayerY() / blockSize == MapLoader.chestY) {
+                    updateMap.run();
+                }
             }
         } else {
             if (code == KeyCode.O && GamePanel.getInstance().isHasGameEnded()) {

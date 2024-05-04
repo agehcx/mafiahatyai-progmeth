@@ -10,6 +10,10 @@ import java.util.Random;
 public class MapLoader {
 
     static boolean isUpdatingMap;
+    static int chestX = 16;
+    static int chestY = 10;
+    static int homeX = 16;
+    static int homeY = 1;
 
     public static GamePanel updateMap(int level) {
 
@@ -64,6 +68,12 @@ public class MapLoader {
             for (int j = 0; j < 32; j++) {
                 if (mapPattern[i][j] == 'O') {
                     spawnablePosition.add(new Pair<>(i, j));
+                } else if (mapPattern[i][j] == 'C') {
+                    chestX = j;
+                    chestY = i;
+                } else if (mapPattern[i][j] == 'H') {
+                    homeX = j;
+                    homeY = i;
                 }
             }
         }
