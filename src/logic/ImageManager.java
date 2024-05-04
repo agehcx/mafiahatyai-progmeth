@@ -12,7 +12,6 @@ public class ImageManager {
     private Image currentCharacterImage = characterRight;
     private Image wall;
     private Image footPath;
-    private Image whiteDot;
     private Image bulletRight;
     private Image bulletUp;
     private Image bulletLeft;
@@ -27,7 +26,6 @@ public class ImageManager {
         currentCharacterImage = characterRight;
         wall = new Image("file:res/gif/grass.jpg", blockSize, blockSize, true, true);
         footPath = new Image("file:res/gif/rock.jpg", blockSize, blockSize, true, true);
-        whiteDot = new Image("file:res/gif/whitedot.png", blockSize, blockSize, true, true);
         bulletRight = new Image("file:res/gif/bulletRight.gif", blockSize, blockSize, true, true);
         bulletUp = new Image("file:res/gif/bulletUp.gif", blockSize, blockSize, false, true);
         bulletLeft = new Image("file:res/gif/bulletLeft.gif", blockSize, blockSize, false, true);
@@ -89,14 +87,6 @@ public class ImageManager {
 
     public void setFootPath(Image footPath) {
         this.footPath = footPath;
-    }
-
-    public Image getWhiteDot() {
-        return whiteDot;
-    }
-
-    public void setWhiteDot(Image whiteDot) {
-        this.whiteDot = whiteDot;
     }
 
     public Image getBulletRight() {
