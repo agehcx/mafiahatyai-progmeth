@@ -36,6 +36,7 @@ public class Ghost {
     }
 
     public Ghost(int hp, int x, int y, int speed) {
+        this.hp = hp;
         this.x = x;
         this.y = y;
         this.speed = speed;
@@ -43,6 +44,7 @@ public class Ghost {
     }
 
     public Ghost(int hp, int x, int y, int speed, Direction dir) {
+        this.hp = hp;
         this.x = x;
         this.y = y;
         this.speed = speed;
