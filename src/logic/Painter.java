@@ -34,9 +34,9 @@ public class Painter {
     final Image chest = new Image("file:res/gif/chest.gif", blockSize, blockSize, true,true);
     final Image house = new Image("file:res/gif/house.png", blockSize * 2, blockSize * 2, true,true);
     final Image sword = new Image("file:res/gif/sword.gif", blockSize * 2, blockSize * 2, true,true);
-    final Image crab = new Image("file:res/gif/crab.gif", blockSize, blockSize, true,true);
-    final Image flyeye = new Image("file:res/gif/fly-eye.gif", blockSize, blockSize, true,true);
-    final Image bat = new Image("file:res/gif/bat.gif", blockSize, blockSize, true,true);
+    final Image crab = new Image("file:res/gif/crab2.gif", blockSize, blockSize, true,true);
+    final Image flyeye = new Image("file:res/gif/fly-eye2.gif", blockSize, blockSize, true,true);
+    final Image bat = new Image("file:res/gif/bat2.gif", blockSize, blockSize, true,true);
     final Image heart = new Image("file:res/gif/heart.png", blockSize, blockSize * 0.75, true,true);
 
     public Painter() {};
