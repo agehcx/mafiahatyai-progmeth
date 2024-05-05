@@ -77,9 +77,10 @@ public class BulletLogic {
                     if (bullet.getY() >= ghostX && bullet.getY() < ghostX + ghostWidth &&
                         bullet.getX() >= ghostY && bullet.getX() < ghostY + ghostHeight) {
                         // Collision detected with BossGhost
-                        MediaPlayer hurtSound = new MediaPlayer(hurt);
-                        hurtSound.setVolume(0.33);
-                        hurtSound.play();
+//                        MediaPlayer hurtSound = new MediaPlayer(hurt);
+//                        hurtSound.setVolume(0.33);
+//                        hurtSound.play();
+                        GamePanel.getInstance().getSoundLoader().playEnemyHitSound();
 
                         // Remove the bullet upon collision
                         bulletIterator.remove();

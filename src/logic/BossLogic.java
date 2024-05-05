@@ -27,9 +27,9 @@ public class BossLogic {
         double bladeY = GhostSpawner.bladeY * blockSize;
 
         // Check if the sword hits the player
-        if (playerX >= bladeY - 0.5 * blockSize && playerX <= bladeY + 0.5 * blockSize &&
-            playerY >= bladeX - 0.5 * blockSize && playerY <= bladeX + 0.5 * blockSize &&
-            GamePanel.getInstance().getMapPattern()[playerX / blockSize][playerY / blockSize] != 'B') {
+        if (playerX >= bladeY - 0.4375 * blockSize && playerX <= bladeY + 0.4375 * blockSize &&
+            playerY >= bladeX - 0.4375 * blockSize && playerY <= bladeX + 0.4375 * blockSize &&
+            GamePanel.getInstance().getMapPattern()[playerY / blockSize - 1][playerX / blockSize - 1] != 'B') {
             // Sword hit player
             System.out.println("Sword hit player");
 

@@ -26,6 +26,7 @@ public class GamePanel extends Pane {
     private Player player = new Player();
     private Painter painter = new Painter();
     private BossLogic bossLogic = new BossLogic();
+    private SoundLoader soundLoader = new SoundLoader();
     private int screenWidth;
     private int screenHeight;
     private final int blockSize = 40; // Size of each block
@@ -36,10 +37,6 @@ public class GamePanel extends Pane {
 //    private static ArrayList<Ghost> ghosts = new ArrayList<>();
     private Direction playerDirection = Direction.RIGHT;
     private static ArrayList<Pair<Integer,Integer>> spawnablePosition = new ArrayList<>();
-    Media buzzer = new Media(new File("res/sound/shoot.mp3").toURI().toString());
-    MediaPlayer gunshotSound = new MediaPlayer(buzzer);
-    Media bgm = new Media(new File("res/sound/ingame.mp3").toURI().toString());
-    MediaPlayer backgroundMusic = new MediaPlayer(bgm);
     private boolean hasGameEnded = false;
     private boolean isUpdatingMap = false;
     private boolean hasKey = false;
@@ -49,8 +46,6 @@ public class GamePanel extends Pane {
     private final int[] extraGhost = {0, 1, 3, 5, 20};
     private final int[] levelSpawntime = {0, 0, 0, 1, 2};
     private long startTimeNano = 0;
-
-    boolean hasSpawnSpinningBlade = false;
 
     public GamePanel() {
         instance = this;
@@ -68,9 +63,10 @@ public class GamePanel extends Pane {
 
         GhostSpawner.spawnGhost();
 
-        backgroundMusic.setCycleCount(MediaPlayer.INDEFINITE);
-        backgroundMusic.setVolume(0.125);
-        backgroundMusic.play();
+//        backgroundMusic.setCycleCount(MediaPlayer.INDEFINITE);
+//        backgroundMusic.setVolume(0.125);
+//        backgroundMusic.play();
+        GamePanel.getInstance().getSoundLoader().playBackgroundMusic();
 
 //        Ghost slc = GhostSpawner.getGhosts().get(0);
 //        if (slc instanceof BossGhost && !hasSpawnSpinningBlade) {
@@ -214,14 +210,6 @@ public class GamePanel extends Pane {
         GamePanel.spawnablePosition = spawnablePosition;
     }
 
-    public Media getBuzzer() {
-        return buzzer;
-    }
-
-    public void setBuzzer(Media buzzer) {
-        this.buzzer = buzzer;
-    }
-
     public boolean isHasGameEnded() {
         return hasGameEnded;
     }
@@ -254,10 +242,6 @@ public class GamePanel extends Pane {
         this.currentLevel = currentLevel;
     }
 
-    public MediaPlayer getGunshotSound() {
-        return gunshotSound;
-    }
-
     public boolean isHasKey() {
         return hasKey;
     }
@@ -266,16 +250,9 @@ public class GamePanel extends Pane {
         this.hasKey = hasKey;
     }
 
-    public MediaPlayer getBackgroundMusic() {
-        return backgroundMusic;
-    }
 
     // Non-getter/setter functions
 
-    public void playBossMusic() {
-        backgroundMusic.setVolume(0);
-
-    }
 
     // Instance + Logic classes
 
@@ -317,5 +294,9 @@ public class GamePanel extends Pane {
 
     public BossLogic getBossLogic() {
         return bossLogic;
+    }
+
+    public SoundLoader getSoundLoader() {
+        return soundLoader;
     }
 }

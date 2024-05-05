@@ -17,7 +17,7 @@ public class ReturnButton extends HBox {
 
         // backButton setup
         backButton = new GameButton();
-        ImageView backImageView = new ImageView("file:res/img/loading_screen.jpg");
+        ImageView backImageView = new ImageView("file:res/img/home.png");
         backImageView.setFitHeight(40);
         backImageView.setFitWidth(40);
         backButton.getChildren().add(backImageView);

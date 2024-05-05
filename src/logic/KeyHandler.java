@@ -21,9 +21,6 @@ public class KeyHandler implements EventHandler<KeyEvent> {
     private int currentLevel;
     private boolean canShoot = true;
 
-    Media warp = new Media(new File("res/sound/warp.mp3").toURI().toString());
-
-    Media purchase = new Media(new File("res/sound/coin.wav").toURI().toString());
 
 
     public KeyHandler(Movement movement, BulletLogic bulletLogic,
@@ -79,16 +76,18 @@ public class KeyHandler implements EventHandler<KeyEvent> {
                     if (GamePanel.getInstance().getCurrentPoint() >= 50 && !GamePanel.getInstance().isHasKey()) {
                         GamePanel.getInstance().setCurrentPoint(GamePanel.getInstance().getCurrentPoint() - 50);
                         GamePanel.getInstance().setHasKey(true);
-                        MediaPlayer purchaseSound = new MediaPlayer(purchase);
-                        purchaseSound.play();
+//                        MediaPlayer purchaseSound = new MediaPlayer(purchase);
+//                        purchaseSound.play();
+                        GamePanel.getInstance().getSoundLoader().playPurchaseSound();
                     }
                 } else if (GamePanel.getInstance().getPlayerX() / blockSize == MapLoader.homeX
                         && GamePanel.getInstance().getPlayerY() / blockSize == MapLoader.homeY) {
                     if (GamePanel.getInstance().isHasKey()) {
                         updateMap.run();
                         GamePanel.getInstance().setHasKey(false);
-                        MediaPlayer warpSound = new MediaPlayer(warp);
-                        warpSound.play();
+//                        MediaPlayer warpSound = new MediaPlayer(warp);
+//                        warpSound.play();
+                        GamePanel.getInstance().getSoundLoader().playWarpSound();
                     }
                 }
             }

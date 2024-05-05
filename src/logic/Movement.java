@@ -82,11 +82,15 @@ public class Movement {
 
                     System.out.println("GAME ENDED !!");
 
+                    GamePanel.setInstance(new GamePanel());
+
                 } else {
                     GamePanel.getInstance().getPlayer().setPlayerHp(GamePanel.getInstance().getPlayer().getPlayerHp() - 1);
                     GamePanel.getInstance().getPainter().repaint();
                     System.out.println("CASE HERE");
-                    iterator.remove();
+                    if (!(ghost instanceof BossGhost)) {
+                        iterator.remove();
+                    }
 //                    GamePanel.getInstance().getPlayer().setPlayerHp(2);
                 }
 

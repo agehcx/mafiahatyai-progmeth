@@ -122,7 +122,7 @@ public class HomeScreen {
         tutorialButton.addEventHandler(MouseEvent.MOUSE_CLICKED, new EventHandler<MouseEvent>() {
             public void handle(MouseEvent e) {
                 try {
-                    Desktop.getDesktop().browse(new URI("https://www.github.com"));
+                    Desktop.getDesktop().browse(new URI("https://github.com/agehcx/mafiahatyai-progmeth"));
                 } catch (Exception err) {
                     err.printStackTrace();
                 }

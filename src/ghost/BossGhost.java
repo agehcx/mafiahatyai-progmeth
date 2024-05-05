@@ -19,7 +19,7 @@ public class BossGhost extends Ghost {
         super(hp, x, y, speed);
     }
 
-    final int radius = 3;
+    private final int radius = 3;
 
     @Override
     public void move(char[][] mapPattern) {
@@ -36,7 +36,7 @@ public class BossGhost extends Ghost {
             case DOWN:
                 // Prevent moving to Height - 2
                 // In this case the ghost will override screen border
-                if (mapPattern[getX() + 2][getY()] == 'X') {
+                if (mapPattern[getX() + 2][getY()] == 'X' || mapPattern[getX() + 2][getY() + 1] == 'X') {
                     changeDirection();
                 } else if (isValidMove(getX() + getSpeed(), getY(), mapPattern)) {
                     setX(getX() + getSpeed());
@@ -52,7 +52,9 @@ public class BossGhost extends Ghost {
                 }
                 break;
             case RIGHT:
-                if (isValidMove(getX(), getY() + getSpeed(), mapPattern)) {
+                if (mapPattern[getX()][getY() + 2] == 'X' || mapPattern[getX() + 1][getY() + 2] == 'X') {
+                    changeDirection();
+                } else if (isValidMove(getX(), getY() + getSpeed(), mapPattern)) {
                     setY(getY() + getSpeed());
                 } else {
                     changeDirection();
