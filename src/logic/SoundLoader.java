@@ -6,13 +6,13 @@ import javafx.scene.media.MediaPlayer;
 import java.io.File;
 
 public class SoundLoader {
-    MediaPlayer gunshotSound;
-    MediaPlayer backgroundMusic;
-    MediaPlayer warpSound;
-    MediaPlayer purchaseSound;
-    MediaPlayer enemyHitSound;
-    MediaPlayer playerHitSound;
-    MediaPlayer bossDeadSound;
+    private MediaPlayer gunshotSound;
+    private MediaPlayer backgroundMusic;
+    private MediaPlayer warpSound;
+    private MediaPlayer purchaseSound;
+    private MediaPlayer enemyHitSound;
+    private MediaPlayer playerHitSound;
+    private MediaPlayer bossDeadSound;
 
     public SoundLoader() {
         Media gunshot = new Media(new File("res/sound/shoot.mp3").toURI().toString());
