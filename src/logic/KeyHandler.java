@@ -75,8 +75,8 @@ public class KeyHandler implements EventHandler<KeyEvent> {
                 if (   GamePanel.getInstance().getPlayerX() / blockSize == MapLoader.chestX
                     && GamePanel.getInstance().getPlayerY() / blockSize == MapLoader.chestY) {
 //                    updateMap.run();\
-                    if (GamePanel.getInstance().getCurrentPoint() >= 50*GamePanel.getInstance().getCurrentLevel() && !GamePanel.getInstance().isHasKey()) {
-                        GamePanel.getInstance().setCurrentPoint(GamePanel.getInstance().getCurrentPoint() - 50*GamePanel.getInstance().getCurrentLevel());
+                    if (GamePanel.getInstance().getCurrentPoint() >= 50*(GamePanel.getInstance().getCurrentLevel()+1) && !GamePanel.getInstance().isHasKey()) {
+                        GamePanel.getInstance().setCurrentPoint(GamePanel.getInstance().getCurrentPoint() - 50*(GamePanel.getInstance().getCurrentLevel()+1));
                         GamePanel.getInstance().setHasKey(true);
                         Media purchase = new Media(new File("res/sound/coin.wav").toURI().toString());
                         MediaPlayer purchaseSound = new MediaPlayer(purchase);
