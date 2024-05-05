@@ -14,7 +14,6 @@ public class GhostSpawner {
     public static double bossY;
     public static double bladeX;
     public static double bladeY;
-    public static boolean isBossDead = false;
     private static ArrayList<Pair<Integer,Integer>> spawnablePosition;
     private static ArrayList<Ghost> ghosts;
 
