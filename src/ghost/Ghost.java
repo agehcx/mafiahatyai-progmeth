@@ -93,7 +93,8 @@ public class Ghost {
                 && newY < mapPattern[0].length
                 && mapPattern[newX][newY] != 'X'
                 && mapPattern[newX][newY] != 'H'
-                && mapPattern[newX][newY] != 'C';
+                && mapPattern[newX][newY] != 'C'
+                && mapPattern[newX][newY] != 'B';
     }
 
     protected void changeDirection() {

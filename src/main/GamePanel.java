@@ -46,7 +46,7 @@ public class GamePanel extends Pane {
     private int currentPoint = 0;
     private int currentLevel = 1;
     // Image resources
-    private final int[] extraGhost = {0, 1, 3, 5, 8};
+    private final int[] extraGhost = {0, 1, 3, 5, 20};
     private final int[] levelSpawntime = {0, 0, 0, 1, 2};
     private long startTimeNano = 0;
 
