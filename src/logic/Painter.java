@@ -84,6 +84,9 @@ public class Painter {
 //                    gc.setFill(Color.GREEN);
 //                    gc.drawImage(house, j * blockSize, i * blockSize);
                     toRenderList.add(new Pair<>(i, j));
+                } else if (GamePanel.getInstance().getMapPattern()[i][j] == 'B') {
+                    gc.drawImage(footPath, j * blockSize, i * blockSize);
+                    gc.drawImage(bush, j * blockSize, i * blockSize);
                 }
             }
         }
@@ -169,12 +172,14 @@ public class Painter {
 //        gc.drawImage(whiteDot, GhostSpawner.bladeY * blockSize, GhostSpawner.bladeX * blockSize);
 //        System.out.println("Painter : " + GhostSpawner.bladeY + "," + GhostSpawner.bladeX);
 
-        gc.save(); // Save the current state
-        gc.translate(GhostSpawner.bladeY * blockSize , GhostSpawner.bladeX * blockSize); // Translate to blade position
-        GamePanel.getInstance().getBossLogic().swordHitPlayer();
+        if (GamePanel.getInstance().getCurrentLevel() == 5) {
+            gc.save(); // Save the current state
+            gc.translate(GhostSpawner.bladeY * blockSize , GhostSpawner.bladeX * blockSize); // Translate to blade position
+            GamePanel.getInstance().getBossLogic().swordHitPlayer();
 //        System.out.println("Repaint Blade : " + GhostSpawner.bladeX + "," + GhostSpawner.bladeY);
-        gc.drawImage(sword, -0.5 * blockSize,  0); // Render the blade
-        gc.restore(); // Restore the previous state
+            gc.drawImage(sword, -0.5 * blockSize,  0); // Render the blade
+            gc.restore(); // Restore the previous state
+        }
 
 
         GamePanel.getInstance().getChildren().setAll(canvas);

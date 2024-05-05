@@ -28,7 +28,8 @@ public class BossLogic {
 
         // Check if the sword hits the player
         if (playerX >= bladeY - 0.5 * blockSize && playerX <= bladeY + 0.5 * blockSize &&
-            playerY >= bladeX - 0.5 * blockSize && playerY <= bladeX + 0.5 * blockSize ) {
+            playerY >= bladeX - 0.5 * blockSize && playerY <= bladeX + 0.5 * blockSize &&
+            GamePanel.getInstance().getMapPattern()[playerX / blockSize][playerY / blockSize] != 'B') {
             // Sword hit player
             System.out.println("Sword hit player");
 

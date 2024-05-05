@@ -34,21 +34,27 @@ public class BulletLogic {
 
     // to-be moved to logic
     public void shootBullet() {
-        int bulletX = GamePanel.getInstance().getPlayerX();
-        int bulletY = GamePanel.getInstance().getPlayerY();
+        int playerX = GamePanel.getInstance().getPlayerX();
+        int playerY = GamePanel.getInstance().getPlayerY();
+        System.out.println(playerX + "," + playerY);
+        if (GamePanel.getInstance().getMapPattern()[playerY / GamePanel.getInstance().getBlockSize()][playerX / GamePanel.getInstance().getBlockSize()] != 'B') {
 
-        ArrayList<Bullet> updatedBullet = GamePanel.getInstance().getBullets();
-        updatedBullet.add(new Bullet(bulletX, bulletY, GamePanel.getInstance().getPlayerDirection()));
+            int bulletX = GamePanel.getInstance().getPlayerX();
+            int bulletY = GamePanel.getInstance().getPlayerY();
+
+            ArrayList<Bullet> updatedBullet = GamePanel.getInstance().getBullets();
+            updatedBullet.add(new Bullet(bulletX, bulletY, GamePanel.getInstance().getPlayerDirection()));
 //        GamePanel.getInstance().setBullets(GamePanel.getInstance().getBullets().add(new Bullet(bulletX, bulletY, GamePanel.getInstance().getPlayerDirection()))));
-        GamePanel.getInstance().setBullets(updatedBullet);
+            GamePanel.getInstance().setBullets(updatedBullet);
 //        mediaPlayer.setVolume(0.025);
 //        mediaPlayer.play();
 //        GamePanel.getInstance().getGunshotSound().setVolume(0.25);
 //        GamePanel.getInstance().getGunshotSound().play();
-        Media buzzerGunshot = new Media(new File("res/sound/shoot.mp3").toURI().toString());
-        MediaPlayer gunshot = new MediaPlayer(buzzerGunshot);
-        gunshot.setVolume(0.2);
-        gunshot.play();
+            Media buzzerGunshot = new Media(new File("res/sound/shoot.mp3").toURI().toString());
+            MediaPlayer gunshot = new MediaPlayer(buzzerGunshot);
+            gunshot.setVolume(0.2);
+            gunshot.play();
+        }
     }
 
     public void updateBulletGhostCollisions() {
