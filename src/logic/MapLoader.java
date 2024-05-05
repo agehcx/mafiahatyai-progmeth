@@ -50,7 +50,7 @@ public class MapLoader {
             }
             case 3 -> {
                 mapPattern = map.level3.getMapPattern();
-                GamePanel.getInstance().getImageManager().setWall(new Image("file:res/gif/tree2.png", blockSize*1.3, blockSize*1.3, true, true));
+                GamePanel.getInstance().getImageManager().setWall(new Image("file:res/gif/grass.jpg", blockSize*1.3, blockSize*1.3, true, true));
                 GamePanel.getInstance().getImageManager().setFootPath(new Image("file:res/gif/rock.jpg", blockSize, blockSize, true, true));
             }
             case 4 -> {

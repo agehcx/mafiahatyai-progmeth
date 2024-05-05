@@ -33,6 +33,7 @@ public class Painter {
     final Image slime = new Image("file:res/gif/slime.gif", blockSize * 2.5, blockSize * 2.5, true, true);
     final Image chest = new Image("file:res/gif/chest.gif", blockSize, blockSize, true,true);
     final Image house = new Image("file:res/gif/house.png", blockSize * 2, blockSize * 2, true,true);
+    final Image bush = new Image("file:res/gif/tree2.png", blockSize , blockSize, true,true);
     final Image sword = new Image("file:res/gif/sword.gif", blockSize * 2, blockSize * 2, true,true);
     final Image crab = new Image("file:res/gif/crab.gif", blockSize, blockSize, true,true);
     final Image flyeye = new Image("file:res/gif/fly-eye.gif", blockSize, blockSize, true,true);
