@@ -1,9 +1,6 @@
 package logic;
 
-import ghost.Ghost;
-import ghost.NormalGhost;
-import ghost.SpeedyGhost;
-import ghost.TankGhost;
+import ghost.*;
 import javafx.util.Pair;
 import main.GamePanel;
 
@@ -12,6 +9,12 @@ import java.util.Collection;
 import java.util.Random;
 
 public class GhostSpawner {
+
+    public static double bossX;
+    public static double bossY;
+    public static double bladeX;
+    public static double bladeY;
+    public static boolean isBossDead = false;
     private static ArrayList<Pair<Integer,Integer>> spawnablePosition;
     private static ArrayList<Ghost> ghosts;
 
@@ -99,8 +102,6 @@ public class GhostSpawner {
         }
 
 
-
-
         return ghosts;
     }
 
@@ -114,6 +115,13 @@ public class GhostSpawner {
         return (Math.abs(playerX - y) <= 2 && Math.abs(playerY - x) <= 2) || Math.abs(playerX - x) <= 2 && Math.abs(playerY - y) <= 2;
     }
 
+    public static void spawnBoss() {
+        System.out.println("BOSS SPAWNED");
+        ghosts.add(new BossGhost(15, 9, 16, 1));
+        BossGhost bg = (BossGhost) ghosts.get(ghosts.size() - 1);
+        bg.spinBlade();
+    }
+
     // Getter for ghosts list
     public static ArrayList<Ghost> getGhosts() {
         return ghosts;
@@ -123,4 +131,5 @@ public class GhostSpawner {
     public static void setGhosts(ArrayList<Ghost> newGhosts) {
         ghosts = newGhosts;
     }
+
 }

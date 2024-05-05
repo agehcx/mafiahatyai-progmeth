@@ -6,6 +6,12 @@ public class Player {
     private int playerX;
     private int playerY;
 
+    public Player() {
+        this.playerHp = 3;
+        this.playerX = 2 * 40;
+        this.playerY = 2 * 40;
+    }
+
     public int getPlayerX() {
         return playerX;
     }

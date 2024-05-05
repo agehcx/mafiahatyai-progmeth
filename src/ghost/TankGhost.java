@@ -9,7 +9,7 @@ public class TankGhost extends Ghost {
         super(2,x, y, 1);
     }
 
-    public TankGhost(int x, int y, int speed) {
+    public TankGhost(int x,  int y, int speed) {
         super(2, x, y, speed);
     }
 

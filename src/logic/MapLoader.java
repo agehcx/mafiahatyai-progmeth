@@ -62,6 +62,7 @@ public class MapLoader {
                 mapPattern = map.level5.getMapPattern();
                 GamePanel.getInstance().getImageManager().setWall(new Image("file:res/gif/water.jpg", blockSize, blockSize, true, true));
                 GamePanel.getInstance().getImageManager().setFootPath(new Image("file:res/gif/rock.jpg", blockSize, blockSize, true, true));
+                GhostSpawner.spawnBoss();
             }
         };
 
@@ -97,6 +98,7 @@ public class MapLoader {
         GamePanel.setSpawnablePosition(spawnablePosition);
         GamePanel.getInstance().setCurrentLevel(currentLevel + 1);
         isUpdatingMap = false;
+        System.out.println("Map update successfully. ");
 
         return GamePanel.getInstance();
     }

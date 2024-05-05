@@ -1,10 +1,7 @@
 package logic;
 
 import component.RetroFont;
-import ghost.Ghost;
-import ghost.NormalGhost;
-import ghost.SpeedyGhost;
-import ghost.TankGhost;
+import ghost.*;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.image.Image;
@@ -17,7 +14,6 @@ import object.Bullet;
 import java.util.ArrayList;
 
 public class Painter {
-
     private int blockSize = 40;
     private Image characterUp = new Image("file:res/character/manUp.png", blockSize*1.2, blockSize*1.2, true, true);
     private Image characterDown = new Image("file:res/character/manDown.png", blockSize*1.2, blockSize*1.2, true, true);
@@ -34,8 +30,13 @@ public class Painter {
     final Image normalGhost = new Image("file:res/gif/redghost.gif", blockSize, blockSize, true, true);
     final Image tankGhost = new Image("file:res/gif/blueghost.gif", blockSize, blockSize, true, true);
     final Image speedyGhost = new Image("file:res/gif/ghost2.gif", blockSize, blockSize, true, true);
+    final Image slime = new Image("file:res/gif/slime.gif", blockSize * 2.5, blockSize * 2.5, true, true);
     final Image chest = new Image("file:res/gif/chest.gif", blockSize, blockSize, true,true);
     final Image house = new Image("file:res/gif/house.png", blockSize * 2, blockSize * 2, true,true);
+    final Image sword = new Image("file:res/gif/sword.gif", blockSize * 2, blockSize * 2, true,true);
+    final Image crab = new Image("file:res/gif/crab.gif", blockSize, blockSize, true,true);
+    final Image flyeye = new Image("file:res/gif/fly-eye.gif", blockSize, blockSize, true,true);
+    final Image bat = new Image("file:res/gif/bat.gif", blockSize, blockSize, true,true);
 
     public Painter() {};
 
@@ -87,6 +88,9 @@ public class Painter {
                 System.out.println("GAME ENDED !!");
 
                 // You might want to add additional game over logic here
+            } if (ghost instanceof BossGhost) {
+                GhostSpawner.bossX = ghost.getX();
+                GhostSpawner.bossY = ghost.getY();
             }
         }
 
@@ -130,11 +134,13 @@ public class Painter {
         // Update ghost
         for (Ghost ghost : GhostSpawner.getGhosts()) {
             if (ghost instanceof NormalGhost) {
-                gc.drawImage(normalGhost, ghost.getY() * blockSize, ghost.getX() * blockSize);
+                gc.drawImage(crab, ghost.getY() * blockSize, ghost.getX() * blockSize);
             } else if (ghost instanceof SpeedyGhost) {
-                gc.drawImage(speedyGhost, ghost.getY() * blockSize, ghost.getX() * blockSize);
+                gc.drawImage(flyeye, ghost.getY() * blockSize, ghost.getX() * blockSize);
             } else if (ghost instanceof TankGhost) {
-                gc.drawImage(tankGhost, ghost.getY() * blockSize, ghost.getX() * blockSize);
+                gc.drawImage(bat, ghost.getY() * blockSize, ghost.getX() * blockSize);
+            } else if (ghost instanceof BossGhost) {
+                gc.drawImage(slime, ghost.getY() * blockSize - 0.5 * blockSize , ghost.getX() * blockSize - 0.5 * blockSize);
             }
         }
 
@@ -157,6 +163,21 @@ public class Painter {
 //        gc.fillText("GameEnd : " + GamePanel.getInstance().isHasGameEnded(), screenWidth - 500, screenHeight - 15);
 
         gc.drawImage(GamePanel.getInstance().getImageManager().getCurrentCharacterImage(), GamePanel.getInstance().getPlayerX() + 0.05 * blockSize, GamePanel.getInstance().getPlayerY() - 0.2 * blockSize);
+
+        // Boss spinning blade section
+
+
+//        gc.drawImage(whiteDot, GhostSpawner.bladeY * blockSize, GhostSpawner.bladeX * blockSize);
+//        System.out.println("Painter : " + GhostSpawner.bladeY + "," + GhostSpawner.bladeX);
+
+        gc.save(); // Save the current state
+        gc.translate(GhostSpawner.bladeY * blockSize , GhostSpawner.bladeX * blockSize); // Translate to blade position
+//        System.out.println("Repaint Blade : " + GhostSpawner.bladeX + "," + GhostSpawner.bladeY);
+        gc.drawImage(sword, -0.5 * blockSize,  0); // Render the blade
+        gc.restore(); // Restore the previous state
+
+
         GamePanel.getInstance().getChildren().setAll(canvas);
+
     }
 }

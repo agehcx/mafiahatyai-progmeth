@@ -1,6 +1,7 @@
 package logic;
 
 import component.RetroFont;
+import ghost.BossGhost;
 import ghost.Ghost;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
@@ -35,7 +36,18 @@ public class Movement {
 
     public void moveGhosts() {
         for (Ghost ghost : GhostSpawner.getGhosts()) {
-            ghost.move(GamePanel.getInstance().getMapPattern());
+            if (ghost instanceof BossGhost) {
+                BossGhost bg = (BossGhost) ghost;
+                int prevX = bg.getX();
+                int prevY = bg.getY();
+                ghost.move(GamePanel.getInstance().getMapPattern());
+//                if (prevX != ghost.getX() || prevY != ghost.getY()) {
+//                    ((BossGhost) ghost).spinBlade();
+//                }
+//                ((BossGhost) ghost).spinBlade();
+            } else {
+                ghost.move(GamePanel.getInstance().getMapPattern());
+            }
             GamePanel.getInstance().getPainter().repaint();
         }
 //        List<Ghost> ghosts = new ArrayList<>(GamePanel.getInstance().getGhosts());

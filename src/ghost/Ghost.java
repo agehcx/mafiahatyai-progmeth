@@ -5,7 +5,6 @@ import object.Direction;
 import java.util.Random;
 
 public class Ghost {
-
     private int hp;
     private int x;
     private int y;
@@ -53,6 +52,7 @@ public class Ghost {
 
     public void move(char[][] mapPattern) {
         // Move the ghost based on its direction
+//        if(1==1) return;
         switch (ghostDirection) {
             case UP:
                 if (isValidMove(x - speed, y, mapPattern)) {
@@ -85,7 +85,7 @@ public class Ghost {
         }
     }
 
-    private boolean isValidMove(int newX, int newY, char[][] mapPattern) {
+    protected boolean isValidMove(int newX, int newY, char[][] mapPattern) {
         // Check if the new position is within the map boundaries and not a wall
         return     newX >= 0
                 && newX < mapPattern.length
@@ -96,7 +96,7 @@ public class Ghost {
                 && mapPattern[newX][newY] != 'C';
     }
 
-    private void changeDirection() {
+    protected void changeDirection() {
         // If the ghost hits a wall, change its direction randomly
         Random random = new Random();
         int randomDirectionIndex = random.nextInt(4); // 0 to 3

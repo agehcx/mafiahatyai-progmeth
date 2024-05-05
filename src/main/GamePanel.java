@@ -1,5 +1,7 @@
 package main;
 
+import ghost.BossGhost;
+import ghost.Ghost;
 import javafx.animation.AnimationTimer;
 import javafx.scene.layout.Pane;
 import javafx.scene.media.Media;
@@ -47,6 +49,8 @@ public class GamePanel extends Pane {
     private final int[] levelSpawntime = {0, 0, 0, 1, 2};
     private long startTimeNano = 0;
 
+    boolean hasSpawnSpinningBlade = false;
+
     public GamePanel() {
         instance = this;
 
@@ -59,14 +63,25 @@ public class GamePanel extends Pane {
         this.setStyle("-fx-background-color: black;");
         this.setFocusTraversable(true);
 
+        mapPattern = map.level1.getMapPattern();
+
+        GhostSpawner.spawnGhost();
+
         backgroundMusic.setCycleCount(MediaPlayer.INDEFINITE);
         backgroundMusic.setVolume(0.125);
         backgroundMusic.play();
 
+//        Ghost slc = GhostSpawner.getGhosts().get(0);
+//        if (slc instanceof BossGhost && !hasSpawnSpinningBlade) {
+//            hasSpawnSpinningBlade = true;
+//            ((BossGhost) slc).spinBlade();
+//            System.out.println("BLADE SPINNED");
+//            hasSpawnSpinningBlade = false;
+//        }
+
         player.setPlayerX(blockSize * 2); // Start player at a specific position
         player.setPlayerY(blockSize * 2); // Start player at a specific position
 
-        mapPattern = map.level1.getMapPattern();
 
         KeyHandler keyHandler = new KeyHandler(movement, bulletLogic,
                 () -> MapLoader.updateMap(GamePanel.getInstance().getCurrentLevel() + 1),
@@ -83,8 +98,11 @@ public class GamePanel extends Pane {
 
             @Override
             public void handle(long now) {
+
                 if (hasGameEnded) {
 //                     Handle game end logic
+                    System.out.println("GAME ENDED");
+                    GhostSpawner.setGhosts(new ArrayList<>());
                 } else {
                     bulletLogic.updateBullets();
                     bulletLogic.updateBulletGhostCollisions();
@@ -93,7 +111,7 @@ public class GamePanel extends Pane {
                     long elapsedTimeNano = System.nanoTime() - lastGhostSpawnTime;
                     double elapsedTimeSeconds = elapsedTimeNano / 1_000_000_000.0;
 
-                    if (elapsedTimeSeconds >= (3 - levelSpawntime[currentLevel - 1])  && GhostSpawner.getGhosts().size() < 5 + extraGhost[currentLevel - 1] && !isUpdatingMap) {
+                    if (elapsedTimeSeconds >= (3 - levelSpawntime[currentLevel - 1])  && GhostSpawner.getGhosts().size() < 0 && !isUpdatingMap) {
                         GhostSpawner.spawnGhost(); // Use ghostSpawner field
                         lastGhostSpawnTime = System.nanoTime();
                     }

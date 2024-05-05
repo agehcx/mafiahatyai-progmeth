@@ -4,8 +4,12 @@ import javafx.animation.PauseTransition;
 import javafx.event.EventHandler;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
+import javafx.scene.media.Media;
+import javafx.scene.media.MediaPlayer;
 import javafx.util.Duration;
 import main.GamePanel;
+
+import java.io.File;
 
 public class KeyHandler implements EventHandler<KeyEvent> {
 
@@ -16,6 +20,11 @@ public class KeyHandler implements EventHandler<KeyEvent> {
     private int blockSize;
     private int currentLevel;
     private boolean canShoot = true;
+
+    Media warp = new Media(new File("res/sound/warp.mp3").toURI().toString());
+
+    Media purchase = new Media(new File("res/sound/coin.wav").toURI().toString());
+
 
     public KeyHandler(Movement movement, BulletLogic bulletLogic,
                       Runnable updateMap, Runnable updateSpawnablePosition, int blockSize, int currentLevel) {
@@ -70,12 +79,16 @@ public class KeyHandler implements EventHandler<KeyEvent> {
                     if (GamePanel.getInstance().getCurrentPoint() >= 50 && !GamePanel.getInstance().isHasKey()) {
                         GamePanel.getInstance().setCurrentPoint(GamePanel.getInstance().getCurrentPoint() - 50);
                         GamePanel.getInstance().setHasKey(true);
+                        MediaPlayer purchaseSound = new MediaPlayer(purchase);
+                        purchaseSound.play();
                     }
                 } else if (GamePanel.getInstance().getPlayerX() / blockSize == MapLoader.homeX
                         && GamePanel.getInstance().getPlayerY() / blockSize == MapLoader.homeY) {
                     if (GamePanel.getInstance().isHasKey()) {
                         updateMap.run();
                         GamePanel.getInstance().setHasKey(false);
+                        MediaPlayer warpSound = new MediaPlayer(warp);
+                        warpSound.play();
                     }
                 }
             }

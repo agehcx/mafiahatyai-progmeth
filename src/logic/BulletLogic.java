@@ -1,9 +1,6 @@
 package logic;
 
-import ghost.Ghost;
-import ghost.NormalGhost;
-import ghost.SpeedyGhost;
-import ghost.TankGhost;
+import ghost.*;
 import javafx.scene.media.Media;
 import javafx.scene.media.MediaPlayer;
 import main.GamePanel;
@@ -16,7 +13,7 @@ import java.util.Iterator;
 
 public class BulletLogic {
 
-
+    Media hurt = new Media(new File("res/sound/enemy_hurt.mp3").toURI().toString());
 
     public BulletLogic() {}
 
@@ -24,7 +21,7 @@ public class BulletLogic {
         Iterator<Bullet> iterator = GamePanel.getInstance().getBullets().iterator();
         while (iterator.hasNext()) {
             Bullet bullet = iterator.next();
-            bullet.move(GamePanel.getInstance().getBlockSize());
+            bullet.move(GamePanel.getInstance().getBlockSize() / 3); // Decrease bullet speed
             if (bulletHitsWall(bullet.getX(), bullet.getY())) {
                 iterator.remove(); // Safely removes the current bullet from the list
             }
@@ -50,7 +47,7 @@ public class BulletLogic {
 //        GamePanel.getInstance().getGunshotSound().play();
         Media buzzerGunshot = new Media(new File("res/sound/shoot.mp3").toURI().toString());
         MediaPlayer gunshot = new MediaPlayer(buzzerGunshot);
-        gunshot.setVolume(0.125);
+        gunshot.setVolume(0.2);
         gunshot.play();
     }
 
@@ -65,35 +62,66 @@ public class BulletLogic {
                 // Check if the coordinates of the bullet intersect with the coordinates of the ghost
 //                System.out.println("BL " + bullet.getX() + ',' + bullet.getY());
 //                System.out.println("GH " + ghost.getX() * blockSize + ',' + ghost.getY() * blockSize);
-                if (    bullet.getY() >= ghost.getX() * blockSize - blockSize * 0.25 &&
-                        bullet.getY() <= ghost.getX() * blockSize + blockSize * 1.25 &&
-                        bullet.getX() >= ghost.getY() * blockSize - blockSize * 0.25 &&
-                        bullet.getX() <= ghost.getY() * blockSize + blockSize * 1.25    ) {
+                if (ghost instanceof BossGhost) {
+                    int ghostX = ghost.getX() * blockSize;
+                    int ghostY = ghost.getY() * blockSize;
+                    int ghostWidth = 2 * blockSize; // BossGhost has 2x2 hitbox
+                    int ghostHeight = 2 * blockSize;
 
-                    // Remove the bullet and ghost upon collision
-                    if (ghost.getHp() == 1) {
+                    if (bullet.getY() >= ghostX && bullet.getY() < ghostX + ghostWidth &&
+                        bullet.getX() >= ghostY && bullet.getX() < ghostY + ghostHeight) {
+                        // Collision detected with BossGhost
+                        MediaPlayer hurtSound = new MediaPlayer(hurt);
+                        hurtSound.setVolume(0.33);
+                        hurtSound.play();
+
+                        // Remove the bullet upon collision
                         bulletIterator.remove();
-                        ghostIterator.remove();
 
-                        if (ghost instanceof NormalGhost) {
-                            GamePanel.getInstance().setCurrentPoint(GamePanel.getInstance().getCurrentPoint() + 10);
-                        } else if (ghost instanceof SpeedyGhost) {
-                            GamePanel.getInstance().setCurrentPoint(GamePanel.getInstance().getCurrentPoint() + 15);
-                        } else if (ghost instanceof TankGhost) {
-                            GamePanel.getInstance().setCurrentPoint(GamePanel.getInstance().getCurrentPoint() + 20);
+                        // Decrease BossGhost hp
+                        ghost.setHp(ghost.getHp() - 1);
+                        if (ghost.getHp() == 0) {
+                            ghostIterator.remove();
+                            // Boss dead
+                            GhostSpawner.isBossDead = true;
+                        }
+                        break;
+                    }
+                } else {
+
+                    if (bullet.getY() >= ghost.getX() * blockSize - blockSize * 0.25 &&
+                        bullet.getY() <= ghost.getX() * blockSize + blockSize * 0.25 &&
+                        bullet.getX() >= ghost.getY() * blockSize - blockSize * 0.25 &&
+                        bullet.getX() <= ghost.getY() * blockSize + blockSize * 0.25    ) {
+
+                        MediaPlayer hurtSound = new MediaPlayer(hurt);
+                        hurtSound.setVolume(0.33);
+                        hurtSound.play();
+
+                        // Remove the bullet and ghost upon collision
+                        if (ghost.getHp() == 1) {
+                            bulletIterator.remove();
+                            ghostIterator.remove();
+
+                            if (ghost instanceof NormalGhost) {
+                                GamePanel.getInstance().setCurrentPoint(GamePanel.getInstance().getCurrentPoint() + 10);
+                            } else if (ghost instanceof SpeedyGhost) {
+                                GamePanel.getInstance().setCurrentPoint(GamePanel.getInstance().getCurrentPoint() + 15);
+                            } else if (ghost instanceof TankGhost) {
+                                GamePanel.getInstance().setCurrentPoint(GamePanel.getInstance().getCurrentPoint() + 20);
+                            }
+
+    //                    this.pointLabel.setText(String.format("Point : %d", this.getCurrentPoint()));
+
+                            System.out.println("Current Point : " + GamePanel.getInstance().getCurrentPoint());
+
+                        } else {
+                            ghost.setHp(ghost.getHp() - 1);
+                            bulletIterator.remove();
                         }
 
-//                    this.pointLabel.setText(String.format("Point : %d", this.getCurrentPoint()));
-
-                        System.out.println("Current Point : " + GamePanel.getInstance().getCurrentPoint());
-
-
-                    } else {
-                        ghost.setHp(ghost.getHp() - 1);
-                        bulletIterator.remove();
+                        break;
                     }
-
-                    break;
                 }
             }
         }
