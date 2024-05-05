@@ -112,7 +112,7 @@ public class GamePanel extends Pane {
                     long elapsedTimeNano = System.nanoTime() - lastGhostSpawnTime;
                     double elapsedTimeSeconds = elapsedTimeNano / 1_000_000_000.0;
 
-                    if (elapsedTimeSeconds >= (3 - levelSpawntime[currentLevel - 1])  && GhostSpawner.getGhosts().size() < 0 && !isUpdatingMap) {
+                    if (elapsedTimeSeconds >= (3 - levelSpawntime[currentLevel - 1])  && GhostSpawner.getGhosts().size() < 5 + extraGhost[currentLevel - 1] && !isUpdatingMap) {
                         GhostSpawner.spawnGhost(); // Use ghostSpawner field
                         lastGhostSpawnTime = System.nanoTime();
                     }

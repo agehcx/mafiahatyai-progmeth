@@ -111,13 +111,11 @@ public class Painter {
                 int maxHP = 15;
                 double bossX = ghost.getX() * blockSize;
                 double bossY = ghost.getY() * blockSize;
-
                 // Render red HP bar
                 double barWidth = blockSize * 2; // Adjust as needed
                 double barHeight = blockSize / 3; // Adjust as needed
                 double barX = bossX - (blockSize / 4);
                 double barY = bossY - 0.5 * blockSize; // Adjust for the position above boss
-
                 // Calculate HP ratio for the bar length
                 double hpRatio = (double) bossHP / maxHP;
                 double filledWidth = barWidth * hpRatio;
@@ -145,7 +143,6 @@ public class Painter {
             };
         }
 
-//        if ()
         gc.setFill(Color.WHITE);
         gc.setFont(new RetroFont("Arial", 20).getFont());
         gc.fillText("Score : " + GamePanel.getInstance().getCurrentPoint(), 20, screenHeight - 15);

@@ -11,10 +11,12 @@ import javafx.geometry.Pos;
 import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.scene.effect.DropShadow;
 import javafx.scene.image.Image;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
+import javafx.scene.shape.StrokeType;
 import javafx.stage.Stage;
 import logic.GameInstance;
 import main.GamePanel;
@@ -36,10 +38,14 @@ public class HomeScreen {
     private GameButton tutorialButton;
     private GameButton creditButton;
     private GameButton quitButton;
+    private BBFont titleBorder;
+    private BBFont title3;
     // Edit full screen
     private final boolean fullScreen = false;
 
     private final Color buttonColor = Color.rgb(82, 210, 145);
+//    private final Color buttonColor = Color.rgb(162, 43, 43);
+//    private final Color buttonColor = Color.rgb(255, 255, 255);
 
     public HomeScreen(Stage stage) {
         this.stage = stage;
@@ -53,20 +59,39 @@ public class HomeScreen {
         buttonContainer.setSpacing(15);
         buttonContainer.setAlignment(Pos.CENTER);
         title2 = new BBFont("Hatyai Tycoon", 90);
+        title2.setFill(Color.rgb(162,43,43));
 
-        title2.setFill(Color.rgb(255,255,255));
+        DropShadow dropShadow = new DropShadow();
+        dropShadow.setRadius(5);
+        dropShadow.setOffsetX(3);
+        dropShadow.setOffsetY(3);
+        dropShadow.setColor(Color.rgb(50, 50, 50, 0.7)); // Adjust color and opacity as needed
+
+        // Apply drop shadow effect to the title text
+        title2.setEffect(dropShadow);
+
+//        titleBorder = new BBFont("Hatyai Tycoon", 90);
+//        titleBorder.setFill(Color.WHITE);
+//        titleBorder.setStroke(Color.WHITE);
+//        titleBorder.setStrokeWidth(2);
+//        titleBorder.setStrokeType(StrokeType.OUTSIDE);
 
         playButton = new GameButton(330, 80, 40, buttonColor);
-        playButton.addText("Play", 35, Color.WHITE);
+        playButton.addText("Play", 30, Color.WHITE);
+//        playButton.addText("Play", 35, Color.rgb(162,43,43));
 
         tutorialButton = new GameButton(330, 80, 40, buttonColor);
-        tutorialButton.addText("Tutorial", 35, Color.WHITE);
+        tutorialButton.addText("Tutorial", 30, Color.WHITE);
+//        tutorialButton.addText("Tutorial", 35, Color.rgb(162,43,43));
 
         creditButton = new GameButton(330, 80, 40, buttonColor);
-        creditButton.addText("Credits", 35, Color.WHITE);
+        creditButton.addText("Credits", 30, Color.WHITE);
+//        creditButton.addText("Credits", 35, Color.rgb(162,43,43));
 
         quitButton = new GameButton(330, 80, 40, buttonColor);
-        quitButton.addText("Quit Game", 35, Color.WHITE);
+        quitButton.addText("Quit Game", 30, Color.WHITE);
+//        quitButton.addText("Quit Game", 35, Color.rgb(162,43,43));
+
 
         eventSetup(gameInstance);
 
@@ -106,15 +131,10 @@ public class HomeScreen {
 
         creditButton.addEventHandler(MouseEvent.MOUSE_CLICKED, new EventHandler<MouseEvent>() {
             public void handle(MouseEvent e) {
-                // To handle credit button click event
-                root.getChildren().clear();
-                try {
-                    root.getChildren().add(FXMLLoader.load(Objects.requireNonNull(getClass().getResource("/fxml/loading_screen.fxml"))));
-                } catch (IOException ex) {
-                    throw new RuntimeException(ex);
-                }
+                root.getChildren().add(new CreditScene());
             }
         });
+
 
         quitButton.addEventHandler(MouseEvent.MOUSE_CLICKED, new EventHandler<MouseEvent>() {
             public void handle(MouseEvent e) {
@@ -123,7 +143,7 @@ public class HomeScreen {
             }
         });
 
-        buttonContainer.getChildren().addAll(title2, playButton, tutorialButton, creditButton, quitButton);
+        buttonContainer.getChildren().addAll(title2,  playButton, tutorialButton, creditButton, quitButton);
 
     }
 
@@ -136,7 +156,7 @@ public class HomeScreen {
 
 //        root.setPrefSize(1053, 593);
 //        Fixed resolution size for game collision rule
-        root.setBackground(new Background(new BackgroundImage(new Image("file:res/img/background.jpg"), BackgroundRepeat.NO_REPEAT,
+        root.setBackground(new Background(new BackgroundImage(new Image("file:res/img/finalbackground.png"), BackgroundRepeat.NO_REPEAT,
                 BackgroundRepeat.NO_REPEAT, BackgroundPosition.CENTER,
                 new BackgroundSize(1280, 760, false, false, false, false))));
 
