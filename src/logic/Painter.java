@@ -91,7 +91,7 @@ public class Painter {
             } else if (ghost instanceof BossGhost) {
                 gc.drawImage(GamePanel.getInstance().getImageManager().getSlime(), ghost.getY() * blockSize - 0.5 * blockSize , ghost.getX() * blockSize - 0.5 * blockSize);;
                 int bossHP = ghost.getHp();
-                int maxHP = 15;
+                int maxHP = 20;
                 double bossX = ghost.getX() * blockSize;
                 double bossY = ghost.getY() * blockSize;
                 // Render red HP bar

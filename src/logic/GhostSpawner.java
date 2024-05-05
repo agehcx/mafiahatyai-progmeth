@@ -117,7 +117,7 @@ public class GhostSpawner {
 
     public static void spawnBoss() {
         System.out.println("BOSS SPAWNED");
-        ghosts.add(new BossGhost(2, 9, 16, 1));
+        ghosts.add(new BossGhost(20, 9, 16, 1));
         BossGhost bg = (BossGhost) ghosts.get(ghosts.size() - 1);
         bg.spinBlade();
     }

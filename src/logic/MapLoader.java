@@ -43,10 +43,10 @@ public class MapLoader {
                 mapPattern = map.level2.getMapPattern();
                 GamePanel.getInstance().getImageManager().setWall(new Image("file:res/gif/wood.jpg", blockSize, blockSize, true, true));
                 GamePanel.getInstance().getImageManager().setFootPath(new Image("file:res/gif/grass.jpg", blockSize, blockSize, true, true));
-                GamePanel.getInstance().getImageManager().setCharacterUp(new Image("file:res/character/wmUp.png", blockSize*1.2, blockSize*1.2, true, true));
-                GamePanel.getInstance().getImageManager().setCharacterDown(new Image("file:res/character/wmDown.png", blockSize*1.2, blockSize*1.2, true, true));
-                GamePanel.getInstance().getImageManager().setCharacterRight(new Image("file:res/character/wmRight.png", blockSize*1.2, blockSize*1.2, true, true));
-                GamePanel.getInstance().getImageManager().setCharacterLeft(new Image("file:res/character/wmLeft.png", blockSize*1.2, blockSize*1.2, true, true));
+                //GamePanel.getInstance().getImageManager().setCharacterUp(new Image("file:res/character/wmUp.png", blockSize*1.2, blockSize*1.2, true, true));
+                //GamePanel.getInstance().getImageManager().setCharacterDown(new Image("file:res/character/wmDown.png", blockSize*1.2, blockSize*1.2, true, true));
+                //GamePanel.getInstance().getImageManager().setCharacterRight(new Image("file:res/character/wmRight.png", blockSize*1.2, blockSize*1.2, true, true));
+                //GamePanel.getInstance().getImageManager().setCharacterLeft(new Image("file:res/character/wmLeft.png", blockSize*1.2, blockSize*1.2, true, true));
             }
             case 3 -> {
                 mapPattern = map.level3.getMapPattern();

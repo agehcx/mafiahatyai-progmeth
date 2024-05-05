@@ -58,7 +58,7 @@ public class HomeScreen {
         buttonContainer = new VBox();
         buttonContainer.setSpacing(15);
         buttonContainer.setAlignment(Pos.CENTER);
-        title2 = new BBFont("Hatyai Tycoon", 90);
+        title2 = new BBFont("Danger World", 90);
         title2.setFill(Color.rgb(162,43,43));
 
         DropShadow dropShadow = new DropShadow();
@@ -163,7 +163,7 @@ public class HomeScreen {
         scene = new Scene(root);
 
         stage.setScene(scene);
-        stage.setTitle("Hatyai Tycoon");
+        stage.setTitle("Danger World");
 
         stage.setResizable(false);
         stage.setFullScreen(fullScreen);

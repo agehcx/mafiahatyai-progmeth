@@ -50,7 +50,7 @@ public class KeyHandler implements EventHandler<KeyEvent> {
                 movement.updateDirection(1,0);
                 movement.movePlayer(blockSize, 0); // Move right
             } else if (code == KeyCode.ESCAPE) {
-                updateMap.run(); // Dev mode
+                //updateMap.run(); // Dev mode
             } else if (code == KeyCode.SPACE) {
                 if (canShoot) {
                     bulletLogic.shootBullet();
@@ -61,7 +61,7 @@ public class KeyHandler implements EventHandler<KeyEvent> {
                 }
 
             } else if (code == KeyCode.Q) {
-                GamePanel.getInstance().setCurrentPoint(5000);
+                //GamePanel.getInstance().setCurrentPoint(5000);
             } else if (code == KeyCode.P) {
                 System.out.println("Restart P !");
                 GameInstance gi = new GameInstance();
@@ -75,8 +75,8 @@ public class KeyHandler implements EventHandler<KeyEvent> {
                 if (   GamePanel.getInstance().getPlayerX() / blockSize == MapLoader.chestX
                     && GamePanel.getInstance().getPlayerY() / blockSize == MapLoader.chestY) {
 //                    updateMap.run();\
-                    if (GamePanel.getInstance().getCurrentPoint() >= 50 && !GamePanel.getInstance().isHasKey()) {
-                        GamePanel.getInstance().setCurrentPoint(GamePanel.getInstance().getCurrentPoint() - 50);
+                    if (GamePanel.getInstance().getCurrentPoint() >= 50*GamePanel.getInstance().getCurrentLevel() && !GamePanel.getInstance().isHasKey()) {
+                        GamePanel.getInstance().setCurrentPoint(GamePanel.getInstance().getCurrentPoint() - 50*GamePanel.getInstance().getCurrentLevel());
                         GamePanel.getInstance().setHasKey(true);
                         Media purchase = new Media(new File("res/sound/coin.wav").toURI().toString());
                         MediaPlayer purchaseSound = new MediaPlayer(purchase);

@@ -24,7 +24,7 @@ public class Main extends Application {
         new HomeScreen(primaryStage);
 //        primaryStage.setScene(new Scene(new HomeScreen(), 1280, 765));
 
-        primaryStage.setTitle("Hatyai Tycoon");
+        primaryStage.setTitle("Danger World");
         primaryStage.setResizable(false);
         primaryStage.centerOnScreen();
         primaryStage.show();
