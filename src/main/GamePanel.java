@@ -25,6 +25,7 @@ public class GamePanel extends Pane {
     private ImageManager imageManager = new ImageManager();
     private Player player = new Player();
     private Painter painter = new Painter();
+    private BossLogic bossLogic = new BossLogic();
     private int screenWidth;
     private int screenHeight;
     private final int blockSize = 40; // Size of each block
@@ -312,5 +313,9 @@ public class GamePanel extends Pane {
 
     public Painter getPainter() {
         return painter;
+    }
+
+    public BossLogic getBossLogic() {
+        return bossLogic;
     }
 }

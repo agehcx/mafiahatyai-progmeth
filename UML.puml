@@ -18,6 +18,11 @@ class object.Bullet {
 + void setDirection(Direction)
 }
 class logic.GhostSpawner {
++ {static} double bossX
++ {static} double bossY
++ {static} double bladeX
++ {static} double bladeY
++ {static} boolean isBossDead
 - {static} ArrayList<Pair<Integer,Integer>> spawnablePosition
 - {static} ArrayList<Ghost> ghosts
 + <<Create>> GhostSpawner()
@@ -26,6 +31,7 @@ class logic.GhostSpawner {
 + {static} ArrayList<Ghost> spawnerSpawnGhost(ArrayList<Pair<Integer,Integer>>,ArrayList<Ghost>)
 - {static} boolean isOnFootpath(int,int)
 - {static} boolean isWithinRangeOfPlayer(int,int)
++ {static} void spawnBoss()
 + {static} ArrayList<Ghost> getGhosts()
 + {static} void setGhosts(ArrayList<Ghost>)
 }
@@ -38,7 +44,6 @@ class logic.ImageManager {
 - Image currentCharacterImage
 - Image wall
 - Image footPath
-- Image whiteDot
 - Image bulletRight
 - Image bulletUp
 - Image bulletLeft
@@ -59,8 +64,6 @@ class logic.ImageManager {
 + void setWall(Image)
 + Image getFootPath()
 + void setFootPath(Image)
-+ Image getWhiteDot()
-+ void setWhiteDot(Image)
 + Image getBulletRight()
 + void setBulletRight(Image)
 + Image getBulletUp()
@@ -73,13 +76,16 @@ class logic.ImageManager {
 + void setRedGhost(Image)
 }
 class logic.KeyHandler {
-- PlayerMovement playerMovement
+- Movement movement
 - BulletLogic bulletLogic
 - Runnable updateMap
 - Runnable updateSpawnablePosition
 - int blockSize
 - int currentLevel
-+ <<Create>> KeyHandler(PlayerMovement,BulletLogic,Runnable,Runnable,int,int)
+- boolean canShoot
+~ Media warp
+~ Media purchase
++ <<Create>> KeyHandler(Movement,BulletLogic,Runnable,Runnable,int,int)
 + void handle(KeyEvent)
 }
 class component.SupermarketFont {
@@ -88,29 +94,83 @@ class component.SupermarketFont {
 + <<Create>> SupermarketFont(String)
 }
 class main.Player {
+- int playerHp
 - int playerX
 - int playerY
++ <<Create>> Player()
 + int getPlayerX()
 + void setPlayerX(int)
 + int getPlayerY()
 + void setPlayerY(int)
++ int getPlayerHp()
++ void setPlayerHp(int)
 }
 class map.level2 {
 - {static} char[][] mapPattern
 + {static} char[][] getMapPattern()
 + {static} void setMapPattern(char[][])
 }
+class logic.Movement {
+- int blockSize
++ void movePlayer(int,int)
++ void moveGhosts()
+~ void checkPlayerCollide()
+~ void updateDirection(int,int)
+}
 class ghost.TankGhost {
++ <<Create>> TankGhost()
++ <<Create>> TankGhost(int,int)
++ <<Create>> TankGhost(int,int,int)
++ <<Create>> TankGhost(int,int,int,int)
 }
 class component.BBFont {
 + <<Create>> BBFont(String,Integer,Paint)
 + <<Create>> BBFont(String,Integer)
 + <<Create>> BBFont(String)
 }
+class logic.Painter {
+- int blockSize
+- Image characterUp
+- Image characterDown
+- Image characterLeft
+- Image characterRight
+- Image wall
+- Image footPath
+~ Image whiteDot
+~ Image bulletRight
+~ Image bulletUp
+~ Image bulletLeft
+~ Image bulletDown
+~ Image normalGhost
+~ Image tankGhost
+~ Image speedyGhost
+~ Image slime
+~ Image chest
+~ Image house
+~ Image sword
+~ Image crab
+~ Image flyeye
+~ Image bat
+~ Image heart
++ <<Create>> Painter()
++ void repaint()
+}
+class ghost.NormalGhost {
++ <<Create>> NormalGhost()
++ <<Create>> NormalGhost(int,int)
++ <<Create>> NormalGhost(int,int,int)
++ <<Create>> NormalGhost(int,int,int,int)
+}
 class map.level3 {
 - {static} char[][] mapPattern
 + {static} char[][] getMapPattern()
 + {static} void setMapPattern(char[][])
+}
+class logic.BossLogic {
+- long lastHitTime
+- long hitCooldownMillis
++ <<Create>> BossLogic()
++ boolean swordHitPlayer()
 }
 class component.TekoFont {
 + <<Create>> TekoFont(String,Integer,Paint)
@@ -123,15 +183,16 @@ class main.Main {
 }
 class main.GamePanel {
 - {static} GamePanel instance
-- PlayerMovement playerMovement
+- Movement movement
 - BulletLogic bulletLogic
 - MapLoader mapLoader
 - GhostSpawner ghostSpawner
 - ImageManager imageManager
+- Player player
+- Painter painter
+- BossLogic bossLogic
 - int screenWidth
 - int screenHeight
-- int playerX
-- int playerY
 - int blockSize
 - int screenWidthBlocks
 - int screenHeightBlocks
@@ -151,6 +212,7 @@ class main.GamePanel {
 - int[] extraGhost
 - int[] levelSpawntime
 - long startTimeNano
+~ boolean hasSpawnSpinningBlade
 + <<Create>> GamePanel()
 + int getScreenWidth()
 + void setScreenWidth(int)
@@ -185,14 +247,17 @@ class main.GamePanel {
 + boolean isHasKey()
 + void setHasKey(boolean)
 + MediaPlayer getBackgroundMusic()
-+ void stopBackgroundMusic()
++ void playBossMusic()
 + {static} GamePanel getInstance()
 + {static} void setInstance(GamePanel)
-+ PlayerMovement getPlayerMovement()
 + BulletLogic getBulletLogic()
 + MapLoader getMapLoader()
 + GhostSpawner getGhostSpawner()
 + ImageManager getImageManager()
++ Player getPlayer()
++ Movement getMovement()
++ Painter getPainter()
++ BossLogic getBossLogic()
 }
 class map.levelMap {
 - {static} char[][] mapPattern
@@ -204,40 +269,22 @@ class map.levelMap {
 + {static} ArrayList<Pair<Integer,Integer>> getPos()
 + {static} void setPos(ArrayList<Pair<Integer,Integer>>)
 }
-class logic.PlayerMovement {
-- int blockSize
-- Image characterUp
-- Image characterDown
-- Image characterLeft
-- Image characterRight
-- Image wall
-- Image footPath
-~ Image whiteDot
-~ Image bulletRight
-~ Image bulletUp
-~ Image bulletLeft
-~ Image bulletDown
-~ Image redGhost
-~ Image chest
-~ Image house
-+ void movePlayer(int,int)
-+ void repaint()
-+ void moveGhosts()
-- void updateDirection(int,int)
-}
 class ghost.Ghost {
+- int hp
 - int x
 - int y
 - int speed
 - Direction ghostDirection
 + <<Create>> Ghost()
 + <<Create>> Ghost(Direction)
-+ <<Create>> Ghost(int,int)
 + <<Create>> Ghost(int,int,int)
-+ <<Create>> Ghost(int,int,int,Direction)
++ <<Create>> Ghost(int,int,int,int)
++ <<Create>> Ghost(int,int,int,int,Direction)
 + void move(char[][])
-- boolean isValidMove(int,int,char[][])
-- void changeDirection()
+# boolean isValidMove(int,int,char[][])
+# void changeDirection()
++ int getHp()
++ void setHp(int)
 + int getX()
 + void setX(int)
 + int getY()
@@ -252,8 +299,14 @@ class logic.GameInstance {
 + void resetGameInstance()
 }
 class ghost.BossGhost {
+~ int radius
++ <<Create>> BossGhost()
++ <<Create>> BossGhost(int,int,int,int)
++ void move(char[][])
++ void spinBlade()
 }
 class logic.BulletLogic {
+~ Media hurt
 + <<Create>> BulletLogic()
 + void updateBullets()
 - boolean bulletHitsWall(int,int)
@@ -264,6 +317,7 @@ class ghost.SpeedyGhost {
 + <<Create>> SpeedyGhost()
 + <<Create>> SpeedyGhost(int,int)
 + <<Create>> SpeedyGhost(int,int,int)
++ <<Create>> SpeedyGhost(int,int,int,int)
 }
 class component.RetroFont {
 + <<Create>> RetroFont(String,Integer,Paint)
@@ -312,9 +366,20 @@ class logic.MapLoader {
 ~ {static} int chestY
 ~ {static} int homeX
 ~ {static} int homeY
+~ {static} int currentLevel
 + {static} GamePanel updateMap(int)
 + {static} boolean isIsUpdatingMap()
 + {static} void setIsUpdatingMap(boolean)
++ {static} int getChestX()
++ {static} void setChestX(int)
++ {static} int getChestY()
++ {static} void setChestY(int)
++ {static} int getHomeX()
++ {static} void setHomeX(int)
++ {static} int getHomeY()
++ {static} void setHomeY(int)
++ {static} int getCurrentLevel()
++ {static} void setCurrentLevel(int)
 }
 class scene.LoadingScreen {
 - ImageView imageView
@@ -335,6 +400,7 @@ javafx.scene.text.Text <|-- component.SupermarketFont
 map.levelMap <|-- map.level2
 ghost.Ghost <|-- ghost.TankGhost
 javafx.scene.text.Text <|-- component.BBFont
+ghost.Ghost <|-- ghost.NormalGhost
 map.levelMap <|-- map.level3
 javafx.scene.text.Text <|-- component.TekoFont
 javafx.application.Application <|-- main.Main

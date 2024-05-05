@@ -29,9 +29,9 @@ public class Movement {
             GamePanel.getInstance().setPlayerX(newX);
             GamePanel.getInstance().setPlayerY(newY);
             updateDirection(dx, dy);
+            checkPlayerCollide();
 //            System.out.println("POSITION: [" + getPlayerY() / blockSize + ", " + getPlayerX() / blockSize + "]");
         }
-
     }
 
     public void moveGhosts() {
@@ -41,10 +41,6 @@ public class Movement {
                 int prevX = bg.getX();
                 int prevY = bg.getY();
                 ghost.move(GamePanel.getInstance().getMapPattern());
-//                if (prevX != ghost.getX() || prevY != ghost.getY()) {
-//                    ((BossGhost) ghost).spinBlade();
-//                }
-//                ((BossGhost) ghost).spinBlade();
             } else {
                 ghost.move(GamePanel.getInstance().getMapPattern());
             }
@@ -54,8 +50,51 @@ public class Movement {
 //        for (Ghost ghost : ghosts) {
 //            ghost.move(GamePanel.getInstance().getMapPattern());
 //        }
-        GamePanel.getInstance().getPainter().repaint();
 
+        checkPlayerCollide();
+    }
+
+    void checkPlayerCollide() {
+        for (Iterator<Ghost> iterator = GhostSpawner.getGhosts().iterator(); iterator.hasNext();) {
+            Ghost ghost = iterator.next();
+            if (GamePanel.getInstance().getPlayerX() == ghost.getY() * blockSize && GamePanel.getInstance().getPlayerY() == ghost.getX() * blockSize) {
+                // Upon player collide with ghost player lose 1 hp, then ghost will be destroyed.
+                if (GamePanel.getInstance().getPlayer().getPlayerHp() == 1) {
+                    // Player collides with ghost, set current score to 0
+                    GamePanel.getInstance().setCurrentPoint(0);
+                    System.out.println("Dead...");
+                    System.out.println("Has game end starting ? " + GamePanel.getInstance().isHasGameEnded());
+
+                    GamePanel.getInstance().setPlayerX(blockSize);
+                    GamePanel.getInstance().setPlayerY(blockSize);
+                    GamePanel.getInstance().setMapPattern(level1.getMapPattern());
+
+//                    GamePanel.getInstance().resetMapToLevel1();
+
+                    GhostSpawner.setGhosts(new ArrayList<>());
+                    GamePanel.getInstance().setHasGameEnded(true);
+
+                    System.out.println("IS GAME ENDED ? " + GamePanel.getInstance().isHasGameEnded());
+
+//                    GamePanel.getInstance().resetInstance();
+//                    GameInstance gi = new GameInstance();
+//                    gi.resetGameInstance();
+
+                    System.out.println("GAME ENDED !!");
+
+                } else {
+                    GamePanel.getInstance().getPlayer().setPlayerHp(GamePanel.getInstance().getPlayer().getPlayerHp() - 1);
+                    GamePanel.getInstance().getPainter().repaint();
+                    System.out.println("CASE HERE");
+                    iterator.remove();
+//                    GamePanel.getInstance().getPlayer().setPlayerHp(2);
+                }
+
+            } if (ghost instanceof BossGhost) {
+                GhostSpawner.bossX = ghost.getX();
+                GhostSpawner.bossY = ghost.getY();
+            }
+        }
     }
 
     void updateDirection(int dx, int dy) {

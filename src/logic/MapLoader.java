@@ -14,6 +14,7 @@ public class MapLoader {
     static int chestY = 10;
     static int homeX = 16;
     static int homeY = 1;
+    static int currentLevel = 1;
 
     public static GamePanel updateMap(int level) {
 
@@ -111,4 +112,43 @@ public class MapLoader {
         MapLoader.isUpdatingMap = isUpdatingMap;
     }
 
+    public static int getChestX() {
+        return chestX;
+    }
+
+    public static void setChestX(int chestX) {
+        MapLoader.chestX = chestX;
+    }
+
+    public static int getChestY() {
+        return chestY;
+    }
+
+    public static void setChestY(int chestY) {
+        MapLoader.chestY = chestY;
+    }
+
+    public static int getHomeX() {
+        return homeX;
+    }
+
+    public static void setHomeX(int homeX) {
+        MapLoader.homeX = homeX;
+    }
+
+    public static int getHomeY() {
+        return homeY;
+    }
+
+    public static void setHomeY(int homeY) {
+        MapLoader.homeY = homeY;
+    }
+
+    public static int getCurrentLevel() {
+        return currentLevel;
+    }
+
+    public static void setCurrentLevel(int currentLevel) {
+        MapLoader.currentLevel = currentLevel;
+    }
 }

@@ -37,6 +37,7 @@ public class Painter {
     final Image crab = new Image("file:res/gif/crab.gif", blockSize, blockSize, true,true);
     final Image flyeye = new Image("file:res/gif/fly-eye.gif", blockSize, blockSize, true,true);
     final Image bat = new Image("file:res/gif/bat.gif", blockSize, blockSize, true,true);
+    final Image heart = new Image("file:res/gif/heart.png", blockSize, blockSize * 0.75, true,true);
 
     public Painter() {};
 
@@ -58,41 +59,6 @@ public class Painter {
 
         gc.setFill(Color.web("#FF93AC"));
         gc.fillRect(0, 0, screenWidth, screenHeight);
-
-        for (Ghost ghost : GhostSpawner.getGhosts()) {
-            if (GamePanel.getInstance().getPlayerX() == ghost.getY() * blockSize && GamePanel.getInstance().getPlayerY() == ghost.getX() * blockSize) {
-                // Player collides with ghost, set current score to 0
-                GamePanel.getInstance().setCurrentPoint(0);
-                System.out.println("Dead...");
-                System.out.println("Has game end starting ? " + GamePanel.getInstance().isHasGameEnded());
-
-
-                GamePanel.getInstance().setPlayerX(blockSize);
-                GamePanel.getInstance().setPlayerY(blockSize);
-
-                GamePanel.getInstance().setMapPattern(level1.getMapPattern());
-
-//                GamePanel.getInstance().resetMapToLevel1();
-
-                GhostSpawner.setGhosts(new ArrayList<>());
-
-                GamePanel.getInstance().setHasGameEnded(true);
-
-                System.out.println("IS GAME ENDED ? " + GamePanel.getInstance().isHasGameEnded());
-
-//                GamePanel.getInstance().resetInstance();
-
-//                GameInstance gi = new GameInstance();
-//                gi.resetGameInstance();
-
-                System.out.println("GAME ENDED !!");
-
-                // You might want to add additional game over logic here
-            } if (ghost instanceof BossGhost) {
-                GhostSpawner.bossX = ghost.getX();
-                GhostSpawner.bossY = ghost.getY();
-            }
-        }
 
         ArrayList<Pair<Integer, Integer>> toRenderList = new ArrayList<>();
 
@@ -140,8 +106,33 @@ public class Painter {
             } else if (ghost instanceof TankGhost) {
                 gc.drawImage(bat, ghost.getY() * blockSize, ghost.getX() * blockSize);
             } else if (ghost instanceof BossGhost) {
-                gc.drawImage(slime, ghost.getY() * blockSize - 0.5 * blockSize , ghost.getX() * blockSize - 0.5 * blockSize);
-            }
+                gc.drawImage(slime, ghost.getY() * blockSize - 0.5 * blockSize , ghost.getX() * blockSize - 0.5 * blockSize);;
+                int bossHP = ghost.getHp();
+                int maxHP = 15;
+                double bossX = ghost.getX() * blockSize;
+                double bossY = ghost.getY() * blockSize;
+
+                // Render red HP bar
+                double barWidth = blockSize * 2; // Adjust as needed
+                double barHeight = blockSize / 3; // Adjust as needed
+                double barX = bossX - (blockSize / 4);
+                double barY = bossY - 0.5 * blockSize; // Adjust for the position above boss
+
+                // Calculate HP ratio for the bar length
+                double hpRatio = (double) bossHP / maxHP;
+                double filledWidth = barWidth * hpRatio;
+
+                gc.setFill(Color.RED);
+                gc.fillRect(barY, barX, barWidth, barHeight);
+
+                // Render filled portion in green
+                gc.setFill(Color.GREEN);
+                gc.fillRect(barY, barX, filledWidth, barHeight);
+
+                // Render HP text
+                gc.setFill(Color.WHITE);
+                gc.setFont(new RetroFont("Arial", 20).getFont()); // Adjust font size as needed
+                gc.fillText("Boss HP: " + bossHP + "/" + maxHP, bossY - (blockSize / 2), bossX - 0.5  * blockSize);            }
         }
 
         // Update bullet
@@ -164,6 +155,16 @@ public class Painter {
 
         gc.drawImage(GamePanel.getInstance().getImageManager().getCurrentCharacterImage(), GamePanel.getInstance().getPlayerX() + 0.05 * blockSize, GamePanel.getInstance().getPlayerY() - 0.2 * blockSize);
 
+        int hp = GamePanel.getInstance().getPlayer().getPlayerHp();
+        double heartX = screenWidth - (hp * (heart.getWidth() + 5)); // Adjust 5 for spacing between hearts
+        double heartY = 5; // Adjust as needed for vertical position
+
+        // Render hearts
+        for (int i = 0; i < hp; i++) {
+            gc.drawImage(heart, heartX + (i * (heart.getWidth() + 5)), heartY);
+        }
+
+
         // Boss spinning blade section
 
 
@@ -172,6 +173,7 @@ public class Painter {
 
         gc.save(); // Save the current state
         gc.translate(GhostSpawner.bladeY * blockSize , GhostSpawner.bladeX * blockSize); // Translate to blade position
+        GamePanel.getInstance().getBossLogic().swordHitPlayer();
 //        System.out.println("Repaint Blade : " + GhostSpawner.bladeX + "," + GhostSpawner.bladeY);
         gc.drawImage(sword, -0.5 * blockSize,  0); // Render the blade
         gc.restore(); // Restore the previous state

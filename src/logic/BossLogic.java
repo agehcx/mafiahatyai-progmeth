@@ -4,70 +4,43 @@ import main.GamePanel;
 
 public class BossLogic {
 
-    // Constants for blade movement directions
-    public static final int BLADE_DIRECTION_UP = 0;
-    public static final int BLADE_DIRECTION_DOWN = 1;
-    public static final int BLADE_DIRECTION_LEFT = 2;
-    public static final int BLADE_DIRECTION_RIGHT = 3;
-
-    private int bladeX;
-    private int bladeY;
-    private int bladeDirection;
+    private long lastHitTime = 0;
+    private final long hitCooldownMillis = 1500; // 1.5 seconds in milliseconds
 
     // Constructor
-    public BossLogic(int initialX, int initialY, int initialDirection) {
-        this.bladeX = initialX;
-        this.bladeY = initialY;
-        this.bladeDirection = initialDirection;
-    }
+    public BossLogic() {}
 
     // Method to update boss blade position and check collision with player
-    public void update() {
-        // Update boss blade position based on direction
-        switch (bladeDirection) {
-            case BLADE_DIRECTION_UP:
-                bladeX--;
-                break;
-            case BLADE_DIRECTION_DOWN:
-                bladeX++;
-                break;
-            case BLADE_DIRECTION_LEFT:
-                bladeY--;
-                break;
-            case BLADE_DIRECTION_RIGHT:
-                bladeY++;
-                break;
+    public boolean swordHitPlayer() {
+        long currentTime = System.currentTimeMillis();
+        if (currentTime - lastHitTime < hitCooldownMillis) {
+            // Cannot get hit again when on cooldown
+            return false;
         }
 
-        // Check collision with player
-        if (bladeX == GamePanel.getInstance().getPlayerX() && bladeY == GamePanel.getInstance().getPlayerY()) {
-            // Collision occurred, decrement player's health points
-            GamePanel.getInstance().decrementPlayerHealth(); // Implement this method in GamePanel class
+        int blockSize = GamePanel.getInstance().getBlockSize();
+
+        // Get player and blade coordinates
+        int playerX = GamePanel.getInstance().getPlayer().getPlayerX();
+        int playerY = GamePanel.getInstance().getPlayer().getPlayerY();
+        double bladeX = GhostSpawner.bladeX * blockSize;
+        double bladeY = GhostSpawner.bladeY * blockSize;
+
+        // Check if the sword hits the player
+        if (playerX >= bladeY - 0.5 * blockSize && playerX <= bladeY + 0.5 * blockSize &&
+            playerY >= bladeX - 0.5 * blockSize && playerY <= bladeX + 0.5 * blockSize ) {
+            // Sword hit player
+            System.out.println("Sword hit player");
+
+            // Reduce player HP
+            int currentHP = GamePanel.getInstance().getPlayer().getPlayerHp();
+            GamePanel.getInstance().getPlayer().setPlayerHp(currentHP - 1);
+
+            lastHitTime = currentTime;
+
+            return true; // Return
         }
-    }
 
-    // Getters and setters
-    public int getBladeX() {
-        return bladeX;
-    }
-
-    public void setBladeX(int bladeX) {
-        this.bladeX = bladeX;
-    }
-
-    public int getBladeY() {
-        return bladeY;
-    }
-
-    public void setBladeY(int bladeY) {
-        this.bladeY = bladeY;
-    }
-
-    public int getBladeDirection() {
-        return bladeDirection;
-    }
-
-    public void setBladeDirection(int bladeDirection) {
-        this.bladeDirection = bladeDirection;
+        return false;
     }
 }

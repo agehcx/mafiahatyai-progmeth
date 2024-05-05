@@ -23,7 +23,7 @@ public class BossGhost extends Ghost {
 
     @Override
     public void move(char[][] mapPattern) {
-        if (1==1) return;
+//        if (1==1) return;
 //        System.out.println(getX() + "," + getY());
         switch (getGhostDirection()) {
             case UP:

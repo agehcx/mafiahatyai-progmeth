@@ -28,6 +28,7 @@ public class Ghost {
     }
 
     public Ghost(int hp, int x, int y) {
+        this.hp = Math.min(3, hp);
         this.x = x;
         this.y = y;
         this.speed = 1;
@@ -52,7 +53,6 @@ public class Ghost {
 
     public void move(char[][] mapPattern) {
         // Move the ghost based on its direction
-//        if(1==1) return;
         switch (ghostDirection) {
             case UP:
                 if (isValidMove(x - speed, y, mapPattern)) {
