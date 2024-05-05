@@ -1,13 +1,7 @@
 package logic;
 
-import component.RetroFont;
 import ghost.BossGhost;
 import ghost.Ghost;
-import javafx.scene.canvas.Canvas;
-import javafx.scene.canvas.GraphicsContext;
-import javafx.scene.image.Image;
-import javafx.scene.paint.Color;
-import javafx.util.Pair;
 import main.GamePanel;
 import map.level1;
 import object.Bullet;
@@ -59,7 +53,7 @@ public class Movement {
             Ghost ghost = iterator.next();
             if (GamePanel.getInstance().getPlayerX() == ghost.getY() * blockSize && GamePanel.getInstance().getPlayerY() == ghost.getX() * blockSize) {
                 // Upon player collide with ghost player lose 1 hp, then ghost will be destroyed.
-                if (GamePanel.getInstance().getPlayer().getPlayerHp() == 1) {
+                if (GamePanel.getInstance().getPlayer().getPlayerHp() <= 1) {
                     // Player collides with ghost, set current score to 0
                     GamePanel.getInstance().setCurrentPoint(0);
                     System.out.println("Dead...");
@@ -82,7 +76,9 @@ public class Movement {
 
                     System.out.println("GAME ENDED !!");
 
-                    GamePanel.setInstance(new GamePanel());
+//                    displayGameOverScreen();
+
+//                    GamePanel.setInstance(new GamePanel());
 
                 } else {
                     GamePanel.getInstance().getPlayer().setPlayerHp(GamePanel.getInstance().getPlayer().getPlayerHp() - 1);

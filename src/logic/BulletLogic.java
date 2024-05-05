@@ -12,9 +12,6 @@ import java.util.ArrayList;
 import java.util.Iterator;
 
 public class BulletLogic {
-
-    Media hurt = new Media(new File("res/sound/enemy_hurt.mp3").toURI().toString());
-
     public BulletLogic() {}
 
     public void updateBullets() {
@@ -54,6 +51,7 @@ public class BulletLogic {
             MediaPlayer gunshot = new MediaPlayer(buzzerGunshot);
             gunshot.setVolume(0.2);
             gunshot.play();
+
         }
     }
 
@@ -90,7 +88,7 @@ public class BulletLogic {
                         if (ghost.getHp() == 0) {
                             ghostIterator.remove();
                             // Boss dead
-                            GhostSpawner.isBossDead = true;
+                            GamePanel.getInstance().setHasWon(true);
                         }
                         break;
                     }
@@ -101,9 +99,7 @@ public class BulletLogic {
                         bullet.getX() >= ghost.getY() * blockSize - blockSize * 0.25 &&
                         bullet.getX() <= ghost.getY() * blockSize + blockSize * 0.25    ) {
 
-                        MediaPlayer hurtSound = new MediaPlayer(hurt);
-                        hurtSound.setVolume(0.33);
-                        hurtSound.play();
+                        GamePanel.getInstance().getSoundLoader().playEnemyHitSound();
 
                         // Remove the bullet and ghost upon collision
                         if (ghost.getHp() == 1) {

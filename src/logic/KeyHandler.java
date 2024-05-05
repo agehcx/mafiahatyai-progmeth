@@ -60,6 +60,8 @@ public class KeyHandler implements EventHandler<KeyEvent> {
                     delay.play();
                 }
 
+            } else if (code == KeyCode.Q) {
+                GamePanel.getInstance().setCurrentPoint(5000);
             } else if (code == KeyCode.P) {
                 System.out.println("Restart P !");
                 GameInstance gi = new GameInstance();
@@ -76,9 +78,10 @@ public class KeyHandler implements EventHandler<KeyEvent> {
                     if (GamePanel.getInstance().getCurrentPoint() >= 50 && !GamePanel.getInstance().isHasKey()) {
                         GamePanel.getInstance().setCurrentPoint(GamePanel.getInstance().getCurrentPoint() - 50);
                         GamePanel.getInstance().setHasKey(true);
-//                        MediaPlayer purchaseSound = new MediaPlayer(purchase);
-//                        purchaseSound.play();
-                        GamePanel.getInstance().getSoundLoader().playPurchaseSound();
+                        Media purchase = new Media(new File("res/sound/coin.wav").toURI().toString());
+                        MediaPlayer purchaseSound = new MediaPlayer(purchase);
+                        purchaseSound.play();
+//                        GamePanel.getInstance().getSoundLoader().playPurchaseSound();
                     }
                 } else if (GamePanel.getInstance().getPlayerX() / blockSize == MapLoader.homeX
                         && GamePanel.getInstance().getPlayerY() / blockSize == MapLoader.homeY) {
@@ -87,6 +90,7 @@ public class KeyHandler implements EventHandler<KeyEvent> {
                         GamePanel.getInstance().setHasKey(false);
 //                        MediaPlayer warpSound = new MediaPlayer(warp);
 //                        warpSound.play();
+                        GamePanel.getInstance().setCurrentPoint(GamePanel.getInstance().getCurrentPoint() / GamePanel.getInstance().getCurrentLevel());
                         GamePanel.getInstance().getSoundLoader().playWarpSound();
                     }
                 }

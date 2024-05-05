@@ -26,6 +26,7 @@ public class GameInstance {
         GamePanel.getInstance().setHasGameEnded(false);
         GamePanel.getInstance().setCurrentPoint(0);
         GamePanel.getInstance().setCurrentLevel(0);
+        GamePanel.getInstance().getPlayer().setPlayerHp(3);
         GamePanel.getInstance().setMapPattern(map.level1.getMapPattern());
 //        GamePanel.getInstance().resetMapToLevel1();
 

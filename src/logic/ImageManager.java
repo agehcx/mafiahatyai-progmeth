@@ -17,6 +17,20 @@ public class ImageManager {
     private Image bulletLeft;
     private Image bulletDown;
     private Image redGhost;
+    private Image whiteDot;
+    private Image normalGhost;
+    private Image tankGhost;
+    private Image speedyGhost;
+    private Image slime;
+    private Image chest;
+    private Image house;
+    private Image bush;
+    private Image sword;
+    private Image crab;
+    private Image flyeye;
+    private Image bat;
+    private Image heart;
+
 
     public ImageManager() {
         characterUp = new Image("file:res/character/manUp.png", blockSize*1.2, blockSize*1.2, true, true);
@@ -31,101 +45,147 @@ public class ImageManager {
         bulletLeft = new Image("file:res/gif/bulletLeft.gif", blockSize, blockSize, false, true);
         bulletDown = new Image("file:res/gif/bulletDown.gif", blockSize, blockSize, false, true);
         redGhost = new Image("file:res/gif/redghost.gif", blockSize, blockSize, true, true);
-    }
 
-    public Image getCurrentCharacterImage() {
-        return currentCharacterImage;
-    }
-
-    public void setCurrentCharacterImage(Image currentCharacterImage) {
-        this.currentCharacterImage = currentCharacterImage;
+        whiteDot = new Image("file:res/gif/whitedot.png", blockSize, blockSize, true, true);
+        normalGhost = new Image("file:res/gif/redghost.gif", blockSize, blockSize, true, true);
+        tankGhost = new Image("file:res/gif/blueghost.gif", blockSize, blockSize, true, true);
+        speedyGhost = new Image("file:res/gif/ghost2.gif", blockSize, blockSize, true, true);
+        slime = new Image("file:res/gif/slime.gif", blockSize * 2.5, blockSize * 2.5, true, true);
+        chest = new Image("file:res/gif/chest.gif", blockSize, blockSize, true,true);
+        house = new Image("file:res/gif/house.png", blockSize * 2, blockSize * 2, true,true);
+        bush = new Image("file:res/gif/tree2.png", blockSize , blockSize, true,true);
+        sword = new Image("file:res/gif/sword.gif", blockSize * 2, blockSize * 2, true,true);
+        crab = new Image("file:res/gif/crab2.gif", blockSize, blockSize, true,true);
+        flyeye = new Image("file:res/gif/fly-eye2.gif", blockSize, blockSize, true,true);
+        bat = new Image("file:res/gif/bat2.gif", blockSize, blockSize, true,true);
+        heart = new Image("file:res/gif/heart.png", blockSize, blockSize * 0.75, true,true);
     }
 
     public Image getCharacterUp() {
         return characterUp;
     }
 
-    public void setCharacterUp(Image characterUp) {
-        this.characterUp = characterUp;
-    }
-
     public Image getCharacterDown() {
         return characterDown;
-    }
-
-    public void setCharacterDown(Image characterDown) {
-        this.characterDown = characterDown;
     }
 
     public Image getCharacterLeft() {
         return characterLeft;
     }
 
-    public void setCharacterLeft(Image characterLeft) {
-        this.characterLeft = characterLeft;
-    }
-
     public Image getCharacterRight() {
         return characterRight;
     }
 
-    public void setCharacterRight(Image characterRight) {
-        this.characterRight = characterRight;
+    public Image getCurrentCharacterImage() {
+        return currentCharacterImage;
     }
 
     public Image getWall() {
         return wall;
     }
 
-    public void setWall(Image wall) {
-        this.wall = wall;
-    }
-
     public Image getFootPath() {
         return footPath;
-    }
-
-    public void setFootPath(Image footPath) {
-        this.footPath = footPath;
     }
 
     public Image getBulletRight() {
         return bulletRight;
     }
 
-    public void setBulletRight(Image bulletRight) {
-        this.bulletRight = bulletRight;
-    }
-
     public Image getBulletUp() {
         return bulletUp;
-    }
-
-    public void setBulletUp(Image bulletUp) {
-        this.bulletUp = bulletUp;
     }
 
     public Image getBulletLeft() {
         return bulletLeft;
     }
 
-    public void setBulletLeft(Image bulletLeft) {
-        this.bulletLeft = bulletLeft;
-    }
-
     public Image getBulletDown() {
         return bulletDown;
-    }
-
-    public void setBulletDown(Image bulletDown) {
-        this.bulletDown = bulletDown;
     }
 
     public Image getRedGhost() {
         return redGhost;
     }
 
-    public void setRedGhost(Image redGhost) {
-        this.redGhost = redGhost;
+    public Image getWhiteDot() {
+        return whiteDot;
+    }
+
+    public Image getNormalGhost() {
+        return normalGhost;
+    }
+
+    public Image getTankGhost() {
+        return tankGhost;
+    }
+
+    public Image getSpeedyGhost() {
+        return speedyGhost;
+    }
+
+    public Image getSlime() {
+        return slime;
+    }
+
+    public Image getChest() {
+        return chest;
+    }
+
+    public Image getHouse() {
+        return house;
+    }
+
+    public Image getBush() {
+        return bush;
+    }
+
+    public Image getSword() {
+        return sword;
+    }
+
+    public Image getCrab() {
+        return crab;
+    }
+
+    public Image getFlyeye() {
+        return flyeye;
+    }
+
+    public Image getBat() {
+        return bat;
+    }
+
+    public Image getHeart() {
+        return heart;
+    }
+
+    public void setCharacterUp(Image characterUp) {
+        this.characterUp = characterUp;
+    }
+
+    public void setCharacterDown(Image characterDown) {
+        this.characterDown = characterDown;
+    }
+
+    public void setCharacterLeft(Image characterLeft) {
+        this.characterLeft = characterLeft;
+    }
+
+    public void setCharacterRight(Image characterRight) {
+        this.characterRight = characterRight;
+    }
+
+    public void setCurrentCharacterImage(Image currentCharacterImage) {
+        this.currentCharacterImage = currentCharacterImage;
+    }
+
+    public void setWall(Image wall) {
+        this.wall = wall;
+    }
+
+    public void setFootPath(Image footPath) {
+        this.footPath = footPath;
     }
 }

@@ -40,6 +40,7 @@ public class GamePanel extends Pane {
     private boolean hasGameEnded = false;
     private boolean isUpdatingMap = false;
     private boolean hasKey = false;
+    private boolean hasWon = false;
     private int currentPoint = 0;
     private int currentLevel = 1;
     // Image resources
@@ -98,7 +99,7 @@ public class GamePanel extends Pane {
 
                 if (hasGameEnded) {
 //                     Handle game end logic
-                    System.out.println("GAME ENDED");
+//                    System.out.println("GAME ENDED");
                     GhostSpawner.setGhosts(new ArrayList<>());
                 } else {
                     bulletLogic.updateBullets();
@@ -250,6 +251,13 @@ public class GamePanel extends Pane {
         this.hasKey = hasKey;
     }
 
+    public boolean isHasWon() {
+        return hasWon;
+    }
+
+    public void setHasWon(boolean hasWon) {
+        this.hasWon = hasWon;
+    }
 
     // Non-getter/setter functions
 
